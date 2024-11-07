@@ -1,16 +1,16 @@
-package Class.Bar;
+package Class.bar;
 
 import javafx.scene.image.Image;
 import java.util.Objects;
 
-public class Bar {
+public class bar {
     protected String name;
     protected float maxCapacity;
     protected float currentCapacity;
     protected String color;
     protected Image texture;
 
-    public Bar(String name, int maxCapacity, int currentCapacity, String color) {
+    public bar(String name, int maxCapacity, int currentCapacity, String color) {
         this.name = name;
         this.maxCapacity = maxCapacity;
         this.currentCapacity = currentCapacity;

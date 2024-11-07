@@ -1,6 +1,6 @@
-package Class.Bar;
+package Class.bar;
 
-public class Feed extends Bar {
+public class Feed extends bar {
     public Feed(String name, int maxCapacity, int currentCapacity) {
         super(name, maxCapacity, currentCapacity, "brown");
     }

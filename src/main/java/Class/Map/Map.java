@@ -1,20 +1,20 @@
 package Class.Map;
 
-import java.util.ArrayList;
+import java.util.List;
 import Class.Item.Item;
 import javafx.scene.image.Image;
 
 public class Map {
     private String name;
     private Image texture;
-    private  boolean is_loaded;
-    private ArrayList<Room> rooms;
-    private ArrayList<Item> items;
+    private  boolean isLoaded;
+    private List<Room> rooms;
+    private List<Item> items;
 
-    public Map(String name, Image texture, boolean is_loaded, ArrayList<Room> rooms, ArrayList<Item> items) {
+    public Map(String name, Image texture, boolean isLoaded, List<Room> rooms, List<Item> items) {
         this.name = name;
         this.texture = texture;
-        this.is_loaded = is_loaded;
+        this.isLoaded = isLoaded;
         this.rooms = rooms;
         this.items = items;
     }
@@ -28,14 +28,14 @@ public class Map {
     }
 
     public boolean getIsLoaded() {
-        return is_loaded;
+        return isLoaded;
     }
 
-    public ArrayList<Room> getRooms() {
+    public List<Room> getRooms() {
         return rooms;
     }
 
-    public ArrayList<Item> getItems() {
+    public List<Item> getItems() {
         return items;
     }
 }

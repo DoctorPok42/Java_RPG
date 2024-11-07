@@ -1,6 +1,6 @@
-package Class.Bar;
+package Class.bar;
 
-public class Tiredness extends Bar {
+public class Tiredness extends bar {
     public Tiredness(String name, int maxCapacity, int currentCapacity) {
         super(name, maxCapacity, currentCapacity, "blue");
     }

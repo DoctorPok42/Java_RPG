@@ -38,7 +38,7 @@ public abstract class Character {
     }
 
     //Method
-    void move(){
-        //move character
+    void move(float x, float y) {
+        
     }
 }
