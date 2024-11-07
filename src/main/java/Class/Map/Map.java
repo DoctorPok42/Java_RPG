@@ -2,29 +2,28 @@ package Class.Map;
 
 import java.util.List;
 import Class.Item.Item;
-import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.Pane;
 
 public class Map {
     private String name;
-    private Image texture;
     private  boolean isLoaded;
     private List<Room> rooms;
     private List<Item> items;
+    private ImageView mapView;
+    private Pane mapContainer;
 
-    public Map(String name, Image texture, boolean isLoaded, List<Room> rooms, List<Item> items) {
+    public Map(String name, ImageView mapView, boolean isLoaded, List<Room> rooms, List<Item> items) {
         this.name = name;
-        this.texture = texture;
+        this.mapView = mapView;
         this.isLoaded = isLoaded;
         this.rooms = rooms;
         this.items = items;
+        this.mapContainer = new Pane(mapView);
     }
 
     public String getName() {
         return name;
-    }
-
-    public Image getTexture() {
-        return texture;
     }
 
     public boolean getIsLoaded() {
@@ -37,5 +36,13 @@ public class Map {
 
     public List<Item> getItems() {
         return items;
+    }
+
+    public ImageView getMapView() {
+        return mapView;
+    }
+
+    public Pane getMapContainer() {
+        return mapContainer;
     }
 }
