@@ -1,15 +1,17 @@
 package Class.Character;
 
+import javafx.scene.image.Image;
+
 public abstract class Character {
     private String name;
-    private String texture;
+    private Image texture;
     private int posX;
     private int posY;
     private int posZ;
     private role type ;
 
     //Constructor
-    protected Character(String name, role type, String texture){
+    protected Character(String name, role type, Image texture) {
         this.name = name;
         this.type = type;
         this.texture = texture;
@@ -19,7 +21,7 @@ public abstract class Character {
     public String getName(){
         return this.name;
     }
-    public String getTexture(){
+    public Image getTexture(){
         return this.texture;
     }
     public int getPosX(){
@@ -36,7 +38,7 @@ public abstract class Character {
     }
 
     //Method
-    void move(){
-        //move character
+    void move(float x, float y) {
+        
     }
 }
