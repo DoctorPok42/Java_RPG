@@ -3,13 +3,14 @@ package Class.Character;
 import javafx.scene.image.Image;
 import java.util.ArrayList;
 import java.util.List;
+import javafx.scene.image.ImageView;
 
 public class Pnj extends Character {
     private List<String> message;
 
     //Constructor
     public Pnj(String name, role type, Image texture) {
-        super(name, type, texture);
+        super(name, type, new ImageView(texture));
         this.message = new ArrayList<>();
     }
 

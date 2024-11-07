@@ -2,6 +2,8 @@ package Class.Character;
 
 import Class.Skill.Skill;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+
 import java.util.List;
 
 public class Player extends Character {
@@ -15,8 +17,8 @@ public class Player extends Character {
     private List<Skill> skills;
 
     //Constructor
-    public Player(String name,Image texture) {
-        super(name, role.PLAYER, texture);
+    public Player(String name, Image texture) {
+        super(name, role.PLAYER, new ImageView(texture));
         this.money = 0;
         this.timeDays = 0;
         this.timeYears = 0;
