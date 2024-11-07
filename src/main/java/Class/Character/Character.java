@@ -9,7 +9,7 @@ public abstract class Character {
     private role type ;
 
     //Constructor
-    public Character(String name, role type, String texture){
+    protected Character(String name, role type, String texture){
         this.name = name;
         this.type = type;
         this.texture = texture;
