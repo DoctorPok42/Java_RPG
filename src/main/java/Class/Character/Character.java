@@ -1,15 +1,15 @@
 package Class.Character;
 
 public abstract class Character {
-    String name;
-    String texture;
-    int posX;
-    int posY;
-    int posZ;
-    role type ;
+    private String name;
+    private String texture;
+    private int posX;
+    private int posY;
+    private int posZ;
+    private role type ;
 
     //Constructor
-    Character(String name, role type, String texture){
+    public Character(String name, role type, String texture){
         this.name = name;
         this.type = type;
         this.texture = texture;

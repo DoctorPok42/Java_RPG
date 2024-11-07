@@ -1,10 +1,10 @@
 package Class.Skill;
 
 public class Skill {
-    String name;
+    private String name;
 
     //Constructor
-    Skill(String name){
+    public Skill(String name){
         this.name = name;
     }
 

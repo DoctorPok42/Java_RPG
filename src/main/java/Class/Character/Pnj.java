@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Pnj extends Character{
-    List<String> message;
+    private List<String> message;
 
     //Constructor
-    Pnj(String name, role type, String texture){
+    public Pnj(String name, role type, String texture){
         super(name, type, texture);
         this.message = new ArrayList<>();
     }

@@ -4,17 +4,17 @@ import Class.Skill.Skill;
 import java.util.List;
 
 public class Player extends Character{
-    int money;
-    int timeDays;
-    int timeYears;
-    int timeHours;
-    int fun;
-    int weakness;
-    int hunger;
-    List<Skill> skills;
+    private int money;
+    private int timeDays;
+    private int timeYears;
+    private int timeHours;
+    private int fun;
+    private int weakness;
+    private int hunger;
+    private List<Skill> skills;
 
     //Constructor
-    Player(String name,String texture){
+    public Player(String name,String texture){
         super(name, role.PLAYER, texture);
         this.money = 0;
         this.timeDays = 0;
