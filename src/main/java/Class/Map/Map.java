@@ -9,6 +9,9 @@ public class Map {
     private  boolean is_loaded;
     private ArrayList<Room> rooms;
     private ArrayList<Item> items;
+    private double mapTranslateX = 0;
+    private double mapTranslateY = 0;
+
 
     public Map(String name, String texture, boolean is_loaded, ArrayList<Room> rooms, ArrayList<Item> items) {
         this.name = name;
