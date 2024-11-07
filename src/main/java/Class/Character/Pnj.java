@@ -1,13 +1,14 @@
 package Class.Character;
 
+import javafx.scene.image.Image;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Pnj extends Character{
+public class Pnj extends Character {
     private List<String> message;
 
     //Constructor
-    public Pnj(String name, role type, String texture){
+    public Pnj(String name, role type, Image texture) {
         super(name, type, texture);
         this.message = new ArrayList<>();
     }

@@ -1,9 +1,10 @@
 package Class.Character;
 
 import Class.Skill.Skill;
+import javafx.scene.image.Image;
 import java.util.List;
 
-public class Player extends Character{
+public class Player extends Character {
     private int money;
     private int timeDays;
     private int timeYears;
@@ -14,7 +15,7 @@ public class Player extends Character{
     private List<Skill> skills;
 
     //Constructor
-    public Player(String name,String texture){
+    public Player(String name,Image texture) {
         super(name, role.PLAYER, texture);
         this.money = 0;
         this.timeDays = 0;
