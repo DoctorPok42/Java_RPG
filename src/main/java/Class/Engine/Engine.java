@@ -34,7 +34,7 @@ public class Engine extends Application {
                 player.move(e, map.getMapView());
             }
         });
-        gameView.setOnMouseClicked((MouseEvent e) -> onClick(e, logger));
+        gameView.setOnMouseClicked((MouseEvent e) -> onClick(e));
         gameView.requestFocus();
     }
 
