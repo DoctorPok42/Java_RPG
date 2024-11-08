@@ -91,8 +91,8 @@ public class Player extends Character {
         }
         this.hunger -= 1 * hungerMultiplier;
 
-        this.weakness = Math.max(0, Math.min(this.weakness, 60));
-        this.hunger = Math.max(0, Math.min(this.hunger, 10));
+        this.weakness = Math.clamp(this.weakness, 0, 60);
+        this.hunger = Math.clamp(this.hunger, 0, 10);
     }
 
     public void updateTime(Map map) {
