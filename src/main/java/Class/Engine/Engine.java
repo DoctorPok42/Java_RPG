@@ -10,6 +10,9 @@ import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import java.util.ArrayList;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.util.Duration;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -27,6 +30,22 @@ public class Engine extends Application {
         double y = e.getY();
     }
 
+    private void changeMap(int floor) {
+        switch (floor) {
+            case 0:
+                map.setMapView(new ImageView(new Image("file:assets/map/mapTest.png")));
+                break;
+            case 1:
+                map.setMapView(new ImageView(new Image("file:assets/map/mapTest2.png")));
+                break;
+            case 2:
+                map.setMapView(new ImageView(new Image("file:assets/map/mapTest3.png")));
+                break;
+            default:
+                break;
+        }
+    }
+
     private void gameLoop(StackPane gameView) {
         gameView.setOnKeyPressed((KeyEvent e) -> {
             if (isMoveKey(e.getCode())) {
@@ -35,6 +54,11 @@ public class Engine extends Application {
             }
         });
         gameView.setOnMouseClicked((MouseEvent e) -> onClick(e));
+
+        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1), e -> player.updateTime(map)));
+        timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline.play();
+
         gameView.requestFocus();
     }
 

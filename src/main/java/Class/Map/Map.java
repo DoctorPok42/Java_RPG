@@ -12,6 +12,7 @@ public class Map {
     private List<Item> items;
     private ImageView mapView;
     private Pane mapContainer;
+    private boolean isNight;
 
     public Map(String name, ImageView mapView, boolean isLoaded, List<Room> rooms, List<Item> items) {
         this.name = name;
@@ -20,6 +21,7 @@ public class Map {
         this.rooms = rooms;
         this.items = items;
         this.mapContainer = new Pane(mapView);
+        this.isNight = false;
     }
 
     public String getName() {
@@ -44,5 +46,17 @@ public class Map {
 
     public Pane getMapContainer() {
         return mapContainer;
+    }
+
+    public boolean getIsNight() {
+        return isNight;
+    }
+
+    public void setMapView(ImageView mapView) {
+        this.mapView = mapView;
+    }
+
+    public void setIsNight(boolean isNight) {
+        this.isNight = isNight;
     }
 }

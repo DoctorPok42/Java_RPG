@@ -1,9 +1,9 @@
 package Class.Character;
 
 import Class.Skill.Skill;
+import Class.Map.Map;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-
 import java.util.List;
 
 public class Player extends Character {
@@ -60,5 +60,24 @@ public class Player extends Character {
     }
     void menu(){
         //display menu
+    }
+
+    public void updateTime(Map map) {
+        this.timeHours++;
+        if (this.timeHours >= 20 || this.timeHours < 6) {
+            if (!map.getIsNight())
+                map.setIsNight(true);
+        } else if (map.getIsNight()) {
+            map.setIsNight(false);
+        }
+
+        if (this.timeHours == 24){
+            this.timeHours = 0;
+            this.timeDays++;
+        }
+        if (this.timeDays == 60){
+            this.timeDays = 0;
+            this.timeYears++;
+        }
     }
 }
