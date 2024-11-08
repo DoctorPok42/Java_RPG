@@ -6,8 +6,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
@@ -20,12 +18,15 @@ public class Player extends Character {
     private int timeDays;
     private int timeYears;
     private int timeHours;
+
     private int fun;
     private int weakness;
     private int hunger;
+
     private List<Skill> skills;
     double mapTranslateX = 0;
     double mapTranslateY = 0;
+
     private Timeline timelineUP;
     private Timeline timelineDOWN;
     private Timeline timelineLEFT;
@@ -142,4 +143,6 @@ public class Player extends Character {
         timeline.setCycleCount(Timeline.INDEFINITE);
         return timeline;
     }
+
+
 }
