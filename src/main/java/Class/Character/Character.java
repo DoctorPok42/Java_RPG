@@ -51,5 +51,5 @@ public abstract class Character {
     }
 
     //Method
-    public void move(ImageView mapView, StackPane gameView) {}
+    public void move(ImageView mapView, StackPane gameView, ImageView persoView) {}
 }

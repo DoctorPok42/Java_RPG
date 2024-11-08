@@ -2,6 +2,7 @@ package Class.Character;
 
 import Class.Skill.Skill;
 import Class.Map.Map;
+import javafx.animation.Animation;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.animation.KeyFrame;
@@ -33,6 +34,10 @@ public class Player extends Character {
     private Timeline animationTimeline;
     private final double movestep = 2;
 
+    private Image[] walkimage;
+    private int currentImageIndex = 0;
+    private ImageView persoView;
+
     //Constructor
     public Player(String name, Image texture) {
         super(name, role.PLAYER, new ImageView(texture));
@@ -43,7 +48,18 @@ public class Player extends Character {
         this.fun = 0;
         this.weakness = 0;
         this.hunger = 0;
+
+        this.walkimage = new Image[]{
+                new Image("file:assets/perso/animtest1.png"),
+                new Image("file:assets/perso/animtest2.png"),
+                new Image("file:assets/perso/animtest3.png"),
+                new Image("file:assets/perso/animtest4.png"),
+                new Image("file:assets/perso/animtest5.png"),
+                new Image("file:assets/perso/animtest6.png")
+        };
     }
+
+
 
     //Getter
     public int getMoney(){
@@ -99,22 +115,31 @@ public class Player extends Character {
     }
     //Move method
     @Override
-    public void move(ImageView mapView, StackPane gameView) {
+    public void move(ImageView mapView, StackPane gameView, ImageView persoView) {
         //def timeline
         timelineUP = createMovementTimeline(0, movestep, mapView);
         timelineDOWN = createMovementTimeline(0, -movestep, mapView);
         timelineLEFT = createMovementTimeline(movestep, 0, mapView);
         timelineRIGHT = createMovementTimeline(-movestep, 0, mapView);
+
+        //move animation
+        animationTimeline = new Timeline(new KeyFrame(Duration.millis(200),e->animateCharacter(persoView)));
+        animationTimeline.setCycleCount(Animation.INDEFINITE);
+
         //move
         gameView.setOnKeyPressed((KeyEvent e) -> {
         if (e.getCode() == KeyCode.UP|| e.getCode() == KeyCode.Z) {
             timelineUP.play();
+            startCharacterAnimation();
         } else if (e.getCode() == KeyCode.DOWN|| e.getCode() == KeyCode.S) {
             timelineDOWN.play();
+            startCharacterAnimation();
         } else if (e.getCode() == KeyCode.LEFT|| e.getCode() == KeyCode.Q) {
             timelineLEFT.play();
+            startCharacterAnimation();
         } else if (e.getCode() == KeyCode.RIGHT|| e.getCode() == KeyCode.D) {
             timelineRIGHT.play();
+            startCharacterAnimation();
         }
         });
         gameView.setOnKeyReleased((KeyEvent e) -> {
@@ -127,8 +152,10 @@ public class Player extends Character {
         } else if (e.getCode() == KeyCode.RIGHT || e.getCode() == KeyCode.D) {
             timelineRIGHT.stop();
         }
+        stopCharacterAnimation();
     });
     }
+
     //Create movement timeline
     private Timeline createMovementTimeline(double x, double y, ImageView mapView) {
         Timeline timeline = new Timeline(
@@ -141,5 +168,21 @@ public class Player extends Character {
         );
         timeline.setCycleCount(Timeline.INDEFINITE);
         return timeline;
+    }
+
+    //Animate character method
+    private void animateCharacter(ImageView persoView) {
+        currentImageIndex = (currentImageIndex + 1) % walkimage.length;
+        persoView.setImage(walkimage[currentImageIndex]);
+    }
+
+    private void startCharacterAnimation() {
+        if(animationTimeline.getStatus() == Animation.Status.STOPPED)
+            animationTimeline.play();
+    }
+
+    private void stopCharacterAnimation() {
+        if(animationTimeline.getStatus() == Animation.Status.RUNNING)
+            animationTimeline.stop();
     }
 }
