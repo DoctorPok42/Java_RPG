@@ -1,0 +1,229 @@
+@startuml
+class Class.bar.bar {
+# String name
+# float maxCapacity
+# float currentCapacity
+# String color
+# Image texture
++ String getName()
++ float getMaxCapacity()
++ float getCurrentCapacity()
++ String getColor()
++ void setTexture(Image)
+}
+
+
+class Class.Skill.Skill {
+- String name
++ String getName()
+}
+
+
+class Class.bar.Feed {
++ void feedMe(float)
++ void decreaseFeed(float)
+}
+
+class Class.Item.Distributor {
+- int money
+- ArrayList<String> snacks
++ int getMoney()
++ ArrayList<String> getSnacks()
++ boolean buySnack(String)
++ boolean hack()
+}
+
+
+class Class.Character.Pnj {
+- List<String> message
++ List<String> getMessage()
+~ void addMessage(String)
+~ void Speak()
+}
+
+
+class Class.Map.Map {
+- String name
+- boolean isLoaded
+- List<Room> rooms
+- List<Item> items
+- ImageView mapView
+- Pane mapContainer
+- boolean isNight
++ String getName()
++ boolean getIsLoaded()
++ List<Room> getRooms()
++ List<Item> getItems()
++ ImageView getMapView()
++ Pane getMapContainer()
++ boolean getIsNight()
++ void setMapView(ImageView)
++ void setIsNight(boolean)
+}
+
+
+enum Class.Character.role {
++  PLAYER
++  STUDENT
++  TEACHER
++  MONSTER
+}
+
+class Class.Item.Item {
+# String name
+# Enum<ItemType> type
+# float x
+# float y
+# int z
++ String getName()
++ Enum<ItemType> getType()
++ float getX()
++ float getY()
++ int getZ()
+}
+
+
+class Class.bar.Fun {
++ void play(float)
++ void decreasePlay(float)
+}
+
+class Class.Menu.Start {
++ void selectOption()
++ void up()
++ void down()
+}
+
+class Class.Item.Canap {
++ void sleep()
+}
+
+class Class.Menu.Option {
+# String value
+# String name
+# Runnable action
++ String getName()
++ String getValue()
++ void select()
+}
+
+
+abstract class Class.Character.Character {
+- String name
+- ImageView persoView
+- int posX
+- int posY
+- int posZ
+- role type
++ String getName()
++ ImageView getPersoView()
++ int getPosX()
++ int getPosY()
++ int getPosZ()
++ role getType()
++ void move(ImageView,StackPane)
+}
+
+
+class Class.Map.Room {
+- String name
+}
+
+enum Class.Item.PcTypeAction {
++  WORK
++  PLAY
++  SEARCH
+}
+
+class Class.Character.Player {
+- int money
+- int timeDays
+- int timeYears
+- int timeHours
+- double fun
+- double weakness
+- double hunger
+- List<Skill> skills
+~ double mapTranslateX
+~ double mapTranslateY
+- Timeline timelineUP
+- Timeline timelineDOWN
+- Timeline timelineLEFT
+- Timeline timelineRIGHT
+- Timeline animationTimeline
+- double movestep
++ int getMoney()
++ int getTimeDays()
++ int getTimeYears()
++ int getTimeHours()
++ double getFun()
++ double getWeakness()
++ double getHunger()
+~ void interact()
+~ void profile()
+~ void menu()
++ void updateStats(Map)
++ void updateTime(Map)
+- Timeline checkKey(KeyCode)
++ void move(ImageView,StackPane)
+- Timeline createMovementTimeline(double,double,ImageView)
+}
+
+
+class Class.Item.Pc {
+- Enum<PcTypeAction> typeAction
++ Enum<PcTypeAction> getTypeAction()
++ void displayMenu()
++ void doAction(int)
+}
+
+
+class Class.bar.Tiredness {
++ void sleep(float)
++ void decreaseSleep(float)
+}
+
+enum Class.Item.ItemType {
++  PC
++  CANAP
++  DISTRIBUTOR
+}
+
+class Class.Menu.Menu {
+# String name
+# String title
+# List<Option> options
+# int selectedOption
+# int id
++ String getName()
++ String getTitle()
++ List<Option> getOptions()
++ int getSelectedOption()
++ int getId()
+}
+
+
+class Class.Engine.Engine {
+- Player player
+- Map map
+- boolean isMoveKey(KeyCode)
+- void onClick(MouseEvent)
+- void changeMap(int)
+- void gameLoop(StackPane)
++ void start(Stage)
+}
+
+
+
+
+Class.bar.bar <|-- Class.bar.Feed
+Class.Item.Item <|-- Class.Item.Distributor
+Class.Character.Character <|-- Class.Character.Pnj
+Class.bar.bar <|-- Class.bar.Fun
+Class.Menu.Menu <|-- Class.Menu.Start
+Class.Item.Item <|-- Class.Item.Canap
+Class.Character.Character <|-- Class.Character.Player
+Class.Item.Item <|-- Class.Item.Pc
+Class.bar.bar <|-- Class.bar.Tiredness
+javafx.application.Application <|-- Class.Engine.Engine
+@enduml
