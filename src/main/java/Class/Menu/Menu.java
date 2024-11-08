@@ -36,10 +36,4 @@ public class Menu {
     public int getId() {
         return this.id;
     }
-
-    public void up() {
-    }
-
-    public void down() {
-    }
 }
