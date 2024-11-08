@@ -58,6 +58,5 @@ public class Map {
 
     public void setIsNight(boolean isNight) {
         this.isNight = isNight;
-        System.out.println("It's night now");
     }
 }
