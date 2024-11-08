@@ -1,9 +1,6 @@
 package Class.Engine;
 
-import Class.Character.Character;
 import Class.Character.Player;
-import Class.Character.role;
-import Class.Item.Item;
 import Class.Map.Map;
 import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
@@ -13,8 +10,7 @@ import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -29,13 +25,6 @@ public class Engine extends Application {
     private void onClick(MouseEvent e) {
         double x = e.getX();
         double y = e.getY();
-        System.out.println("x: " + x + " y: " + y);
-
-        /* for (Item item : map.getItems()) {
-            if (Objects.equals(item.getItemView().getBoundsInParent().getMinX(), x) && Objects.equals(item.getItemView().getBoundsInParent().getMinY(), y)) {
-                System.out.println("Item clicked: " + item.getName());
-            }
-        }*/
     }
 
     private void gameLoop(StackPane gameView) {
@@ -45,7 +34,7 @@ public class Engine extends Application {
                 player.move(e, map.getMapView());
             }
         });
-        gameView.setOnMouseClicked((MouseEvent e) -> onClick(e));
+        gameView.setOnMouseClicked((MouseEvent e) -> onClick(e, logger));
         gameView.requestFocus();
     }
 
