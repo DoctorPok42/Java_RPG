@@ -1,14 +1,7 @@
 package Class.Character;
 
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
-import javafx.util.Duration;
-
-import java.util.Stack;
 
 public abstract class Character {
     private String name;
