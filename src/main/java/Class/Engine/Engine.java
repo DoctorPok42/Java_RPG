@@ -53,7 +53,7 @@ public class Engine extends Application {
     }
 
     private void gameLoop(StackPane gameView) {
-        player.move(map.getMapView(), gameView);
+        player.move(map.getMapView(), gameView, player.getPersoView());
 //        gameView.setOnMouseClicked((MouseEvent e) -> onClick(e));
         Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1), e -> player.updateTime(map)));
         timeline.setCycleCount(Timeline.INDEFINITE);
