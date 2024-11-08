@@ -19,9 +19,9 @@ public class Player extends Character {
     private int timeYears;
     private int timeHours;
 
-    private int fun;
-    private int weakness;
-    private int hunger;
+    private double fun;
+    private double weakness;
+    private double hunger;
 
     private List<Skill> skills;
     double mapTranslateX = 0;
@@ -43,7 +43,7 @@ public class Player extends Character {
         this.timeHours = 0;
         this.fun = 0;
         this.weakness = 0;
-        this.hunger = 0;
+        this.hunger = 10;
     }
 
     //Getter
@@ -59,13 +59,13 @@ public class Player extends Character {
     public int getTimeHours(){
         return this.timeHours;
     }
-    public int getFun(){
+    public double getFun(){
         return this.fun;
     }
-    public int getWeakness(){
+    public double getWeakness(){
         return this.weakness;
     }
-    public int getHunger(){
+    public double getHunger(){
         return this.hunger;
     }
 
@@ -78,6 +78,21 @@ public class Player extends Character {
     }
     void menu(){
         //display menu
+    }
+
+    public void updateStats(Map map) {
+        double fatigueMultiplier = (this.weakness / 10.0) + 1;
+        double hungerMultiplier = (this.hunger / 50.0) + 1;
+
+        if (map.getIsNight()) {
+            this.weakness += 3 * fatigueMultiplier;
+        } else {
+            this.weakness += 1 * fatigueMultiplier;
+        }
+        this.hunger -= 1 * hungerMultiplier;
+
+        this.weakness = Math.max(0, Math.min(this.weakness, 60));
+        this.hunger = Math.max(0, Math.min(this.hunger, 10));
     }
 
     public void updateTime(Map map) {
@@ -97,7 +112,24 @@ public class Player extends Character {
             this.timeDays = 0;
             this.timeYears++;
         }
+
+        updateStats(map);
     }
+
+    private Timeline checkKey(KeyCode code) {
+        if (code == KeyCode.UP || code == KeyCode.Z) {
+            return timelineUP;
+        } else if (code == KeyCode.DOWN || code == KeyCode.S) {
+            return timelineDOWN;
+        } else if (code == KeyCode.LEFT || code == KeyCode.Q) {
+            return timelineLEFT;
+        } else if (code == KeyCode.RIGHT || code == KeyCode.D) {
+            return timelineRIGHT;
+        }
+
+        return null;
+    }
+
     //Move method
     @Override
     public void move(ImageView mapView, StackPane gameView) {
@@ -108,26 +140,12 @@ public class Player extends Character {
         timelineRIGHT = createMovementTimeline(-movestep, 0, mapView);
         //move
         gameView.setOnKeyPressed((KeyEvent e) -> {
-        if (e.getCode() == KeyCode.UP|| e.getCode() == KeyCode.Z) {
-            timelineUP.play();
-        } else if (e.getCode() == KeyCode.DOWN|| e.getCode() == KeyCode.S) {
-            timelineDOWN.play();
-        } else if (e.getCode() == KeyCode.LEFT|| e.getCode() == KeyCode.Q) {
-            timelineLEFT.play();
-        } else if (e.getCode() == KeyCode.RIGHT|| e.getCode() == KeyCode.D) {
-            timelineRIGHT.play();
-        }
+            Timeline timeline = checkKey(e.getCode());
+            timeline.play();
         });
         gameView.setOnKeyReleased((KeyEvent e) -> {
-        if (e.getCode() == KeyCode.UP || e.getCode() == KeyCode.Z) {
-            timelineUP.stop();
-        } else if (e.getCode() == KeyCode.DOWN || e.getCode() == KeyCode.S) {
-            timelineDOWN.stop();
-        } else if (e.getCode() == KeyCode.LEFT || e.getCode() == KeyCode.Q) {
-            timelineLEFT.stop();
-        } else if (e.getCode() == KeyCode.RIGHT || e.getCode() == KeyCode.D) {
-            timelineRIGHT.stop();
-        }
+            Timeline timeline = checkKey(e.getCode());
+            timeline.stop();
     });
     }
     //Create movement timeline
@@ -143,6 +161,4 @@ public class Player extends Character {
         timeline.setCycleCount(Timeline.INDEFINITE);
         return timeline;
     }
-
-
 }
