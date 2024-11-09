@@ -18,6 +18,7 @@ public class Player extends Character {
     private int timeDays;
     private int timeYears;
     private int timeHours;
+    private int nbHoursOfSearch;
 
     private double fun;
     private double weakness;
@@ -41,6 +42,7 @@ public class Player extends Character {
         this.timeDays = 0;
         this.timeYears = 0;
         this.timeHours = 0;
+        this.nbHoursOfSearch = 0;
         this.fun = 0;
         this.weakness = 0;
         this.hunger = 10;
@@ -59,6 +61,9 @@ public class Player extends Character {
     public int getTimeHours(){
         return this.timeHours;
     }
+    public int getNbHoursOfSearch(){
+        return this.nbHoursOfSearch;
+    }
     public double getFun(){
         return this.fun;
     }
@@ -67,6 +72,18 @@ public class Player extends Character {
     }
     public double getHunger(){
         return this.hunger;
+    }
+    public List<Skill> getSkills(){
+        return this.skills;
+    }
+
+    public Skill getSkill(String name) {
+        for (Skill skill : this.skills) {
+            if (skill.getName().equals(name)) {
+                return skill;
+            }
+        }
+        return null;
     }
 
     //Method
@@ -78,6 +95,10 @@ public class Player extends Character {
     }
     void menu(){
         //display menu
+    }
+
+    public void addTimeOfSearch(int hours){
+        this.nbHoursOfSearch += hours;
     }
 
     public void updateStats(Map map) {
@@ -95,6 +116,17 @@ public class Player extends Character {
         this.hunger = Math.clamp(this.hunger, 0, 10);
     }
 
+    private void timeLogic() {
+        if (this.timeHours == 24) {
+            this.timeHours = 0;
+            this.timeDays++;
+        }
+        if (this.timeDays == 60) {
+            this.timeDays = 0;
+            this.timeYears++;
+        }
+    }
+
     public void updateTime(Map map) {
         this.timeHours++;
         if (this.timeHours >= 20 || this.timeHours < 6) {
@@ -104,16 +136,27 @@ public class Player extends Character {
             map.setIsNight(false);
         }
 
-        if (this.timeHours == 24) {
-            this.timeHours = 0;
-            this.timeDays++;
-        }
-        if (this.timeDays == 60) {
-            this.timeDays = 0;
-            this.timeYears++;
-        }
+        timeLogic();
 
         updateStats(map);
+    }
+
+    public void addTime(int hours) {
+        this.timeHours += hours;
+        timeLogic();
+    }
+
+    public void addSkill(Skill skill) {
+        this.skills.add(skill);
+    }
+
+    public void setSkills(Skill argSkills) {
+        for (Skill skill : this.skills) {
+            if (skill.getName().equals(argSkills.getName())) {
+                skill.setLevel(argSkills.getLevel());
+                return;
+            }
+        }
     }
 
     private Timeline checkKey(KeyCode code) {

@@ -19,11 +19,7 @@ public class Skill {
         return this.level;
     }
 
-    public void levelUp(){
-        this.level++;
-    }
-
-    public void levelDown(){
-        this.level--;
+    public void setLevel(int level){
+        this.level = level;
     }
 }
