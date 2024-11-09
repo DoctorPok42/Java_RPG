@@ -7,7 +7,6 @@ import javafx.animation.Timeline;
 import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
@@ -25,7 +24,6 @@ public class Engine extends Application {
     public Engine(){
         this.player = new Player("Character", new Image("file:assets/perso/animtest1.png"));
         this.map = new Map("Map", new ImageView(new Image("file:assets/map/mapTest.png")), true, new ArrayList<>(), new ArrayList<>());
-
     }
     private boolean isMoveKey(KeyCode key) {
         return key == KeyCode.UP || key == KeyCode.DOWN || key == KeyCode.LEFT || key == KeyCode.RIGHT || key == KeyCode.Z || key == KeyCode.Q || key == KeyCode.S || key == KeyCode.D;
@@ -52,8 +50,15 @@ public class Engine extends Application {
         }
     }
 
+    private void displayItems(StackPane gameView) {
+        for (int i = 0; i < map.getItems().size(); i++) {
+            gameView.getChildren().add(map.getItems().get(i).getItemView());
+        }
+    }
+
     private void gameLoop(StackPane gameView) {
         player.move(map.getMapView(), gameView);
+        displayItems(gameView);
 //        gameView.setOnMouseClicked((MouseEvent e) -> onClick(e));
         Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1), e -> player.updateTime(map)));
         timeline.setCycleCount(Timeline.INDEFINITE);
