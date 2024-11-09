@@ -1,7 +1,12 @@
 package Class.Item;
 
+import javafx.scene.Node;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+
 public class Item {
     protected String name;
+    protected Node itemView;
     protected Enum<ItemType> type;
     protected float x;
     protected float y;
@@ -13,6 +18,20 @@ public class Item {
         this.x = x;
         this.y = y;
         this.z = z;
+
+        switch (type) {
+            case ItemType.PC:
+                this.itemView = new ImageView(new Image("file:assets/items/pc.png"));
+                break;
+            case ItemType.CANAP:
+                this.itemView = new ImageView(new Image("file:assets/items/canap.png"));
+                break;
+            case ItemType.DISTRIBUTOR:
+                this.itemView = new ImageView(new Image("file:assets/items/distributor.png"));
+                break;
+            default:
+                break;
+        }
     }
 
     public String getName() {
@@ -33,5 +52,9 @@ public class Item {
 
     public int getZ() {
         return z;
+    }
+
+    public Node getItemView() {
+        return itemView;
     }
 }
