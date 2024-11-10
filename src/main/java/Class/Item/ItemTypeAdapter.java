@@ -8,6 +8,7 @@ import java.io.IOException;
 public class ItemTypeAdapter extends TypeAdapter<Item> {
     @Override
     public void write(JsonWriter out, Item item) throws IOException {
+        // No need to implement this method
     }
 
     @Override
@@ -36,6 +37,9 @@ public class ItemTypeAdapter extends TypeAdapter<Item> {
                     break;
                 case "z":
                     z = in.nextInt();
+                    break;
+                default:
+                    in.skipValue();
                     break;
             }
         }
