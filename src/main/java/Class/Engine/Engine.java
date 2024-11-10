@@ -1,15 +1,27 @@
 package Class.Engine;
 
 import Class.Character.Player;
+import Class.Item.Item;
+import Class.Item.ItemTypeAdapter;
 import Class.Map.Map;
+import com.example.demo1.HelloApplication;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonIOException;
+import com.google.gson.JsonSyntaxException;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
+
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import javafx.application.Application;
@@ -50,6 +62,27 @@ public class Engine extends Application {
         }
     }
 
+    private void loadItems(Map map, int mapLevel) {
+        Item[] items = null;
+        try (FileReader reader = new FileReader("./data/items.json")) {
+            // Read JSON file
+            Gson gson = new GsonBuilder()
+                    .registerTypeAdapter(Item.class, new ItemTypeAdapter())
+                    .create();
+
+            // Parse JSON file
+            items = gson.fromJson(reader, Item[].class);
+            for (int i = 0; i < items.length; i++) {
+                // Add items to the map if they are on the current level
+                if (items[i].getZ() == mapLevel) {
+                    map.getItems().add(items[i]);
+                }
+            }
+        } catch (NullPointerException | IOException | JsonIOException | JsonSyntaxException e) {
+            e.printStackTrace();
+        }
+    }
+
     private void displayItems(StackPane gameView) {
         for (int i = 0; i < map.getItems().size(); i++) {
             gameView.getChildren().add(map.getItems().get(i).getItemView());
@@ -74,7 +107,7 @@ public class Engine extends Application {
         primaryStage.setScene(scene);
         primaryStage.setTitle("Epitech Simulator");
         primaryStage.show();
+        this.loadItems(map, 1);
         gameView.requestFocus();
-
     }
 }
