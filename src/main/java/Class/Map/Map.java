@@ -7,7 +7,7 @@ import javafx.scene.layout.Pane;
 
 public class Map {
     private String name;
-    private  boolean isLoaded;
+    private boolean isLoaded;
     private List<Room> rooms;
     private List<Item> items;
     private ImageView mapView;

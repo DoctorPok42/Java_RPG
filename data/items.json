@@ -1,0 +1,30 @@
+[
+  {
+    "name": "item1",
+    "type": "PC",
+    "x": 0,
+    "y": 0,
+    "z": 0
+  },
+  {
+    "name": "item2",
+    "type": "CANAP",
+    "x": 0,
+    "y": 0,
+    "z": 1
+  },
+  {
+    "name": "item3",
+    "type": "DISTRIBUTOR",
+    "x": 0,
+    "y": 0,
+    "z": 2
+  },
+  {
+    "name": "item4",
+    "type": "PC",
+    "x": 0,
+    "y": 0,
+    "z": 1
+  }
+]
