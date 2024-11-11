@@ -204,4 +204,19 @@ public class Player extends Character {
         timeline.setCycleCount(Timeline.INDEFINITE);
         return timeline;
     }
+
+    public void loadSkills(String filename) {
+        try (FileReader reader = new FileReader(filename)) {
+            // Read JSON file
+            Gson gson = new Gson();
+
+            // Parse JSON file
+            String[] skillNames = gson.fromJson(reader, String[].class);
+            this.skills = Arrays.stream(skillNames)
+                    .map(Skill::new)
+                    .collect(Collectors.toList());
+        } catch (NullPointerException | IOException | JsonIOException | JsonSyntaxException e) {
+            e.printStackTrace();
+        }
+    }
 }
