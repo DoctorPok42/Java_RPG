@@ -108,6 +108,7 @@ public class Engine extends Application {
         primaryStage.setTitle("Epitech Simulator");
         primaryStage.show();
         this.loadItems(map, 1);
+        player.loadSkills("./data/skills.json");
         gameView.requestFocus();
     }
 }
