@@ -2,6 +2,9 @@ package Class.Character;
 
 import Class.Skill.Skill;
 import Class.Map.Map;
+import com.google.gson.Gson;
+import com.google.gson.JsonIOException;
+import com.google.gson.JsonSyntaxException;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.animation.KeyFrame;
@@ -11,7 +14,11 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Player extends Character {
     private int money;
@@ -99,6 +106,22 @@ public class Player extends Character {
 
     public void addTimeOfSearch(int hours){
         this.nbHoursOfSearch += hours;
+    }
+
+    public void addMoney(int money) {
+        this.money += money;
+    }
+
+    public void addFun(double fun) {
+        this.fun += fun;
+    }
+
+    public void eat() {
+        this.hunger += 1;
+    }
+
+    public void sleep(int hours) {
+        this.weakness -= hours;
     }
 
     public void updateStats(Map map) {

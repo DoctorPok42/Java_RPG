@@ -1,5 +1,6 @@
 package Class.Item;
 
+import Class.Character.Player;
 import java.util.ArrayList;
 
 public class Distributor extends Item {
@@ -20,17 +21,31 @@ public class Distributor extends Item {
         return snacks;
     }
 
-    public boolean buySnack(String snack) {
+    private boolean buySnack(Player player, String snack) {
         if (snacks.contains(snack)) {
             snacks.remove(snack);
             money += 1;
+
+            player.eat();
             return true;
         }
         return false;
     }
 
-    public boolean hack() {
-        System.out.println("Hacking...");
+    private boolean hack(Player player) {
+        player.addMoney(money);
+        money = 0;
         return true;
+    }
+
+    @Override
+    public boolean doAction(Player player, Enum<?> action, int time, String snack) {
+        if (!(action instanceof DistributorTypeAction))
+            return false;
+
+        return switch ((DistributorTypeAction) action) {
+            case BUY -> buySnack(player, snack);
+            case HACK -> hack(player);
+        };
     }
 }
