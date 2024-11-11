@@ -39,7 +39,6 @@ public class Pc extends Item {
         return true;
     }
 
-    @Override
     public boolean doAction(Player player, Enum<?> action, int time, String module) {
         if (!(action instanceof PcTypeAction))
             return false;

@@ -13,7 +13,7 @@ public class Canap extends Item {
         return true;
     }
 
-    @Override
+
     public boolean doAction(Player player, Enum<?> action, int time, String module) {
         if (!(action instanceof CanapTypeAction))
             return false;

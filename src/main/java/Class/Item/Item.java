@@ -59,7 +59,7 @@ public class Item {
         return itemView;
     }
 
-    public boolean doAction(Player player, Enum<?> action, int time, String module) {
+    public boolean doAction() {
         return false;
     }
 }

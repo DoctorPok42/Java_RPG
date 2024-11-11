@@ -38,7 +38,6 @@ public class Distributor extends Item {
         return true;
     }
 
-    @Override
     public boolean doAction(Player player, Enum<?> action, int time, String snack) {
         if (!(action instanceof DistributorTypeAction))
             return false;
