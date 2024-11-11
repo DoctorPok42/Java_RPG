@@ -1,5 +1,6 @@
 package Class.Item;
 
+import Class.Character.Player;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -56,5 +57,9 @@ public class Item {
 
     public Node getItemView() {
         return itemView;
+    }
+
+    public boolean doAction() {
+        return false;
     }
 }
