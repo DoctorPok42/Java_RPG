@@ -6,6 +6,13 @@ on:
       - " ga-ignore-"
 
 jobs:
+  size:
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v3
+      - name: Check the size of the repository
+        run: du -skh --exclude=.git
+
   push_to_mirror:
     runs-on: self-hosted
     if: github.event_name == 'push'
