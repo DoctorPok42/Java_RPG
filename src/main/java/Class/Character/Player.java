@@ -55,6 +55,7 @@ public class Player extends Character {
         this.playerCoord = map.getMapContainer().sceneToLocal(this.playerView.getLayoutX(), this.playerView.getLayoutY());
         this.setPosX(this.playerCoord.getX());
         this.setPosY(this.playerCoord.getY());
+
         this.money = 0;
         this.timeDays = 0;
         this.timeYears = 0;
@@ -74,7 +75,10 @@ public class Player extends Character {
         this.playerHitbox.setStrokeWidth(2);
         map.addMapContainer(this.playerHitbox);
 
-
+        timelineUP = createMovementTimeline(0, movestep, map);
+        timelineDOWN = createMovementTimeline(0, -movestep, map);
+        timelineLEFT = createMovementTimeline(movestep, 0, map);
+        timelineRIGHT = createMovementTimeline(-movestep, 0, map);
     }
 
     //Getter
@@ -223,21 +227,14 @@ public class Player extends Character {
 
     //Move method
     @Override
-    public void move(Map map, StackPane gameView) {
-        //def timeline
-        timelineUP = createMovementTimeline(0, movestep, map);
-        timelineDOWN = createMovementTimeline(0, -movestep, map);
-        timelineLEFT = createMovementTimeline(movestep, 0, map);
-        timelineRIGHT = createMovementTimeline(-movestep, 0, map);
-        //move
-        gameView.setOnKeyPressed((KeyEvent e) -> {
+    public void move(ImageView mapView, StackPane gameView, boolean keyUp, KeyEvent e) {
+        if (keyUp) {
             Timeline timeline = checkKey(e.getCode());
             timeline.play();
-        });
-        gameView.setOnKeyReleased((KeyEvent e) -> {
+        } else {
             Timeline timeline = checkKey(e.getCode());
             timeline.stop();
-    });
+        }
     }
     //Create movement timeline
     private Timeline createMovementTimeline(double x, double y, Map map) {

@@ -2,6 +2,7 @@ package Class.Character;
 
 import Class.Map.Map;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
 
@@ -61,5 +62,5 @@ public abstract class Character {
     }
 
     //Method
-    public void move(Map map, StackPane gameView) {}
+    public void move(ImageView mapView, StackPane gameView, boolean keyUp, KeyEvent e) {}
 }
