@@ -4,15 +4,12 @@ import Class.Character.Player;
 import Class.Item.Item;
 import Class.Item.ItemTypeAdapter;
 import Class.Map.Map;
-import com.example.demo1.HelloApplication;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -86,15 +83,27 @@ public class Engine extends Application {
     private void displayItems(StackPane gameView) {
         for (int i = 0; i < map.getItems().size(); i++) {
             gameView.getChildren().add(map.getItems().get(i).getItemView());
+            map.getItems().get(i).getItemView().toFront();
         }
     }
 
     private void gameLoop(StackPane gameView) {
-        player.move(this.map, gameView);
         displayItems(gameView);
         Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1), e -> player.updateTime(map)));
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.play();
+
+        gameView.setOnKeyPressed(e -> {
+            if (isMoveKey(e.getCode())) {
+                player.move(map.getMapView(), gameView, true, e);
+            }
+        });
+
+        gameView.setOnKeyReleased(e -> {
+            if (isMoveKey(e.getCode())) {
+                player.move(map.getMapView(), gameView, false, e);
+            }
+        });
     }
 
     public void start(Stage primaryStage) {
@@ -102,11 +111,11 @@ public class Engine extends Application {
         gameView.setPrefSize(this.map.getViewWidth(), this.map.getViewHeight());
 
         Scene scene = new Scene(gameView);
-        this.gameLoop(gameView);
         primaryStage.setScene(scene);
         primaryStage.setTitle("Epitech Simulator");
         primaryStage.setResizable(false);
         primaryStage.show();
+        this.gameLoop(gameView);
         this.loadItems(map, 1);
         player.loadSkills("./data/skills.json");
         gameView.requestFocus();
