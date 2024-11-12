@@ -34,6 +34,7 @@ public class Engine extends Application {
     private Pane mapContainer;
     private ImageView interactImg;
     private Item itemToInteract;
+    private Item storeItem;
     private boolean canInteract;
 
     //Constructor
@@ -45,6 +46,7 @@ public class Engine extends Application {
         this.interactImg.setFitWidth(32);
         this.interactImg.setFitHeight(32);
         this.itemToInteract = null;
+        this.storeItem = null;
         this.canInteract = false;
     }
     private boolean isMoveKey(KeyCode key) {
@@ -127,6 +129,7 @@ public class Engine extends Application {
             Item item = map.getItems().get(i);
             if (player.getPlayerHitbox().getBoundsInParent().intersects(item.getInteractionHitbox().getBoundsInParent())) {
                 System.out.println("Interaction with " + item.getName());
+                this.storeItem = item;
                 return item;
             }
         }
@@ -137,14 +140,22 @@ public class Engine extends Application {
         // switch sur ItemType
         switch ((ItemType) this.itemToInteract.getType()) {
             case PC:
-                System.out.println("PC");
+                List<ImageView> pcImages = this.itemToInteract.getMenu();
+
+                for (int i = 0; i < pcImages.size(); i++) {
+                    pcImages.get(i).setLayoutX(this.itemToInteract.getX() + 60);
+                    pcImages.get(i).setLayoutY(this.itemToInteract.getY() + (i * 35) + 1.5);
+                    if (!mapContainer.getChildren().contains(pcImages.get(i))) {
+                        mapContainer.getChildren().add(pcImages.get(i));
+                    }
+                }
                 break;
             case CANAP:
                 List<ImageView> canapImages = this.itemToInteract.getMenu();
 
                 for (int i = 0; i < canapImages.size(); i++) {
                     canapImages.get(i).setLayoutX(this.itemToInteract.getX() + 60);
-                    canapImages.get(i).setLayoutY(this.itemToInteract.getY() + (i * 50) + 1.5);
+                    canapImages.get(i).setLayoutY(this.itemToInteract.getY() + (i + 35) + 1.5);
                     if (!mapContainer.getChildren().contains(canapImages.get(i))) {
                         mapContainer.getChildren().add(canapImages.get(i));
                     }
@@ -170,19 +181,13 @@ public class Engine extends Application {
                     interactImg.setLayoutY((double) this.itemToInteract.getHeight() / 2 + this.itemToInteract.getY() - 16);
                     mapContainer.getChildren().add(interactImg);
                 }
-            } else if (mapContainer.getChildren().contains(interactImg)) {
-                this.canInteract = false;
+            } else {
                 mapContainer.getChildren().remove(interactImg);
 
-                if (this.itemToInteract != null && new HashSet<>(mapContainer.getChildren()).containsAll(this.itemToInteract.getMenu())) {
-                    mapContainer.getChildren().removeAll(this.itemToInteract.getMenu());
-                }
-            } else {
-                this.canInteract = false;
+                if (this.storeItem != null && new HashSet<>(mapContainer.getChildren()).containsAll(this.storeItem.getMenu()))
+                    mapContainer.getChildren().removeAll(this.storeItem.getMenu());
 
-                if (this.itemToInteract != null && new HashSet<>(mapContainer.getChildren()).containsAll(this.itemToInteract.getMenu())) {
-                    mapContainer.getChildren().removeAll(this.itemToInteract.getMenu());
-                }
+                this.canInteract = false;
             }
 
             if (e.getCode() == KeyCode.E && this.canInteract) {
