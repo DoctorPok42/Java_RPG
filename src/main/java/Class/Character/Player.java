@@ -67,9 +67,7 @@ public class Player extends Character {
         map.getMapContainer().setTranslateX(map.getViewWidth() / 2 - map.getMapWidth() / 2);
         map.getMapContainer().setTranslateY(map.getViewHeight() / 2 - map.getMapHeight() / 2);
         map.setMapTranslateX(map.getViewWidth() / 2 - map.getMapWidth() / 2);
-        System.out.println(map.getMapTranslateX());
         map.setMapTranslateY(map.getViewHeight() / 2 - map.getMapHeight() / 2);
-        System.out.println(map.getMapTranslateY());
         this.playerHitbox = new Rectangle(playerCoord.getX(),playerCoord.getY(), this.playerView.getFitWidth(), this.playerView.getFitHeight());
         this.playerHitbox.setFill(Color.TRANSPARENT);
         this.playerHitbox.setStroke(Color.YELLOW);

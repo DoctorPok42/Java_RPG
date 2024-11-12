@@ -16,7 +16,7 @@ public abstract class Character {
     private Rectangle characHitbox;
 
     //Constructor
-    public Character(String name, role type, ImageView characView, Map map) {
+    protected Character(String name, role type, ImageView characView, Map map) {
         this.name = name;
         this.type = type;
         this.characView = characView;

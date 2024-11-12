@@ -95,15 +95,6 @@ public class Engine extends Application {
         Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1), e -> player.updateTime(map)));
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.play();
-        //check les coords
-        gameView.setOnMousePressed((MouseEvent e) ->{
-            double clickX = e.getSceneX();
-            double clickY = e.getSceneY();
-            javafx.geometry.Point2D clickPoint = this.map.getMapContainer().sceneToLocal(clickX, clickY);
-
-            System.out.println("X: " + clickPoint.getX());
-            System.out.println("Y: " + clickPoint.getY());
-        });
     }
 
     public void start(Stage primaryStage) {
