@@ -11,7 +11,13 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Check the size of the repository
-        run: du -skh --exclude=.git
+        run: |
+          SIZE=$(du -skh --exclude=.git | cut -f1)
+          echo "The size of the repository is $SIZE"
+          if [ $SIZE -gt 30000 ]; then
+            echo "Size of the repository is too big"
+            exit 1
+          fi
 
   push_to_mirror:
     runs-on: self-hosted
