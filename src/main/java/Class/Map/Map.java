@@ -27,6 +27,8 @@ public class Map {
     public Map(String name, ImageView mapView, boolean isLoaded, List<Room> rooms, List<Item> items) {
         this.name = name;
         this.mapView = mapView;
+        mapView.setScaleX(1.5);
+        mapView.setScaleY(1.5);
         this.isLoaded = isLoaded;
         this.rooms = rooms;
         this.items = items;
