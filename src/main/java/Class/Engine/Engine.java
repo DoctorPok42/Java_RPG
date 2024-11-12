@@ -34,8 +34,8 @@ public class Engine extends Application {
 
     //Constructor
     public Engine(){
-        this.player = new Player("Character", new Image("file:assets/perso/animtest1.png"));
-        this.map = new Map("Map", new ImageView(new Image("file:assets/map/mapTest.png")), true, new ArrayList<>(), new ArrayList<>());
+        this.map = new Map("Map", new ImageView(new Image("file:assets/map/vraimenttestmap.png")), true, new ArrayList<>(), new ArrayList<>());
+        this.player = new Player("Character", new Image("file:assets/perso/animtest1.png"), this.map);
     }
     private boolean isMoveKey(KeyCode key) {
         return key == KeyCode.UP || key == KeyCode.DOWN || key == KeyCode.LEFT || key == KeyCode.RIGHT || key == KeyCode.Z || key == KeyCode.Q || key == KeyCode.S || key == KeyCode.D;
@@ -90,22 +90,22 @@ public class Engine extends Application {
     }
 
     private void gameLoop(StackPane gameView) {
-        player.move(map.getMapView(), gameView);
+        player.move(this.map, gameView);
         displayItems(gameView);
-//        gameView.setOnMouseClicked((MouseEvent e) -> onClick(e));
         Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1), e -> player.updateTime(map)));
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.play();
     }
 
     public void start(Stage primaryStage) {
-        StackPane gameView = new StackPane(map.getMapContainer(), player.getPersoView());
-        gameView.setPrefSize(1080, 720);
+        StackPane gameView = new StackPane(map.getMapContainer(), player.getPlayerView());
+        gameView.setPrefSize(this.map.getViewWidth(), this.map.getViewHeight());
 
         Scene scene = new Scene(gameView);
         this.gameLoop(gameView);
         primaryStage.setScene(scene);
         primaryStage.setTitle("Epitech Simulator");
+        primaryStage.setResizable(false);
         primaryStage.show();
         this.loadItems(map, 1);
         player.loadSkills("./data/skills.json");
