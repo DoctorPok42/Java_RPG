@@ -284,4 +284,9 @@ public class Player extends Character {
             e.printStackTrace();
         }
     }
+
+    // getPlayerHitbox
+    public Rectangle getPlayerHitbox() {
+        return playerHitbox;
+    }
 }

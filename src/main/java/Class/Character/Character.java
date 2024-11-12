@@ -21,8 +21,8 @@ public abstract class Character {
         this.name = name;
         this.type = type;
         this.characView = characView;
-        this.characView.setFitWidth(75);
-        this.characView.setFitHeight(75);
+        this.characView.setFitWidth(37.5);
+        this.characView.setFitHeight(50);
         characCoord = map.getMapContainer().sceneToLocal(this.characView.getLayoutX(), this.characView.getLayoutY());
         this.posX = characCoord.getX();
         this.posY = characCoord.getY();

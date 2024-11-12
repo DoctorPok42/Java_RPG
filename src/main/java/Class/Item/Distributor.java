@@ -7,10 +7,11 @@ public class Distributor extends Item {
     private int money;
     private ArrayList<String> snacks = new ArrayList<String>();
 
-    public Distributor(String name, Enum<ItemType> type, float x, float y, int z, int money, ArrayList<String> snacks) {
+    public Distributor(String name, Enum<ItemType> type, float x, float y, int z, int money) {
         super(name, type, x, y, z);
+
         this.money = money;
-        this.snacks = snacks;
+//        this.snacks = snacks;
     }
 
     public int getMoney() {
