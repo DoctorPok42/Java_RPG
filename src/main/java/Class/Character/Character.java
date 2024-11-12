@@ -1,21 +1,30 @@
 package Class.Character;
 
+import Class.Map.Map;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
+import javafx.scene.shape.Rectangle;
 
 public abstract class Character {
     private String name;
-    private final ImageView persoView;
-    private int posX;
-    private int posY;
+    protected final ImageView characView;
+    private double posX;
+    private double posY;
     private int posZ;
     private role type;
+    protected javafx.geometry.Point2D characCoord;
+    private Rectangle characHitbox;
 
     //Constructor
-    public Character(String name, role type, ImageView persoView) {
+    public Character(String name, role type, ImageView characView, Map map) {
         this.name = name;
         this.type = type;
-        this.persoView = persoView;
+        this.characView = characView;
+        this.characView.setFitWidth(50);
+        this.characView.setFitHeight(50);
+        characCoord = map.getMapContainer().sceneToLocal(this.characView.getLayoutX(), this.characView.getLayoutY());
+        this.posX = characCoord.getX();
+        this.posY = characCoord.getY();
     }
 
     //Getter
@@ -23,15 +32,15 @@ public abstract class Character {
         return this.name;
     }
 
-    public ImageView getPersoView() {
-        return this.persoView;
+    public ImageView getCharacView() {
+        return this.characView;
     }
 
-    public int getPosX() {
+    public double getPosX() {
         return this.posX;
     }
 
-    public int getPosY() {
+    public double getPosY() {
         return this.posY;
     }
 
@@ -43,6 +52,14 @@ public abstract class Character {
         return this.type;
     }
 
+    //setter
+    public void setPosX(double posX) {
+        this.posX = posX;
+    }
+    public void setPosY(double posY) {
+        this.posY = posY;
+    }
+
     //Method
-    public void move(ImageView mapView, StackPane gameView) {}
+    public void move(Map map, StackPane gameView) {}
 }
