@@ -2,10 +2,29 @@ package Class.Item;
 
 import Class.Character.Player;
 import Class.Skill.Skill;
+import javafx.scene.image.ImageView;
 
 public class Pc extends Item {
     public Pc(String name, Enum<ItemType> type, float x, float y, int z) {
         super(name, type, x, y, z);
+
+        this.menu.add(new ImageView("file:assets/interact/pc/work.png"));
+        this.menu.add(new ImageView("file:assets/interact/test4.png"));
+        this.menu.add(new ImageView("file:assets/interact/pc/play.png"));
+        this.menu.add(new ImageView("file:assets/interact/test4.png"));
+        this.menu.add(new ImageView("file:assets/interact/pc/search.png"));
+        this.menu.add(new ImageView("file:assets/interact/test4.png"));
+
+        for (int i = 0; i < this.menu.size(); i++) {
+            ImageView img = (ImageView) this.menu.get(i);
+            if (i % 2 == 0) {
+                img.setFitWidth(83.6);
+                img.setFitHeight(32);
+            } else {
+                img.setFitWidth(91.96);
+                img.setFitHeight(37.5);
+            }
+        }
     }
 
     public void displayMenu() {
