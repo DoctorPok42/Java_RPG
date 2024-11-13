@@ -11,7 +11,6 @@ public class Distributor extends Item {
         super(name, type, x, y, z);
 
         this.money = money;
-//        this.snacks = snacks;
     }
 
     public int getMoney() {

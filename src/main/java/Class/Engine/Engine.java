@@ -23,9 +23,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import java.util.HashSet;
-import java.util.List;
-
 import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -88,7 +85,6 @@ public class Engine extends Application {
             for (int i = 0; i < items.length; i++) {
                 // Add items to the map if they are on the current level
                 if (items[i].getZ() == mapLevel) {
-//                    map.getItems().add(items[i]);
                     switch ((ItemType) items[i].getType()) {
                         case PC:
                             map.getItems().add(new Pc(items[i].getName(), items[i].getType(), items[i].getX(), items[i].getY(), items[i].getZ()));
