@@ -1,18 +1,23 @@
 package Class.Character;
 
-import javafx.scene.image.Image;
+import Class.Map.Map;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.StackPane;
+import javafx.scene.shape.Rectangle;
 
 public abstract class Character {
     private String name;
-    private Image texture;
-    private int posX;
-    private int posY;
+    protected final ImageView characView;
+    private double posX;
+    private double posY;
     private int posZ;
-    private role type ;
+    private Enum<Roles> type;
+    protected javafx.geometry.Point2D characCoord;
+    private Rectangle characHitbox;
 
     //Constructor
-    protected Character(String name, role type, Image texture) {
+    protected Character(String name, Enum<Roles> type, ImageView characView, Map map) {
         this.name = name;
         this.type = type;
         this.characView = characView;
@@ -21,31 +26,48 @@ public abstract class Character {
         characCoord = map.getMapContainer().sceneToLocal(this.characView.getLayoutX(), this.characView.getLayoutY());
         this.posX = characCoord.getX();
         this.posY = characCoord.getY();
-        this.texture = texture;
+    }
+    protected Character(String name, Enum<Roles> type, ImageView characView) {
+        this.name = name;
+        this.type = type;
+        this.characView = characView;
+        this.characView.setFitWidth(37.5);
+        this.characView.setFitHeight(50);
     }
 
     //Getter
-    public String getName(){
+    public String getName() {
         return this.name;
     }
-    public Image getTexture(){
-        return this.texture;
+
+    public ImageView getCharacView() {
+        return this.characView;
     }
-    public int getPosX(){
+
+    public double getPosX() {
         return this.posX;
     }
-    public int getPosY(){
+
+    public double getPosY() {
         return this.posY;
     }
-    public int getPosZ(){
+
+    public int getPosZ() {
         return this.posZ;
     }
-    public role getType(){
+
+    public Enum<Roles> getType() {
         return this.type;
     }
 
-    //Method
-    void move(KeyEvent key) {
-
+    //setter
+    public void setPosX(double posX) {
+        this.posX = posX;
     }
+    public void setPosY(double posY) {
+        this.posY = posY;
+    }
+
+    //Method
+    public void move(ImageView mapView, StackPane gameView, boolean keyUp, KeyEvent e) {}
 }
