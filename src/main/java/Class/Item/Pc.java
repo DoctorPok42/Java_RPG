@@ -9,12 +9,21 @@ public class Pc extends Item {
         super(name, type, x, y, z);
 
         this.menu.add(new ImageView("file:assets/interact/pc/work.png"));
+        this.menu.add(new ImageView("file:assets/interact/test4.png"));
         this.menu.add(new ImageView("file:assets/interact/pc/play.png"));
+        this.menu.add(new ImageView("file:assets/interact/test4.png"));
         this.menu.add(new ImageView("file:assets/interact/pc/search.png"));
+        this.menu.add(new ImageView("file:assets/interact/test4.png"));
 
-        for (ImageView img : this.menu) {
-            img.setFitWidth(83.6);
-            img.setFitHeight(32);
+        for (int i = 0; i < this.menu.size(); i++) {
+            ImageView img = (ImageView) this.menu.get(i);
+            if (i % 2 == 0) {
+                img.setFitWidth(83.6);
+                img.setFitHeight(32);
+            } else {
+                img.setFitWidth(91.96);
+                img.setFitHeight(37.5);
+            }
         }
     }
 

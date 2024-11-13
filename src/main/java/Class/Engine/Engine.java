@@ -13,6 +13,7 @@ import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
@@ -20,6 +21,7 @@ import javafx.scene.layout.StackPane;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import java.util.HashSet;
 import java.util.List;
@@ -36,6 +38,8 @@ public class Engine extends Application {
     private Item itemToInteract;
     private Item storeItem;
     private boolean canInteract;
+    private boolean isInteracting;
+    private int currentAction;
 
     //Constructor
     public Engine() {
@@ -48,6 +52,8 @@ public class Engine extends Application {
         this.itemToInteract = null;
         this.storeItem = null;
         this.canInteract = false;
+        this.isInteracting = false;
+        this.currentAction = 0;
     }
     private boolean isMoveKey(KeyCode key) {
         return key == KeyCode.UP || key == KeyCode.DOWN || key == KeyCode.LEFT || key == KeyCode.RIGHT || key == KeyCode.Z || key == KeyCode.Q || key == KeyCode.S || key == KeyCode.D;
@@ -105,6 +111,9 @@ public class Engine extends Application {
 
     private void displayItems(StackPane gameView) {
         for (int i = 0; i < map.getItems().size(); i++) {
+            gameView.getChildren().add(map.getItems().get(i).getItemView());
+            map.getItems().get(i).getItemView().toFront();
+
             Item item = map.getItems().get(i);
             mapContainer.getChildren().add(item.getInteractionHitbox());
             mapContainer.getChildren().add(item.getHitbox());
@@ -115,20 +124,20 @@ public class Engine extends Application {
         }
     }
 
-    private void detectColision() {
+    private boolean detectColision() {
         for (int i = 0; i < map.getItems().size(); i++) {
             Item item = map.getItems().get(i);
             if (player.getPlayerHitbox().getBoundsInParent().intersects(item.getHitbox().getBoundsInParent())) {
-                System.out.println("Collision with " + item.getName());
+                return true;
             }
         }
+        return false;
     }
 
     private Item detectInteraction() {
         for (int i = 0; i < map.getItems().size(); i++) {
             Item item = map.getItems().get(i);
             if (player.getPlayerHitbox().getBoundsInParent().intersects(item.getInteractionHitbox().getBoundsInParent())) {
-                System.out.println("Interaction with " + item.getName());
                 this.storeItem = item;
                 return item;
             }
@@ -137,33 +146,53 @@ public class Engine extends Application {
     }
 
     private void displayInteractiveMenu() {
-        // switch sur ItemType
-        switch ((ItemType) this.itemToInteract.getType()) {
-            case PC:
-                List<ImageView> pcImages = this.itemToInteract.getMenu();
+        if (this.itemToInteract != null && this.itemToInteract.getType() == ItemType.PC || this.itemToInteract.getType() == ItemType.DISTRIBUTOR || this.itemToInteract.getType() == ItemType.CANAP) {
+            List<ImageView> images = this.itemToInteract.getMenu();
 
-                for (int i = 0; i < pcImages.size(); i++) {
-                    pcImages.get(i).setLayoutX(this.itemToInteract.getX() + 60);
-                    pcImages.get(i).setLayoutY(this.itemToInteract.getY() + (i * 35) + 1.5);
-                    if (!mapContainer.getChildren().contains(pcImages.get(i))) {
-                        mapContainer.getChildren().add(pcImages.get(i));
+            for (int i = 0; i < images.size(); i += 2) {
+                images.get(i).setLayoutX(this.itemToInteract.getX() + 40);
+                images.get(i).setLayoutY(this.itemToInteract.getY() + (i * 18) + 1.5);
+                if (!mapContainer.getChildren().contains(images.get(i))) {
+                    mapContainer.getChildren().add(images.get(i));
+                }
+            }
+        }
+    }
+
+    private void displayActionSelected() {
+        if (this.itemToInteract != null && this.itemToInteract.getType() == ItemType.PC || this.itemToInteract.getType() == ItemType.DISTRIBUTOR || this.itemToInteract.getType() == ItemType.CANAP) {
+            ImageView img = this.itemToInteract.getMenu().get(this.currentAction + 1);
+
+            img.setLayoutX(this.itemToInteract.getX() + 36);
+            img.setLayoutY(this.itemToInteract.getY() + (this.currentAction * 18) - 1.5);
+            if (!mapContainer.getChildren().contains(img)) {
+                mapContainer.getChildren().add(img);
+            }
+
+            for (int i = 0; i < this.itemToInteract.getMenu().size(); i += 2) {
+                if (i != this.currentAction) {
+                    ImageView img2 = this.itemToInteract.getMenu().get(i + 1);
+                    if (mapContainer.getChildren().contains(img2)) {
+                        mapContainer.getChildren().remove(img2);
                     }
                 }
-                break;
-            case CANAP:
-                List<ImageView> canapImages = this.itemToInteract.getMenu();
+            }
+        }
+    }
 
-                for (int i = 0; i < canapImages.size(); i++) {
-                    canapImages.get(i).setLayoutX(this.itemToInteract.getX() + 60);
-                    canapImages.get(i).setLayoutY(this.itemToInteract.getY() + (i + 35) + 1.5);
-                    if (!mapContainer.getChildren().contains(canapImages.get(i))) {
-                        mapContainer.getChildren().add(canapImages.get(i));
-                    }
+    private void moveSelected(KeyEvent e) {
+        List<ImageView> images = this.itemToInteract.getMenu();
+
+        if (this.currentAction != -1) {
+            if (e.getCode() == KeyCode.UP || e.getCode() == KeyCode.Z) {
+                if (this.currentAction > 0) {
+                    this.currentAction -= 2;
                 }
-                break;
-            case DISTRIBUTOR:
-                System.out.println("DISTRIBUTOR");
-                break;
+            } else if (e.getCode() == KeyCode.DOWN || e.getCode() == KeyCode.S) {
+                if (this.currentAction < images.size() - 2) {
+                    this.currentAction += 2;
+                }
+            }
         }
     }
 
@@ -174,6 +203,22 @@ public class Engine extends Application {
         timeline.play();
 
         gameView.setOnKeyPressed(e -> {
+            if (e.getCode() == KeyCode.ESCAPE) {
+                this.isInteracting = false;
+                this.itemToInteract = null;
+                this.canInteract = false;
+                mapContainer.getChildren().remove(interactImg);
+
+                if (this.storeItem != null) {
+                    for (ImageView img : this.storeItem.getMenu()) {
+                        mapContainer.getChildren().remove(img);
+                    }
+                }
+
+                this.currentAction = 0;
+                this.storeItem = null;
+            }
+
             if (this.itemToInteract != null) {
                 this.canInteract = true;
                 if (!mapContainer.getChildren().contains(interactImg)) {
@@ -183,22 +228,28 @@ public class Engine extends Application {
                 }
             } else {
                 mapContainer.getChildren().remove(interactImg);
-
-                if (this.storeItem != null && new HashSet<>(mapContainer.getChildren()).containsAll(this.storeItem.getMenu()))
-                    mapContainer.getChildren().removeAll(this.storeItem.getMenu());
-
-                this.canInteract = false;
             }
 
             if (e.getCode() == KeyCode.E && this.canInteract) {
-                System.out.println("Interacting with " + this.itemToInteract.getName());
+                this.isInteracting = true;
                 displayInteractiveMenu();
+                displayActionSelected();
             }
 
             if (isMoveKey(e.getCode())) {
-                player.move(map.getMapView(), gameView, true, e);
+                if (detectColision()) {
+                    System.out.println("Collision detected");
+                }
+
+                if (this.isInteracting) {
+                    moveSelected(e);
+                    displayActionSelected();
+
+                } else {
+                    player.move(map.getMapView(), gameView, true, e);
+                }
+
                 this.itemToInteract = detectInteraction();
-                detectColision();
             }
         });
 
