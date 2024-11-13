@@ -10,7 +10,7 @@ public class Pnj extends Character {
     private List<String> message;
 
     //Constructor
-    public Pnj(String name, role type, Image texture, Map map) {
+    public Pnj(String name, Roles type, Image texture, Map map) {
         super(name, type, new ImageView(texture), map);
         this.message = new ArrayList<>();
     }

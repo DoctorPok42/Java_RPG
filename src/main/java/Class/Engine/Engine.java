@@ -1,8 +1,7 @@
 package Class.Engine;
 
 import Class.Character.Player;
-import Class.Item.Item;
-import Class.Item.ItemTypeAdapter;
+import Class.Item.*;
 import Class.Map.Map;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -40,7 +39,7 @@ public class Engine extends Application {
     private int currentAction;
 
     //Constructor
-    public Engine(){
+    public Engine() {
         this.map = new Map("Map", new ImageView(new Image("file:assets/map/vraimenttestmap.png")), true, new ArrayList<>(), new ArrayList<>());
         this.player = new Player("Character", new Image("file:assets/perso/animtest1.png"), this.map);
         this.mapContainer = map.getMapContainer();
@@ -57,18 +56,13 @@ public class Engine extends Application {
         return key == KeyCode.UP || key == KeyCode.DOWN || key == KeyCode.LEFT || key == KeyCode.RIGHT || key == KeyCode.Z || key == KeyCode.Q || key == KeyCode.S || key == KeyCode.D;
     }
 
-    private void onClick(MouseEvent e) {
-        double x = e.getX();
-        double y = e.getY();
-    }
-
     private void changeMap(int floor) {
         switch (floor) {
             case 0:
                 map.setMapView(new ImageView(new Image("file:assets/map/mapTest.png")));
                 break;
             case 1:
-                map.setMapView(new ImageView(new Image("file:assets/map/mapTest2.png")));
+                map.setMapView(new ImageView(new Image("file:assets/map/vraimenttestmap.png")));
                 break;
             case 2:
                 map.setMapView(new ImageView(new Image("file:assets/map/mapTest3.png")));
@@ -91,7 +85,19 @@ public class Engine extends Application {
             for (int i = 0; i < items.length; i++) {
                 // Add items to the map if they are on the current level
                 if (items[i].getZ() == mapLevel) {
-                    map.getItems().add(items[i]);
+                    switch ((ItemType) items[i].getType()) {
+                        case PC:
+                            map.getItems().add(new Pc(items[i].getName(), items[i].getType(), items[i].getX(), items[i].getY(), items[i].getZ()));
+                            break;
+                        case CANAP:
+                            map.getItems().add(new Canap(items[i].getName(), items[i].getType(), items[i].getX(), items[i].getY(), items[i].getZ()));
+                            break;
+                        case DISTRIBUTOR:
+                            map.getItems().add(new Distributor(items[i].getName(), items[i].getType(), items[i].getX(), items[i].getY(), items[i].getZ(), 0));
+                            break;
+                        default:
+                            break;
+                    }
                 }
             }
         } catch (NullPointerException | IOException | JsonIOException | JsonSyntaxException e) {
@@ -103,6 +109,7 @@ public class Engine extends Application {
         for (int i = 0; i < map.getItems().size(); i++) {
             gameView.getChildren().add(map.getItems().get(i).getItemView());
             map.getItems().get(i).getItemView().toFront();
+
             Item item = map.getItems().get(i);
             mapContainer.getChildren().add(item.getInteractionHitbox());
             mapContainer.getChildren().add(item.getHitbox());
@@ -247,6 +254,15 @@ public class Engine extends Application {
                 player.move(map.getMapView(), gameView, false, e);
             }
         });
+
+        gameView.setOnMousePressed((MouseEvent e) ->{
+            double clickX = e.getSceneX();
+            double clickY = e.getSceneY();
+            javafx.geometry.Point2D clickPoint = this.map.getMapContainer().sceneToLocal(clickX, clickY);
+
+            System.out.println("X: " + clickPoint.getX());
+            System.out.println("Y: " + clickPoint.getY());
+        });
     }
 
     public void start(Stage primaryStage) {
@@ -258,8 +274,8 @@ public class Engine extends Application {
         primaryStage.setTitle("Epitech Simulator");
         primaryStage.setResizable(false);
         primaryStage.show();
-        this.gameLoop(gameView);
         this.loadItems(map, 1);
+        this.gameLoop(gameView);
         player.loadSkills("./data/skills.json");
         gameView.requestFocus();
     }

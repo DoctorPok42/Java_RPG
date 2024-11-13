@@ -48,7 +48,7 @@ public class Player extends Character {
 
     //Constructor
     public Player(String name, Image texture, Map map) {
-        super(name, role.PLAYER, new ImageView(texture), map);
+        super(name, Roles.PLAYER, new ImageView(texture), map);
         this.playerView = super.characView;
         this.playerView.setLayoutX(map.getViewWidth() / 2 - this.playerView.getFitWidth() / 2);
         this.playerView.setLayoutY(map.getViewHeight() / 2 - this.playerView.getFitHeight() / 2);
@@ -283,5 +283,10 @@ public class Player extends Character {
         } catch (NullPointerException | IOException | JsonIOException | JsonSyntaxException e) {
             e.printStackTrace();
         }
+    }
+
+    // getPlayerHitbox
+    public Rectangle getPlayerHitbox() {
+        return playerHitbox;
     }
 }

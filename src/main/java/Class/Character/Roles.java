@@ -1,5 +1,5 @@
 package Class.Character;
 
-public enum role {
+public enum Roles {
     PLAYER,STUDENT,TEACHER,MONSTER
 }
