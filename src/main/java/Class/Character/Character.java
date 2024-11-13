@@ -1,23 +1,18 @@
 package Class.Character;
 
-import Class.Map.Map;
-import javafx.scene.image.ImageView;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.StackPane;
-import javafx.scene.shape.Rectangle;
 
 public abstract class Character {
     private String name;
-    protected final ImageView characView;
-    private double posX;
-    private double posY;
+    private Image texture;
+    private int posX;
+    private int posY;
     private int posZ;
-    private role type;
-    protected javafx.geometry.Point2D characCoord;
-    private Rectangle characHitbox;
+    private role type ;
 
     //Constructor
-    protected Character(String name, role type, ImageView characView, Map map) {
+    protected Character(String name, role type, Image texture) {
         this.name = name;
         this.type = type;
         this.characView = characView;
@@ -26,41 +21,31 @@ public abstract class Character {
         characCoord = map.getMapContainer().sceneToLocal(this.characView.getLayoutX(), this.characView.getLayoutY());
         this.posX = characCoord.getX();
         this.posY = characCoord.getY();
+        this.texture = texture;
     }
 
     //Getter
-    public String getName() {
+    public String getName(){
         return this.name;
     }
-
-    public ImageView getCharacView() {
-        return this.characView;
+    public Image getTexture(){
+        return this.texture;
     }
-
-    public double getPosX() {
+    public int getPosX(){
         return this.posX;
     }
-
-    public double getPosY() {
+    public int getPosY(){
         return this.posY;
     }
-
-    public int getPosZ() {
+    public int getPosZ(){
         return this.posZ;
     }
-
-    public role getType() {
+    public role getType(){
         return this.type;
     }
 
-    //setter
-    public void setPosX(double posX) {
-        this.posX = posX;
-    }
-    public void setPosY(double posY) {
-        this.posY = posY;
-    }
-
     //Method
-    public void move(ImageView mapView, StackPane gameView, boolean keyUp, KeyEvent e) {}
+    void move(KeyEvent key) {
+
+    }
 }

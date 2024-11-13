@@ -38,7 +38,7 @@ public class Item {
                 this.itemView = new ImageView(new Image("file:assets/items/canap.png"));
                 break;
             case ItemType.DISTRIBUTOR:
-                this.itemView = new ImageView(new Image("file:assets/items/distributor.png"));
+                this.itemView = new ImageView(new Image("file:assets/items/distributeur.png"));
                 break;
             default:
                 break;
