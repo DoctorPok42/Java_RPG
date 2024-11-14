@@ -15,7 +15,6 @@ public class bar {
         this.maxCapacity = maxCapacity;
         this.currentCapacity = currentCapacity;
         this.color = color;
-        this.texture = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/bar.png")));
     }
 
     public String getName() {
@@ -32,6 +31,9 @@ public class bar {
 
     public String getColor() {
         return color;
+    }
+    public Image getTexture() {
+        return texture;
     }
 
     public void setTexture(Image texture) {

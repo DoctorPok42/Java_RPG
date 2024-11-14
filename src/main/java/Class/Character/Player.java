@@ -32,7 +32,7 @@ public class Player extends Character {
     private Item storeItem;
 
     private double fun;
-    private double weakness;
+    private int weakness;
     private double hunger;
 
     private List<Skill> skills;
@@ -102,7 +102,7 @@ public class Player extends Character {
     public double getFun(){
         return this.fun;
     }
-    public double getWeakness(){
+    public int getWeakness(){
         return this.weakness;
     }
     public double getHunger(){
@@ -198,8 +198,7 @@ public class Player extends Character {
         }
 
         timeLogic();
-
-        updateStats(map);
+        this.updateStats(map);
     }
 
     public void addTime(int hours) {

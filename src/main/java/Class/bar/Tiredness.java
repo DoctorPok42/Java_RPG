@@ -1,8 +1,11 @@
 package Class.bar;
 
+import javafx.scene.image.Image;
+
 public class Tiredness extends bar {
-    public Tiredness(String name, int maxCapacity, int currentCapacity) {
-        super(name, maxCapacity, currentCapacity, "blue");
+    public Tiredness(String name, int currentCapacity) {
+        super(name, 60, currentCapacity, "blue");
+        this.texture = new Image("file:assets/items/canap.png");
     }
 
     public void sleep(float amount) {

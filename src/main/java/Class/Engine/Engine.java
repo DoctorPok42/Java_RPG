@@ -7,6 +7,7 @@ import Class.Item.Item;
 import Class.Item.ItemTypeAdapter;
 import Class.Item.*;
 import Class.Map.Map;
+import Class.bar.Tiredness;
 import Class.Skill.Skill;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -14,6 +15,8 @@ import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.geometry.Pos;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -30,6 +33,8 @@ import java.util.List;
 import java.util.Objects;
 
 import javafx.application.Application;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -59,6 +64,63 @@ public class Engine extends Application {
     }
     private boolean isMoveKey(KeyCode key) {
         return key == KeyCode.UP || key == KeyCode.DOWN || key == KeyCode.LEFT || key == KeyCode.RIGHT || key == KeyCode.Z || key == KeyCode.Q || key == KeyCode.S || key == KeyCode.D;
+    }
+
+    Text hours = new Text();
+    Text days = new Text();
+    Text years = new Text();
+    private void displayTime(StackPane gameView) {
+        if (!gameView.getChildren().contains(years)) {
+            years.setFill(javafx.scene.paint.Color.WHITE);
+            years.setStyle("-fx-font: 20 arial;");
+            StackPane.setAlignment(years, Pos.TOP_LEFT);
+            years.setTranslateX(10);
+            years.setTranslateY(10);
+            gameView.getChildren().add(years);
+        }
+        years.setText("Year: "+player.getTimeYears());
+
+        if (!gameView.getChildren().contains(days)) {
+            days.setFill(javafx.scene.paint.Color.WHITE);
+            days.setStyle("-fx-font: 20 arial;");
+            StackPane.setAlignment(days, Pos.TOP_LEFT);
+            days.setTranslateX(100);
+            days.setTranslateY(10);
+            gameView.getChildren().add(days);
+        }
+        days.setText("Day: "+player.getTimeDays());
+
+        if (!gameView.getChildren().contains(hours)) {
+            hours.setFill(javafx.scene.paint.Color.WHITE);
+            hours.setStyle("-fx-font: 20 arial;");
+            StackPane.setAlignment(hours, Pos.TOP_LEFT);
+            hours.setTranslateX(200);
+            hours.setTranslateY(10);
+            gameView.getChildren().add(hours);
+        }
+        hours.setText("Hour: "+player.getTimeHours());
+
+    }
+
+    private void displayTiredness(StackPane gameview){
+        Tiredness tiredness = new Tiredness("Tiredness", this.player.getWeakness());
+        ImageView tirednessBar = new ImageView(tiredness.getTexture());
+        double valueBar = tiredness.getCurrentCapacity()/tiredness.getMaxCapacity();
+        if(!gameview.getChildren().contains(tirednessBar)){
+            tirednessBar.setFitWidth(200);
+            tirednessBar.setFitHeight(25);
+            StackPane.setAlignment(tirednessBar, Pos.TOP_RIGHT);
+            tirednessBar.setTranslateX(-10);
+            tirednessBar.setTranslateY(10);
+            Rectangle2D viewportRect = new Rectangle2D(0, 0, 68, 35);
+            tirednessBar.setViewport(viewportRect);
+            gameview.getChildren().add(tirednessBar);
+        }
+        tirednessBar.setFitWidth(200*valueBar);
+        tirednessBar.setTranslateX(-10-200*(1-valueBar));
+        tirednessBar.setViewport(new Rectangle2D(0, 0, 68*valueBar, 35));
+
+
     }
 
     private void changeMap(int floor) {
@@ -285,11 +347,6 @@ public class Engine extends Application {
                 canap.doAction(player, canap.getActions().get(firstMenu), 1, "module");
             }
         }
-        for (Item item : this.map.getItems()) {
-            item.getItemView().setLayoutX(item.getX());
-            item.getItemView().setLayoutY(item.getY());
-            this.map.getMapContainer().getChildren().add(item.getItemView());
-        }
     }
     double X1 = 0;
     double Y1 = 0;
@@ -298,7 +355,11 @@ public class Engine extends Application {
     private void gameLoop(StackPane gameView) {
         displayPnjs(gameView);
         displayItems(gameView);
-        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1), e -> player.updateTime(map)));
+        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
+            player.updateTime(map);
+            displayTime(gameView);
+            displayTiredness(gameView);
+        }));
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.play();
         gameView.setOnMousePressed((MouseEvent e) ->{
