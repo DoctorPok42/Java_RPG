@@ -22,6 +22,8 @@ public class Item {
     protected float y;
     protected int z;
     protected List<ImageView> menu = new ArrayList<ImageView>();
+    protected List<List<ImageView>> second_menu = new ArrayList<List<ImageView>>();
+    protected ImageView selected_menu = null;
 
     public Item(String name, Enum<ItemType> type, float x, float y, int z) {
         this.name = name;
@@ -51,6 +53,10 @@ public class Item {
 
         this.interactionHitbox = new Rectangle((int) x - 40, (int) y - 40, width + 80, height + 80);
         this.interactionHitbox.setFill(Color.TRANSPARENT);
+
+        this.selected_menu = new ImageView(new Image("file:assets/interact/test4.png"));
+        this.selected_menu.setFitWidth(91.96);
+        this.selected_menu.setFitHeight(37.5);
     }
 
     public String getName() {
@@ -97,7 +103,19 @@ public class Item {
         return false;
     }
 
+    public List<?> getActions() {
+        return null;
+    }
+
     public List<ImageView> getMenu() {
         return menu;
+    }
+
+    public List<List<ImageView>> getSecondMenu() {
+        return second_menu;
+    }
+
+    public ImageView getSelectedMenu() {
+        return selected_menu;
     }
 }

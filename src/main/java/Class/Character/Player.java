@@ -1,5 +1,6 @@
 package Class.Character;
 
+import Class.Item.Item;
 import Class.Skill.Skill;
 import Class.Map.Map;
 import com.google.gson.Gson;
@@ -28,6 +29,7 @@ public class Player extends Character {
     private int timeYears;
     private int timeHours;
     private int nbHoursOfSearch;
+    private Item storeItem;
 
     private double fun;
     private double weakness;
@@ -71,7 +73,7 @@ public class Player extends Character {
         map.setMapTranslateY(map.getViewHeight() / 2 - map.getMapHeight() / 2);
         this.playerHitbox = new Rectangle(playerCoord.getX(),playerCoord.getY(), this.playerView.getFitWidth(), this.playerView.getFitHeight());
         this.playerHitbox.setFill(Color.TRANSPARENT);
-        this.playerHitbox.setStroke(Color.YELLOW);
+        this.playerHitbox.setStroke(Color.TRANSPARENT);
         this.playerHitbox.setStrokeWidth(2);
         map.addMapContainer(this.playerHitbox);
 
@@ -108,6 +110,13 @@ public class Player extends Character {
     }
     public List<Skill> getSkills(){
         return this.skills;
+    }
+    public Item getStoreItem() {
+        return this.storeItem;
+    }
+
+    public void setStoreItem(Item item) {
+        this.storeItem = item;
     }
 
     public Skill getSkill(String name) {
@@ -247,6 +256,14 @@ public class Player extends Character {
 //                    targetHitbox.setStroke(Color.RED);
 //                    targetHitbox.setStrokeWidth(2);
 
+                    Item detectedItem = detectInteraction(targetHitbox, map);
+
+                    if (detectedItem != null) {
+                        this.storeItem = detectedItem;
+                    } else {
+                        this.storeItem = null;
+                    }
+
                     if (!isCollision(targetHitbox, map)) {
                         map.setMapTranslateX(map.getMapTranslateX() + x);
                         map.setMapTranslateY(map.getMapTranslateY() + y);
@@ -267,7 +284,25 @@ public class Player extends Character {
                 return true;
             }
         }
+
+        for (int i = 0; i < map.getItems().size(); i++) {
+            Item item = map.getItems().get(i);
+            if (targetHitbox.getBoundsInParent().intersects(item.getHitbox().getBoundsInParent())) {
+                return true;
+            }
+        }
         return false;
+    }
+
+    private Item detectInteraction(Rectangle targetHitbox, Map map) {
+        for (int i = 0; i < map.getItems().size(); i++) {
+            Item item = map.getItems().get(i);
+            if (targetHitbox.getBoundsInParent().intersects(item.getInteractionHitbox().getBoundsInParent())) {
+                this.storeItem = item;
+                return item;
+            }
+        }
+        return null;
     }
 
     public void loadSkills(String filename) {
