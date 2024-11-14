@@ -2,6 +2,7 @@ package Class.Item;
 
 import Class.Character.Player;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Distributor extends Item {
     private int money;
@@ -46,5 +47,9 @@ public class Distributor extends Item {
             case BUY -> buySnack(player, snack);
             case HACK -> hack(player);
         };
+    }
+
+    public List<DistributorTypeAction> getActions() {
+        return List.of(DistributorTypeAction.class.getEnumConstants());
     }
 }
