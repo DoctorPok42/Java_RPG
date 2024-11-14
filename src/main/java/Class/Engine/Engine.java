@@ -347,11 +347,6 @@ public class Engine extends Application {
                 canap.doAction(player, canap.getActions().get(firstMenu), 1, "module");
             }
         }
-        for (Item item : this.map.getItems()) {
-            item.getItemView().setLayoutX(item.getX());
-            item.getItemView().setLayoutY(item.getY());
-            this.map.getMapContainer().getChildren().add(item.getItemView());
-        }
     }
     double X1 = 0;
     double Y1 = 0;
