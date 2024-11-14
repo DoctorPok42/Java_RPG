@@ -21,7 +21,6 @@ public class Pnj extends Character {
         pnjHitbox.setFill(Color.TRANSPARENT);
         pnjHitbox.setStroke(Color.RED);
         pnjHitbox.setStrokeWidth(2);
-        System.out.println("Pnj named " + name + " created with texture : " + texture.getUrl());
     }
 
     //Getter

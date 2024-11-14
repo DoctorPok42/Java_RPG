@@ -15,7 +15,7 @@ public class Map {
     private boolean isLoaded;
     private List<Room> rooms;
     private List<Item> items;
-    private List<Pnj> Pnjs;
+    private List<Pnj> pnjs;
     private ImageView mapView;
     private Pane mapContainer;
     private boolean isNight;
@@ -35,7 +35,7 @@ public class Map {
         this.isLoaded = isLoaded;
         this.rooms = rooms;
         this.items = items;
-        this.Pnjs = pnjs;
+        this.pnjs = pnjs;
         this.mapContainer = new Pane(mapView);
         this.isNight = false;
         mapWidth = mapView.getImage().getWidth();
@@ -63,7 +63,7 @@ public class Map {
     }
 
     public List<Pnj> getPnjs() {
-        return Pnjs;
+        return pnjs;
     }
 
     public ImageView getMapView() {

@@ -23,7 +23,6 @@ public class PnjTypeAdapter extends TypeAdapter<Pnj> {
         String roleString = null;
         double x = 0;
         double y = 0;
-        int z = 0;
         Image texture = null;
 
         while (in.hasNext()) {
@@ -39,9 +38,6 @@ public class PnjTypeAdapter extends TypeAdapter<Pnj> {
                     break;
                 case "y":
                     y =  in.nextDouble();
-                    break;
-                case "z":
-                    z = in.nextInt();
                     break;
                 case "texture":
                     texture = new Image(in.nextString());
