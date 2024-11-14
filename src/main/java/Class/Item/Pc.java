@@ -4,27 +4,43 @@ import Class.Character.Player;
 import Class.Skill.Skill;
 import javafx.scene.image.ImageView;
 
+import java.util.List;
+
 public class Pc extends Item {
     public Pc(String name, Enum<ItemType> type, float x, float y, int z) {
         super(name, type, x, y, z);
 
         this.menu.add(new ImageView("file:assets/interact/pc/work.png"));
-        this.menu.add(new ImageView("file:assets/interact/test4.png"));
         this.menu.add(new ImageView("file:assets/interact/pc/play.png"));
-        this.menu.add(new ImageView("file:assets/interact/test4.png"));
         this.menu.add(new ImageView("file:assets/interact/pc/search.png"));
-        this.menu.add(new ImageView("file:assets/interact/test4.png"));
+
+        this.second_menu.add(List.of(
+                new ImageView("file:assets/skills/web.png"),
+                new ImageView("file:assets/skills/java.png"),
+                new ImageView("file:assets/skills/devops.png"),
+                new ImageView("file:assets/skills/cyber.png"),
+                new ImageView("file:assets/skills/ai.png"),
+                new ImageView("file:assets/skills/data.png")
+        ));
+        this.second_menu.add(null);
+        this.second_menu.add(null);
 
         for (int i = 0; i < this.menu.size(); i++) {
-            ImageView img = (ImageView) this.menu.get(i);
-            if (i % 2 == 0) {
-                img.setFitWidth(83.6);
-                img.setFitHeight(32);
-            } else {
-                img.setFitWidth(91.96);
-                img.setFitHeight(37.5);
+            ImageView img = this.menu.get(i);
+            img.setFitWidth(83.6);
+            img.setFitHeight(32);
+        }
+
+        for (int i = 0; i < this.second_menu.size(); i++) {
+            if (this.second_menu.get(i) != null) {
+                for (int j = 0; j < this.second_menu.get(i).size(); j++) {
+                    ImageView img = this.second_menu.get(i).get(j);
+                    img.setFitWidth(83.6);
+                    img.setFitHeight(32);
+                }
             }
         }
+
     }
 
     public void displayMenu() {
@@ -66,5 +82,10 @@ public class Pc extends Item {
             case PLAY -> play(player, time);
             case SEARCH -> search(player, time);
         };
+    }
+
+    @Override
+    public List<PcTypeAction> getActions() {
+        return List.of(PcTypeAction.class.getEnumConstants());
     }
 }

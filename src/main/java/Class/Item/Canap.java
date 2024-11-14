@@ -32,4 +32,8 @@ public class Canap extends Item {
             case SLEEP -> sleep(player, time);
         };
     }
+
+    public List<CanapTypeAction> getActions() {
+        return List.of(CanapTypeAction.class.getEnumConstants());
+    }
 }
