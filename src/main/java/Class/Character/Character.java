@@ -12,20 +12,27 @@ public abstract class Character {
     private double posX;
     private double posY;
     private int posZ;
-    private role type;
+    private Enum<Roles> type;
     protected javafx.geometry.Point2D characCoord;
     private Rectangle characHitbox;
 
     //Constructor
-    protected Character(String name, role type, ImageView characView, Map map) {
+    protected Character(String name, Enum<Roles> type, ImageView characView, Map map) {
         this.name = name;
         this.type = type;
         this.characView = characView;
-        this.characView.setFitWidth(75);
-        this.characView.setFitHeight(75);
+        this.characView.setFitWidth(37.5);
+        this.characView.setFitHeight(50);
         characCoord = map.getMapContainer().sceneToLocal(this.characView.getLayoutX(), this.characView.getLayoutY());
         this.posX = characCoord.getX();
         this.posY = characCoord.getY();
+    }
+    protected Character(String name, Enum<Roles> type, ImageView characView) {
+        this.name = name;
+        this.type = type;
+        this.characView = characView;
+        this.characView.setFitWidth(37.5);
+        this.characView.setFitHeight(50);
     }
 
     //Getter
@@ -49,7 +56,7 @@ public abstract class Character {
         return this.posZ;
     }
 
-    public role getType() {
+    public Enum<Roles> getType() {
         return this.type;
     }
 
