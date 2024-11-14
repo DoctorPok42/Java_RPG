@@ -1,5 +1,5 @@
 package Class.Character;
 
 public enum Roles {
-    PLAYER,PEDAGO,AER,MONSTER,
+    PLAYER,PEDAGO,AER,MONSTER
 }
