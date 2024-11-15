@@ -1,5 +1,6 @@
 package Class.Item;
 
+import Class.Character.Pnj;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -24,23 +25,51 @@ public class Item {
     protected List<ImageView> menu = new ArrayList<ImageView>();
     protected List<List<ImageView>> second_menu = new ArrayList<List<ImageView>>();
     protected ImageView selected_menu = null;
+    protected int skin;
 
-    public Item(String name, Enum<ItemType> type, float x, float y, int z) {
+    public Item(String name, Enum<ItemType> type, float x, float y, int z, int skin) {
         this.name = name;
         this.type = type;
         this.x = x;
         this.y = y;
         this.z = z;
+        this.skin = skin;
 
         switch (type) {
             case ItemType.PC:
                 this.itemView = new ImageView(new Image("file:assets/items/pc.png"));
                 break;
             case ItemType.CANAP:
-                this.itemView = new ImageView(new Image("file:assets/items/canap.png"));
+                switch (skin) {
+                    case 1:
+                        this.itemView = new ImageView(new Image("file:assets/items/canapplusgros.png"));
+                        break;
+                    case 2:
+                        this.itemView = new ImageView(new Image("file:assets/items/canapplusgros2.png"));
+                        break;
+                    default:
+                        break;
+                }
                 break;
             case ItemType.DISTRIBUTOR:
                 this.itemView = new ImageView(new Image("file:assets/items/distributeur.png"));
+                break;
+            case ItemType.TABLE:
+                switch (skin) {
+                    case 1:
+                        this.itemView = new ImageView(new Image("file:assets/items/table1.png"));
+                        break;
+                    case 2:
+                        this.itemView = new ImageView(new Image("file:assets/items/table2.png"));
+                        break;
+                    case 3:
+                        this.itemView = new ImageView(new Image("file:assets/items/table3.png"));
+                    default:
+                        break;
+                }
+                break;
+            case ItemType.PNJ:
+                this.itemView = new ImageView(new Image("file:assets/item/pnjinteract.png"));
                 break;
             default:
                 break;
@@ -48,11 +77,17 @@ public class Item {
 
         this.width = (int) itemView.getImage().getWidth();
         this.height = (int) itemView.getImage().getHeight();
+        if (type == ItemType.PNJ) {
+            this.width = 32;
+            this.height = 46;
+        }
         this.hitbox = new Rectangle((int) x, (int) y, width, height);
         this.hitbox.setFill(Color.TRANSPARENT);
 
         this.interactionHitbox = new Rectangle((int) x - 40, (int) y - 40, width + 80, height + 80);
         this.interactionHitbox.setFill(Color.TRANSPARENT);
+        this.interactionHitbox.setStroke(Color.RED);
+        this.interactionHitbox.setStrokeWidth(2);
 
         this.selected_menu = new ImageView(new Image("file:assets/interact/test4.png"));
         this.selected_menu.setFitWidth(91.96);
@@ -118,4 +153,9 @@ public class Item {
     public ImageView getSelectedMenu() {
         return selected_menu;
     }
+
+    public int getSkin() {
+        return skin;
+    }
+
 }
