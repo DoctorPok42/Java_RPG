@@ -1,6 +1,7 @@
 package Class.bar;
 
 import Class.Character.Player;
+import javafx.geometry.Pos;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
@@ -10,8 +11,17 @@ public class bar {
     protected ImageView texture;
     protected Rectangle bar;
 
-    public bar(String name) {
+    public bar(String name, ImageView texture) {
         this.name = name;
+        this.texture = texture;
+        this.texture.setFitWidth(187.6);
+        this.texture.setFitHeight(60.4);
+        StackPane.setAlignment(texture, Pos.BOTTOM_LEFT);
+        this.texture.setTranslateX(5);
+
+        this.bar = new Rectangle(0, -30, 115, 14.5);
+        StackPane.setAlignment(bar, Pos.BOTTOM_LEFT);
+        this.bar.setTranslateX(60);
     }
 
     public String getName() {
@@ -24,5 +34,6 @@ public class bar {
     }
 
     public void update(Player player, StackPane gameView) {
+        // To be implemented in subclasses
     }
 }

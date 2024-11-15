@@ -74,9 +74,10 @@ public class Engine extends Application {
     Text days = new Text();
     Text years = new Text();
     private void displayTime(StackPane gameView) {
+        String styles = "-fx-font: 20 arial;";
         if (!gameView.getChildren().contains(years)) {
             years.setFill(javafx.scene.paint.Color.WHITE);
-            years.setStyle("-fx-font: 20 arial;");
+            years.setStyle(styles);
             StackPane.setAlignment(years, Pos.TOP_LEFT);
             years.setTranslateX(10);
             years.setTranslateY(10);
@@ -86,7 +87,7 @@ public class Engine extends Application {
 
         if (!gameView.getChildren().contains(days)) {
             days.setFill(javafx.scene.paint.Color.WHITE);
-            days.setStyle("-fx-font: 20 arial;");
+            days.setStyle(styles);
             StackPane.setAlignment(days, Pos.TOP_LEFT);
             days.setTranslateX(100);
             days.setTranslateY(10);
@@ -96,7 +97,7 @@ public class Engine extends Application {
 
         if (!gameView.getChildren().contains(hours)) {
             hours.setFill(javafx.scene.paint.Color.WHITE);
-            hours.setStyle("-fx-font: 20 arial;");
+            hours.setStyle(styles);
             StackPane.setAlignment(hours, Pos.TOP_LEFT);
             hours.setTranslateX(200);
             hours.setTranslateY(10);
@@ -242,10 +243,8 @@ public class Engine extends Application {
                 if (this.currentAction > 0) {
                     this.currentAction -= 1;
                 }
-            } else if (e.getCode() == KeyCode.DOWN || e.getCode() == KeyCode.S) {
-                if (this.currentAction < images.size() - 1) {
-                    this.currentAction += 1;
-                }
+            } else if ((e.getCode() == KeyCode.DOWN || e.getCode() == KeyCode.S) && this.currentAction < images.size() - 1) {
+                this.currentAction += 1;
             }
         } else if (this.currentAction != -1) {
             List<ImageView> secondMenu = this.itemToInteract.getSecondMenu().get((this.currentAction / 10) - 1);
@@ -254,18 +253,14 @@ public class Engine extends Application {
                 if (this.currentAction > 10) {
                     this.currentAction -= 1;
                 }
-            } else if (e.getCode() == KeyCode.DOWN || e.getCode() == KeyCode.S) {
-                if ((this.currentAction % 10) < secondMenu.size() - 1) {
-                    this.currentAction += 1;
-                }
+            } else if ((e.getCode() == KeyCode.DOWN || e.getCode() == KeyCode.S) && (this.currentAction % 10) < secondMenu.size() - 1) {
+                this.currentAction += 1;
             }
         }
 
         if (e.getCode() == KeyCode.RIGHT || e.getCode() == KeyCode.D) {
-            if (this.currentAction < 10) {
-                if (this.itemToInteract.getSecondMenu().get(this.currentAction) != null) {
-                    this.currentAction += 10;
-                }
+            if (this.currentAction < 10 && this.itemToInteract.getSecondMenu().get(this.currentAction) != null) {
+                this.currentAction += 10;
             }
         } else if (e.getCode() == KeyCode.LEFT || e.getCode() == KeyCode.Q) {
             if (this.currentAction > 10) {
