@@ -1,42 +1,39 @@
 package Class.bar;
 
-import javafx.scene.image.Image;
-import java.util.Objects;
+import Class.Character.Player;
+import javafx.geometry.Pos;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.StackPane;
+import javafx.scene.shape.Rectangle;
 
 public class bar {
     protected String name;
-    protected float maxCapacity;
-    protected float currentCapacity;
-    protected String color;
-    protected Image texture;
+    protected ImageView texture;
+    protected Rectangle bar;
 
-    public bar(String name, int maxCapacity, int currentCapacity, String color) {
+    public bar(String name, ImageView texture) {
         this.name = name;
-        this.maxCapacity = maxCapacity;
-        this.currentCapacity = currentCapacity;
-        this.color = color;
+        this.texture = texture;
+        this.texture.setFitWidth(187.6);
+        this.texture.setFitHeight(60.4);
+        StackPane.setAlignment(texture, Pos.BOTTOM_LEFT);
+        this.texture.setTranslateX(5);
+
+        this.bar = new Rectangle(0, -30, 115, 14.5);
+        StackPane.setAlignment(bar, Pos.BOTTOM_LEFT);
+        this.bar.setTranslateX(60);
     }
 
     public String getName() {
         return name;
     }
 
-    public float getMaxCapacity() {
-        return maxCapacity;
+    public void display(StackPane gameView) {
+        gameView.getChildren().add(texture);
+        gameView.getChildren().add(bar);
     }
 
-    public float getCurrentCapacity() {
-        return currentCapacity;
-    }
-
-    public String getColor() {
-        return color;
-    }
-    public Image getTexture() {
-        return texture;
-    }
-
-    public void setTexture(Image texture) {
-        this.texture = texture;
+    public void update(Player player, StackPane gameView) {
+        // To be implemented in subclasses
     }
 }
