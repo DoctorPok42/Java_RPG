@@ -2,7 +2,7 @@ package Class.bar;
 
 public class Fun extends bar {
     public Fun(String name, int maxCapacity, int currentCapacity) {
-        super(name, maxCapacity, currentCapacity, "yellow");
+        super(name);
     }
 
     public void play(float amount) {

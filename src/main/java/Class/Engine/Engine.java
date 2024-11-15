@@ -7,8 +7,10 @@ import Class.Item.Item;
 import Class.Item.ItemTypeAdapter;
 import Class.Item.*;
 import Class.Map.Map;
-import Class.bar.Tiredness;
 import Class.Skill.Skill;
+import Class.bar.Feed;
+import Class.bar.Tiredness;
+import Class.bar.bar;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonIOException;
@@ -16,7 +18,6 @@ import com.google.gson.JsonSyntaxException;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.geometry.Pos;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -33,7 +34,6 @@ import java.util.List;
 import java.util.Objects;
 
 import javafx.application.Application;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -47,11 +47,15 @@ public class Engine extends Application {
     private boolean canInteract;
     private boolean isInteracting;
     private int currentAction;
+    private bar weakness;
+    private bar hunger;
 
     //Constructor
     public Engine() {
         this.map = new Map("Map", new ImageView(new Image("file:assets/map/mapavectexture.png")), true, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
         this.player = new Player("Character", new Image("file:assets/perso/animtest1.png"), this.map);
+        this.weakness = new Tiredness("Tiredness");
+        this.hunger = new Feed("Hunger");
         this.mapContainer = map.getMapContainer();
         this.interactImg = new ImageView(new Image("file:assets/interact/e.png"));
         this.interactImg.setFitWidth(32);
@@ -99,27 +103,6 @@ public class Engine extends Application {
             gameView.getChildren().add(hours);
         }
         hours.setText("Hour: "+player.getTimeHours());
-
-    }
-
-    private void displayTiredness(StackPane gameview){
-        Tiredness tiredness = new Tiredness("Tiredness", this.player.getWeakness());
-        ImageView tirednessBar = new ImageView(tiredness.getTexture());
-        double valueBar = tiredness.getCurrentCapacity()/tiredness.getMaxCapacity();
-        if(!gameview.getChildren().contains(tirednessBar)){
-            tirednessBar.setFitWidth(200);
-            tirednessBar.setFitHeight(25);
-            StackPane.setAlignment(tirednessBar, Pos.TOP_RIGHT);
-            tirednessBar.setTranslateX(-10);
-            tirednessBar.setTranslateY(10);
-            Rectangle2D viewportRect = new Rectangle2D(0, 0, 68, 35);
-            tirednessBar.setViewport(viewportRect);
-            gameview.getChildren().add(tirednessBar);
-        }
-        tirednessBar.setFitWidth(200*valueBar);
-        tirednessBar.setTranslateX(-10-200*(1-valueBar));
-        tirednessBar.setViewport(new Rectangle2D(0, 0, 68*valueBar, 35));
-
 
     }
 
@@ -358,7 +341,8 @@ public class Engine extends Application {
         Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
             player.updateTime(map);
             displayTime(gameView);
-            displayTiredness(gameView);
+            weakness.update(player, gameView);
+            hunger.update(player, gameView);
         }));
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.play();
@@ -472,6 +456,8 @@ public class Engine extends Application {
         this.loadPnj(map);
         this.loadItems(map, 1);
         player.loadSkills("./data/skills.json");
+        weakness.display(gameView);
+        hunger.display(gameView);
         this.gameLoop(gameView);
         gameView.requestFocus();
     }

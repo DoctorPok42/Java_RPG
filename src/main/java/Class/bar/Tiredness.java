@@ -1,26 +1,36 @@
 package Class.bar;
 
-import javafx.scene.image.Image;
+import Class.Character.Player;
+import javafx.geometry.Pos;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 
 public class Tiredness extends bar {
-    public Tiredness(String name, int currentCapacity) {
-        super(name, 60, currentCapacity, "blue");
-        this.texture = new Image("file:assets/items/canap.png");
+    public Tiredness(String name) {
+        super(name);
+        this.texture = new ImageView("file:assets/bar/energy.png");
+        this.texture.setFitWidth(187.6);
+        this.texture.setFitHeight(60.4);
+
+        StackPane.setAlignment(texture, Pos.BOTTOM_LEFT);
+        this.texture.setTranslateX(5);
+        this.texture.setTranslateY(-5);
+
+        this.bar = new Rectangle(0, -30, 115, 14.5);
+        this.bar.setFill(Color.web("#ffba08"));
+
+        StackPane.setAlignment(bar, Pos.BOTTOM_LEFT);
+        this.bar.setTranslateX(60);
+        this.bar.setTranslateY(-28);
     }
 
-    public void sleep(float amount) {
-        if (currentCapacity + amount > maxCapacity) {
-            currentCapacity = maxCapacity;
-        } else {
-            currentCapacity += amount;
-        }
+    public void display(StackPane gameView) {
+        super.display(gameView);
     }
 
-    public void decreaseSleep(float amount) {
-        if (currentCapacity - amount < 0f) {
-            currentCapacity = 0f;
-        } else {
-            currentCapacity -= amount;
-        }
+    public void update(Player player, StackPane gameView) {
+        this.bar.setWidth(player.getWeakness());
     }
 }

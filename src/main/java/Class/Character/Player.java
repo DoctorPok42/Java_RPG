@@ -64,8 +64,8 @@ public class Player extends Character {
         this.timeHours = 0;
         this.nbHoursOfSearch = 0;
         this.fun = 0;
-        this.weakness = 0;
-        this.hunger = 10;
+        this.weakness = 115;
+        this.hunger = 115;
 
         map.getMapContainer().setTranslateX(map.getViewWidth() / 2 - map.getMapWidth() / 2);
         map.getMapContainer().setTranslateY(map.getViewHeight() / 2 - map.getMapHeight() / 2);
@@ -102,12 +102,15 @@ public class Player extends Character {
     public double getFun(){
         return this.fun;
     }
-    public int getWeakness(){
+
+    public int getWeakness() {
         return this.weakness;
     }
-    public double getHunger(){
+
+    public double getHunger() {
         return this.hunger;
     }
+
     public List<Skill> getSkills(){
         return this.skills;
     }
@@ -163,18 +166,18 @@ public class Player extends Character {
     }
 
     public void updateStats(Map map) {
-        double fatigueMultiplier = (this.weakness / 10.0) + 1;
-        double hungerMultiplier = (this.hunger / 50.0) + 1;
+        double fatigueMultiplier = (this.weakness / 50.0) + 1;
+        double hungerMultiplier = (this.hunger / 10.0) + 1;
 
         if (map.getIsNight()) {
-            this.weakness += 3 * fatigueMultiplier;
+            this.weakness -= (int) (3 * fatigueMultiplier);
         } else {
-            this.weakness += 1 * fatigueMultiplier;
+            this.weakness -= (int) (1 * fatigueMultiplier);
         }
         this.hunger -= 1 * hungerMultiplier;
 
-        this.weakness = Math.clamp(this.weakness, 0, 60);
-        this.hunger = Math.clamp(this.hunger, 0, 10);
+        this.weakness = Math.clamp(this.weakness, 0, 115);
+        this.hunger = Math.clamp(this.hunger, 0, 115);
     }
 
     private void timeLogic() {
