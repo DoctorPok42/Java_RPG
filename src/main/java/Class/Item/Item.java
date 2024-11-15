@@ -64,6 +64,7 @@ public class Item {
                         break;
                     case 3:
                         this.itemView = new ImageView(new Image("file:assets/items/table3.png"));
+                        break;
                     default:
                         break;
                 }
