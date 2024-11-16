@@ -27,6 +27,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -34,6 +35,8 @@ import java.util.List;
 import java.util.Objects;
 
 import javafx.application.Application;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -49,6 +52,7 @@ public class Engine extends Application {
     private int currentAction;
     private bar weakness;
     private bar hunger;
+    private final Media media = new Media(new File("assets/music/ingame.wav").toURI().toString());
 
     //Constructor
     public Engine() {
@@ -341,6 +345,7 @@ public class Engine extends Application {
     private void gameLoop(StackPane gameView) {
         displayPnjs(gameView);
         displayItems(gameView);
+        displayTime(gameView);
         Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
             player.updateTime(map);
             displayTime(gameView);
@@ -443,10 +448,13 @@ public class Engine extends Application {
         StackPane gameView = new StackPane(map.getMapContainer(), player.getPlayerView());
         gameView.setPrefSize(this.map.getViewWidth(), this.map.getViewHeight());
 
+        MediaPlayer mediaPlayer = new MediaPlayer(media);
+        mediaPlayer.setAutoPlay(true);
+        mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+        mediaPlayer.setVolume(0.2);
+
         Scene scene = new Scene(gameView);
         primaryStage.setScene(scene);
-        primaryStage.setTitle("Epitech Simulator");
-        primaryStage.setResizable(false);
         primaryStage.show();
         this.loadPnj(map);
         this.loadItems(map, 1);

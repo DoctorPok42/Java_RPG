@@ -9,10 +9,9 @@ public class Menu {
     protected int selectedOption;
     protected int id;
 
-    public Menu(String name, String title, List<Option> options, int id) {
+    public Menu(String name, String title, int id) {
         this.name = name;
         this.title = title;
-        this.options = options;
         this.selectedOption = 0;
         this.id = id;
     }
@@ -27,6 +26,11 @@ public class Menu {
 
     public List<Option> getOptions() {
         return this.options;
+    }
+
+    public int selectOption() {
+        this.options.get(this.selectedOption).select();
+        return 0;
     }
 
     public int getSelectedOption() {
