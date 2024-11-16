@@ -14,7 +14,7 @@ import java.io.File;
 import java.util.List;
 
 public class Start extends Menu {
-    private final ImageView title = new ImageView("file:assets/menu/RPG_title.png");
+    private final ImageView titleScene = new ImageView("file:assets/menu/RPG_title.png");
     private final ImageView background = new ImageView("file:assets/menu/background.png");
     private final ImageView cursor = new ImageView("file:assets/menu/cursor.png");
     private final Media media = new Media(new File("assets/music/menu.wav").toURI().toString());
@@ -26,12 +26,12 @@ public class Start extends Menu {
         super("Start", "Start Menu",0);
 
         this.options = List.of(
-            new Option("newGame", "Start New Game", System::gc),
+            new Option("newGame", "Start New Game", System::console),
             new Option("exit", "Exit", () -> System.exit(0))
         );
 
-        StackPane.setAlignment(this.title, Pos.TOP_CENTER);
-        this.title.setTranslateY(50);
+        StackPane.setAlignment(this.titleScene, Pos.TOP_CENTER);
+        this.titleScene.setTranslateY(50);
 
         this.background.setFitWidth(1280);
         this.background.setFitHeight(720);
@@ -46,6 +46,7 @@ public class Start extends Menu {
         }
     }
 
+    @Override
     public int selectOption() {
         this.options.get(this.selectedOption).getAction().run();
 
@@ -84,7 +85,7 @@ public class Start extends Menu {
             gameView.getChildren().add(imageView);
         }
 
-        gameView.getChildren().add(title);
+        gameView.getChildren().add(titleScene);
 
         // play the media
          mediaPlayer.setAutoPlay(true);

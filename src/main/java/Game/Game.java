@@ -34,12 +34,10 @@ public class Game extends Application {
 
         root.setOnKeyPressed(e -> {
             switch (e.getCode()) {
-                case Z:
-                case UP:
+                case Z, UP:
                     this.startMenu.up();
                     break;
-                case S:
-                case DOWN:
+                case S, DOWN:
                     this.startMenu.down();
                     break;
                 case ENTER:
