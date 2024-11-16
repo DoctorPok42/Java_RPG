@@ -22,4 +22,8 @@ public class Option {
     public void select() {
         this.action.run();
     }
+
+    public Runnable getAction() {
+        return this.action;
+    }
 }

@@ -1,35 +1,120 @@
 package Class.Menu;
 
+import javafx.geometry.Pos;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.StackPane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+import java.util.ArrayList;
+
+import java.io.File;
 import java.util.List;
 
 public class Start extends Menu {
+    private final ImageView title = new ImageView("file:assets/menu/RPG_title.png");
+    private final ImageView background = new ImageView("file:assets/menu/background.png");
+    private final ImageView cursor = new ImageView("file:assets/menu/cursor.png");
+    private final Media media = new Media(new File("assets/music/menu.wav").toURI().toString());
+    MediaPlayer mediaPlayer = new MediaPlayer(media);
+    private final Font font = Font.loadFont("file:assets/font/PressStart2P-Regular.ttf", 40);
+    private final List<ImageView> back = new ArrayList<>();
+
     public Start() {
-        super("Start", "Start Menu", List.of(
-            new Option("newGame", "Start New Game", () -> {
-                // System.out.println("New Game");
-            }),
-            new Option("loadGame", "Load Game", () -> {
-                // System.out.println("Load Game");
-            }),
-            new Option("exit", "Exit", () -> {
-                // System.out.println("Exit");
-            })
-        ), 0);
+        super("Start", "Start Menu",0);
+
+        this.options = List.of(
+            new Option("newGame", "Start New Game", System::gc),
+            new Option("exit", "Exit", () -> System.exit(0))
+        );
+
+        StackPane.setAlignment(this.title, Pos.TOP_CENTER);
+        this.title.setTranslateY(50);
+
+        this.background.setFitWidth(1280);
+        this.background.setFitHeight(720);
+        this.selectedOption = 0;
+
+        for (int i = 1; i < 10; i++) {
+            ImageView img = new ImageView("file:assets/menu/parallax/menu_" + i + ".png");
+            img.setFitWidth(1280);
+            img.setFitHeight(720);
+
+            this.back.add(img);
+        }
     }
 
-    public void selectOption() {
-        this.options.get(this.selectedOption).select();
+    public int selectOption() {
+        this.options.get(this.selectedOption).getAction().run();
+
+        if (this.selectedOption == 0) {
+            mediaPlayer.stop();
+        }
+
+        return this.selectedOption + 1;
     }
 
     public void up() {
         if (this.selectedOption > 0) {
             this.selectedOption--;
+        } else {
+            this.selectedOption = this.options.size() - 1;
         }
+
+        this.displayCursor();
     }
 
     public void down() {
-        if (this.selectedOption < this.options.size() - 1) {
+        if (this.selectedOption >= 0 && this.selectedOption < this.options.size() - 1) {
             this.selectedOption++;
+        } else {
+            this.selectedOption = 0;
         }
+
+        this.displayCursor();
+    }
+
+    public void show(StackPane gameView) {
+        gameView.getChildren().clear();
+        gameView.getChildren().add(background);
+
+        for (ImageView imageView : this.back) {
+            gameView.getChildren().add(imageView);
+        }
+
+        gameView.getChildren().add(title);
+
+        // play the media
+         mediaPlayer.setAutoPlay(true);
+         mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+         mediaPlayer.setVolume(0.3);
+
+        // display option
+        for (int i = 0; i < this.options.size(); i++) {
+            Text text = new Text(this.options.get(i).getName());
+            text.setFill(Color.WHITE);
+            text.setStyle(
+                "-fx-font-size: 40;" +
+                "-fx-font-family: 'Press Start 2P';" +
+                "-fx-font-weight: bold;"
+            );
+            StackPane.setAlignment(text, Pos.TOP_CENTER);
+            text.setTranslateY(380 + i * 100);
+            gameView.getChildren().add(text);
+        }
+
+        // display cursor
+        this.cursor.setFitWidth(50);
+        this.cursor.setFitHeight(50);
+        StackPane.setAlignment(cursor, Pos.BASELINE_CENTER);
+        cursor.setTranslateX(330);
+        cursor.setTranslateY(440 + this.selectedOption * 100);
+        gameView.getChildren().add(cursor);
+    }
+
+    public void displayCursor() {
+        cursor.setTranslateY(440 + this.selectedOption * 100);
     }
 }
