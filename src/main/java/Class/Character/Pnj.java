@@ -1,5 +1,6 @@
 package Class.Character;
 
+import Class.Item.Item;
 import javafx.scene.image.Image;
 import java.util.ArrayList;
 import java.util.List;

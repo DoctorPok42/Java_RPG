@@ -8,8 +8,8 @@ import java.util.ArrayList;
 import javafx.scene.image.ImageView;
 
 public class Canap extends Item {
-    public Canap(String name, Enum<ItemType> type, float x, float y, int z) {
-        super(name, type, x, y, z);
+    public Canap(String name, Enum<ItemType> type, float x, float y, int z, int skin) {
+        super(name, type, x, y, z, skin);
 
         this.menu.add(new ImageView("file:assets/interact/canap/sleep.png"));
 
@@ -17,6 +17,7 @@ public class Canap extends Item {
             img.setFitWidth(83.6);
             img.setFitHeight(32);
         }
+        this.second_menu.add(null);
     }
 
     private boolean sleep(Player player, int time) {

@@ -20,6 +20,7 @@ public class ItemTypeAdapter extends TypeAdapter<Item> {
         float x = 0;
         float y = 0;
         int z = 0;
+        int skin = 0;
 
         while (in.hasNext()) {
             switch (in.nextName()) {
@@ -38,6 +39,9 @@ public class ItemTypeAdapter extends TypeAdapter<Item> {
                 case "z":
                     z = in.nextInt();
                     break;
+                case "skin":
+                    skin = in.nextInt();
+                    break;
                 default:
                     in.skipValue();
                     break;
@@ -49,6 +53,6 @@ public class ItemTypeAdapter extends TypeAdapter<Item> {
         // Convert the type string to an ItemType
         ItemType type = ItemType.valueOf(typeString.toUpperCase());
 
-        return new Item(name, type, x, y, z);
+        return new Item(name, type, x, y, z, skin);
     }
 }
