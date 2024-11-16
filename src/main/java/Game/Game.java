@@ -4,6 +4,7 @@ import Class.Engine.Engine;
 import Class.Menu.Start;
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import static java.lang.Thread.sleep;
@@ -26,6 +27,7 @@ public class Game extends Application {
     public void start(Stage primaryStage) {
         StackPane root = new StackPane();
         primaryStage.setTitle("Epitech Simulator");
+        primaryStage.getIcons().add(new Image("file:assets/logo.png"));
         primaryStage.setResizable(false);
         root.setPrefSize(1280, 720);
         Scene scene = new Scene(root);
