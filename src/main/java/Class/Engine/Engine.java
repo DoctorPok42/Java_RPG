@@ -138,6 +138,7 @@ public class Engine extends Application {
             pnjs = gson.fromJson(reader, Pnj[].class);
             for (int i = 0; i < pnjs.length; i++) {
                 map.getPnjs().add(pnjs[i]);
+                map.getItems().add(new PnjInteraction(pnjs[i].getName(), ItemType.PNJ,(float) pnjs[i].getPosX(),(float) pnjs[i].getPosY(), 1, -1, pnjs[i]));
             }
         } catch (NullPointerException | IOException | JsonIOException | JsonSyntaxException e) {
             e.printStackTrace();
@@ -171,15 +172,18 @@ public class Engine extends Application {
                 if (items[i].getZ() == mapLevel) {
                     switch ((ItemType) items[i].getType()) {
                         case PC:
-                            map.getItems().add(new Pc(items[i].getName(), items[i].getType(), items[i].getX(), items[i].getY(), items[i].getZ()));
+                            map.getItems().add(new Pc(items[i].getName(), items[i].getType(), items[i].getX(), items[i].getY(), items[i].getZ(), items[i].getSkin()));
                             break;
                         case CANAP:
-                            map.getItems().add(new Canap(items[i].getName(), items[i].getType(), items[i].getX(), items[i].getY(), items[i].getZ()));
+                            map.getItems().add(new Canap(items[i].getName(), items[i].getType(), items[i].getX(), items[i].getY(), items[i].getZ(), items[i].getSkin()));
                             break;
                         case DISTRIBUTOR:
-                            map.getItems().add(new Distributor(items[i].getName(), items[i].getType(), items[i].getX(), items[i].getY(), items[i].getZ(), 0));
+                            map.getItems().add(new Distributor(items[i].getName(), items[i].getType(), items[i].getX(), items[i].getY(), items[i].getZ(), 0, items[i].getSkin()));
+                            break;
+                        case PNJ:
                             break;
                         default:
+                            map.getItems().add(items[i]);
                             break;
                     }
                 }
@@ -204,8 +208,9 @@ public class Engine extends Application {
         }
     }
 
+
     private void displayInteractiveMenu() {
-        if (this.itemToInteract != null && this.itemToInteract.getType() == ItemType.PC || this.itemToInteract.getType() == ItemType.DISTRIBUTOR || this.itemToInteract.getType() == ItemType.CANAP) {
+        if (this.itemToInteract != null && this.itemToInteract.getType() == ItemType.PC || this.itemToInteract.getType() == ItemType.DISTRIBUTOR || this.itemToInteract.getType() == ItemType.CANAP|| this.itemToInteract.getType() == ItemType.PNJ) {
             List<ImageView> images = this.itemToInteract.getMenu();
 
             for (int i = 0; i < images.size(); i++) {
@@ -219,7 +224,7 @@ public class Engine extends Application {
     }
 
     private void displayActionSelected() {
-        if (this.itemToInteract != null && this.itemToInteract.getType() == ItemType.PC || Objects.requireNonNull(this.itemToInteract).getType() == ItemType.DISTRIBUTOR || this.itemToInteract.getType() == ItemType.CANAP) {
+        if (this.itemToInteract != null && this.itemToInteract.getType() == ItemType.PC || Objects.requireNonNull(this.itemToInteract).getType() == ItemType.DISTRIBUTOR || this.itemToInteract.getType() == ItemType.CANAP|| this.itemToInteract.getType() == ItemType.PNJ) {
             ImageView img = this.itemToInteract.getSelectedMenu();
 
             if (this.currentAction < 10) {
@@ -307,7 +312,7 @@ public class Engine extends Application {
         }
     }
 
-    private void doActionOnEnter() {
+    private void doActionOnEnter(StackPane gameView) {
         List<Skill> skills = player.getSkills();
 
         if (this.itemToInteract != null) {
@@ -327,6 +332,9 @@ public class Engine extends Application {
             } else if (this.itemToInteract.getType() == ItemType.CANAP) {
                 Canap canap = (Canap) this.itemToInteract;
                 canap.doAction(player, canap.getActions().get(firstMenu), 1, "module");
+            } else if ( this.itemToInteract.getType() == ItemType.PNJ) {
+                PnjInteraction pnj = (PnjInteraction) this.itemToInteract;
+                pnj.doAction(this.player, pnj.getActions().get(firstMenu), pnj.getPnj(), gameView);
             }
         }
     }
@@ -424,7 +432,7 @@ public class Engine extends Application {
             }
 
             if (e.getCode() == KeyCode.ENTER && this.isInteracting) {
-                doActionOnEnter();
+                doActionOnEnter(gameView);
             }
         });
 
@@ -434,14 +442,6 @@ public class Engine extends Application {
             }
         });
 
-        gameView.setOnMousePressed((MouseEvent e) ->{
-            double clickX = e.getSceneX();
-            double clickY = e.getSceneY();
-            javafx.geometry.Point2D clickPoint = this.map.getMapContainer().sceneToLocal(clickX, clickY);
-
-            System.out.println("X: " + clickPoint.getX());
-            System.out.println("Y: " + clickPoint.getY());
-        });
     }
 
     public void start(Stage primaryStage) {

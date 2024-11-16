@@ -7,8 +7,8 @@ import javafx.scene.image.ImageView;
 import java.util.List;
 
 public class Pc extends Item {
-    public Pc(String name, Enum<ItemType> type, float x, float y, int z) {
-        super(name, type, x, y, z);
+    public Pc(String name, Enum<ItemType> type, float x, float y, int z, int skin) {
+        super(name, type, x, y, z, skin);
 
         this.menu.add(new ImageView("file:assets/interact/pc/work.png"));
         this.menu.add(new ImageView("file:assets/interact/pc/play.png"));
