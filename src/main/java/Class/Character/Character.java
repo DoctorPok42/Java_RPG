@@ -61,6 +61,9 @@ public abstract class Character {
     }
 
     //setter
+    public void setName(String name) {
+        this.name = name;
+    }
     public void setPosX(double posX) {
         this.posX = posX;
     }

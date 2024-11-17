@@ -81,6 +81,21 @@ public class Player extends Character {
         timelineDOWN = createMovementTimeline(0, -movestep, map);
         timelineLEFT = createMovementTimeline(movestep, 0, map);
         timelineRIGHT = createMovementTimeline(-movestep, 0, map);
+
+        pickName();
+    }
+
+    private void pickName(){
+        try (FileReader reader = new FileReader("./data/playerName.json")) {
+            // Read JSON file
+            Gson gson = new Gson();
+            // Parse JSON file
+            String[] names = gson.fromJson(reader, String[].class);
+            this.setName(names[new java.util.Random().nextInt(names.length)]);
+        } catch (NullPointerException | IOException | JsonIOException | JsonSyntaxException e) {
+            e.printStackTrace();
+            this.setName("John Doe");
+        }
     }
 
     //Getter
@@ -258,13 +273,7 @@ public class Player extends Character {
 //                    targetHitbox.setStroke(Color.RED);
 //                    targetHitbox.setStrokeWidth(2);
 
-                    Item detectedItem = detectInteraction(targetHitbox, map);
-
-                    if (detectedItem != null) {
-                        this.storeItem = detectedItem;
-                    } else {
-                        this.storeItem = null;
-                    }
+                    this.storeItem = detectInteraction(targetHitbox, map);
 
                     if (!isCollision(targetHitbox, map)) {
                         map.setMapTranslateX(map.getMapTranslateX() + x);

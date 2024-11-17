@@ -7,6 +7,7 @@ import Class.Item.Item;
 import Class.Item.ItemTypeAdapter;
 import Class.Item.*;
 import Class.Map.Map;
+import Class.Menu.Profile;
 import Class.Skill.Skill;
 import Class.bar.Feed;
 import Class.bar.Tiredness;
@@ -42,24 +43,26 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 public class Engine extends Application {
-    private Player player;
-    private Map map;
-    private Pane mapContainer;
-    private ImageView interactImg;
+    private final Player player;
+    private final Map map;
+    private final Pane mapContainer;
+    private final ImageView interactImg;
     private Item itemToInteract;
     private boolean canInteract;
     private boolean isInteracting;
     private int currentAction;
-    private bar weakness;
-    private bar hunger;
+    private final bar weakness;
+    private final bar hunger;
     private final Media media = new Media(new File("assets/music/ingame.wav").toURI().toString());
+    private final Profile profileMenu;
 
     //Constructor
     public Engine() {
         this.map = new Map("Map", new ImageView(new Image("file:assets/map/mapavectexture.png")), true, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
-        this.player = new Player("Character", new Image("file:assets/perso/animtest1.png"), this.map);
+        this.player = new Player("John Doe", new Image("file:assets/perso/animtest1.png"), this.map);
         this.weakness = new Tiredness("Tiredness");
         this.hunger = new Feed("Hunger");
+        this.profileMenu = new Profile();
         this.mapContainer = map.getMapContainer();
         this.interactImg = new ImageView(new Image("file:assets/interact/e.png"));
         this.interactImg.setFitWidth(32);
@@ -136,9 +139,9 @@ public class Engine extends Application {
 
             // Parse JSON file
             pnjs = gson.fromJson(reader, Pnj[].class);
-            for (int i = 0; i < pnjs.length; i++) {
-                map.getPnjs().add(pnjs[i]);
-                map.getItems().add(new PnjInteraction(pnjs[i].getName(), ItemType.PNJ,(float) pnjs[i].getPosX(),(float) pnjs[i].getPosY(), 1, -1, pnjs[i]));
+            for (Pnj pnj : pnjs) {
+                map.getPnjs().add(pnj);
+                map.getItems().add(new PnjInteraction(pnj.getName(), ItemType.PNJ, (float) pnj.getPosX(), (float) pnj.getPosY(), 1, -1, pnj));
             }
         } catch (NullPointerException | IOException | JsonIOException | JsonSyntaxException e) {
             e.printStackTrace();
@@ -167,23 +170,23 @@ public class Engine extends Application {
 
             // Parse JSON file
             items = gson.fromJson(reader, Item[].class);
-            for (int i = 0; i < items.length; i++) {
+            for (Item item : items) {
                 // Add items to the map if they are on the current level
-                if (items[i].getZ() == mapLevel) {
-                    switch ((ItemType) items[i].getType()) {
+                if (item.getZ() == mapLevel) {
+                    switch ((ItemType) item.getType()) {
                         case PC:
-                            map.getItems().add(new Pc(items[i].getName(), items[i].getType(), items[i].getX(), items[i].getY(), items[i].getZ(), items[i].getSkin()));
+                            map.getItems().add(new Pc(item.getName(), item.getType(), item.getX(), item.getY(), item.getZ(), item.getSkin()));
                             break;
                         case CANAP:
-                            map.getItems().add(new Canap(items[i].getName(), items[i].getType(), items[i].getX(), items[i].getY(), items[i].getZ(), items[i].getSkin()));
+                            map.getItems().add(new Canap(item.getName(), item.getType(), item.getX(), item.getY(), item.getZ(), item.getSkin()));
                             break;
                         case DISTRIBUTOR:
-                            map.getItems().add(new Distributor(items[i].getName(), items[i].getType(), items[i].getX(), items[i].getY(), items[i].getZ(), 0, items[i].getSkin()));
+                            map.getItems().add(new Distributor(item.getName(), item.getType(), item.getX(), item.getY(), item.getZ(), 0, item.getSkin()));
                             break;
                         case PNJ:
                             break;
                         default:
-                            map.getItems().add(items[i]);
+                            map.getItems().add(item);
                             break;
                     }
                 }
@@ -402,6 +405,8 @@ public class Engine extends Application {
 
                 this.currentAction = 0;
                 player.setStoreItem(null);
+
+                profileMenu.remove(gameView);
             }
 
             if (this.itemToInteract != null) {
@@ -415,13 +420,13 @@ public class Engine extends Application {
                 mapContainer.getChildren().remove(interactImg);
             }
 
-            if (e.getCode() == KeyCode.E && this.canInteract) {
+            if (e.getCode() == KeyCode.E && this.canInteract && !this.isInteracting && !profileMenu.isLoaded()) {
                 this.isInteracting = true;
                 displayInteractiveMenu();
                 displayActionSelected();
             }
 
-            if (isMoveKey(e.getCode())) {
+            if (isMoveKey(e.getCode()) && !profileMenu.isLoaded()) {
                 if (this.isInteracting) {
                     moveSelected(e);
                     displaySecondMenu();
@@ -433,6 +438,10 @@ public class Engine extends Application {
 
             if (e.getCode() == KeyCode.ENTER && this.isInteracting) {
                 doActionOnEnter(gameView);
+            }
+
+            if (e.getCode() == KeyCode.P && !this.isInteracting && !profileMenu.isLoaded()) {
+                profileMenu.show(gameView, player);
             }
         });
 
@@ -459,6 +468,7 @@ public class Engine extends Application {
         this.loadPnj(map);
         this.loadItems(map, 1);
         player.loadSkills("./data/skills.json");
+        profileMenu.loadSkills(player);
         weakness.display(gameView);
         hunger.display(gameView);
         this.gameLoop(gameView);
