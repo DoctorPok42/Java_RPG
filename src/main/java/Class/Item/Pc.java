@@ -51,7 +51,7 @@ public class Pc extends Item {
         if (module == null)
             return false;
 
-        if (time > 2) {
+        if (time >= 2) {
             if (player.getSkill(module) != null) {
                 player.getSkill(module).setLevel(player.getSkill(module).getLevel() + 1);
             } else {
