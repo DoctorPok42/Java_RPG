@@ -22,6 +22,7 @@ public class Profile extends Menu {
     private final Text lastName = new Text("");
     private final Rectangle bar = new Rectangle(0, -30, 525, 24);
     private boolean isLoaded = false;
+    private String font = "Press Start 2P";
 
     public Profile() {
         super("Profile", "Profile Menu", 1);
@@ -46,7 +47,7 @@ public class Profile extends Menu {
 
         for (int i = 0; i < this.skills.size(); i++) {
             Text text = new Text(this.skills.get(i).getName() + ": " + this.skills.get(i).getLevel());
-            text.setFont(new Font("Press Start 2P", 20));
+            text.setFont(new Font(font, 20));
             text.setFill(Color.GREY);
             StackPane.setAlignment(text, Pos.BOTTOM_LEFT);
             text.setTranslateX(
@@ -61,13 +62,13 @@ public class Profile extends Menu {
         this.firstName.setText(player.getName().split(" ")[0]);
         this.lastName.setText(player.getName().split(" ")[1]);
 
-        this.lastName.setFont(new Font("Press Start 2P", 20));
+        this.lastName.setFont(new Font(font, 20));
         this.lastName.setFill(Color.GREY);
         StackPane.setAlignment(this.lastName, Pos.TOP_LEFT);
         this.lastName.setTranslateX(320);
         this.lastName.setTranslateY(309);
 
-        this.firstName.setFont(new Font("Press Start 2P", 20));
+        this.firstName.setFont(new Font(font, 20));
         this.firstName.setFill(Color.GREY);
         StackPane.setAlignment(this.firstName, Pos.TOP_LEFT);
         this.firstName.setTranslateX(320);
@@ -78,7 +79,7 @@ public class Profile extends Menu {
         this.isLoaded = true;
         gameView.getChildren().add(background);
 
-        List<Skill> skills = player.getSkills();
+        skills = player.getSkills();
         int total = 0;
 
         // Display name of the player

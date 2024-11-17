@@ -91,7 +91,7 @@ public class Player extends Character {
             Gson gson = new Gson();
             // Parse JSON file
             String[] names = gson.fromJson(reader, String[].class);
-            this.setName(names[(int) (Math.random() * names.length)]);
+            this.setName(names[new java.util.Random().nextInt(names.length)]);
         } catch (NullPointerException | IOException | JsonIOException | JsonSyntaxException e) {
             e.printStackTrace();
             this.setName("John Doe");
