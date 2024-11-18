@@ -9,6 +9,7 @@ import Class.Item.*;
 import Class.Map.Map;
 import Class.Menu.End;
 import Class.Menu.Profile;
+import Class.Music.Music;
 import Class.Skill.Skill;
 import Class.bar.Feed;
 import Class.bar.Tiredness;
@@ -54,7 +55,7 @@ public class Engine extends Application {
     private int currentAction;
     private final bar weakness;
     private final bar hunger;
-    private final Media media = new Media(new File("assets/music/ingame.wav").toURI().toString());
+    private final Music music = new Music("assets/music/ingame.wav", 0.3);
     private final Profile profileMenu;
     private final End endMenu;
 
@@ -385,6 +386,9 @@ public class Engine extends Application {
         gameView.setOnKeyPressed(e -> {
             this.itemToInteract = player.getStoreItem();
             if (e.getCode() == KeyCode.ESCAPE) {
+                if (!music.isPlaying())
+                    music.play();
+
                 this.isInteracting = false;
                 this.itemToInteract = null;
                 this.canInteract = false;
@@ -410,7 +414,6 @@ public class Engine extends Application {
 
                 this.currentAction = 0;
                 player.setStoreItem(null);
-
                 profileMenu.remove(gameView);
                 endMenu.remove(gameView);
             }
@@ -451,6 +454,7 @@ public class Engine extends Application {
             }
 
             if (e.getCode() == KeyCode.W && !this.isInteracting && !profileMenu.isLoaded() && !endMenu.isLoaded()) {
+                music.pause();
                 endMenu.show(gameView, player);
             }
         });
@@ -466,11 +470,7 @@ public class Engine extends Application {
     public void start(Stage primaryStage) {
         StackPane gameView = new StackPane(map.getMapContainer(), player.getPlayerView());
         gameView.setPrefSize(this.map.getViewWidth(), this.map.getViewHeight());
-
-        MediaPlayer mediaPlayer = new MediaPlayer(media);
-        mediaPlayer.setAutoPlay(true);
-        mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
-        mediaPlayer.setVolume(0.2);
+        music.play();
 
         Scene scene = new Scene(gameView);
         primaryStage.setScene(scene);
