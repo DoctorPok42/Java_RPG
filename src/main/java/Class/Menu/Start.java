@@ -1,24 +1,20 @@
 package Class.Menu;
 
+import Class.Music.Music;
 import javafx.geometry.Pos;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import java.util.ArrayList;
-
-import java.io.File;
 import java.util.List;
 
 public class Start extends Menu {
     private final ImageView titleScene = new ImageView("file:assets/menu/RPG_title.png");
     private final ImageView background = new ImageView("file:assets/menu/background.png");
     private final ImageView cursor = new ImageView("file:assets/menu/cursor.png");
-    private final Media media = new Media(new File("assets/music/menu.wav").toURI().toString());
-    MediaPlayer mediaPlayer = new MediaPlayer(media);
+    private final Music music = new Music("assets/music/menu.wav", 0.3);
     private final Font font = Font.loadFont("file:assets/font/PressStart2P-Regular.ttf", 40);
     private final List<ImageView> back = new ArrayList<>();
 
@@ -51,7 +47,7 @@ public class Start extends Menu {
         this.options.get(this.selectedOption).getAction().run();
 
         if (this.selectedOption == 0) {
-            mediaPlayer.stop();
+            music.stop();
         }
 
         return this.selectedOption + 1;
@@ -88,9 +84,7 @@ public class Start extends Menu {
         gameView.getChildren().add(titleScene);
 
         // play the media
-         mediaPlayer.setAutoPlay(true);
-         mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
-         mediaPlayer.setVolume(0.3);
+        music.play();
 
         // display option
         for (int i = 0; i < this.options.size(); i++) {

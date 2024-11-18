@@ -177,7 +177,7 @@ public class Player extends Character {
     }
 
     public void sleep(int hours) {
-        this.weakness -= hours;
+        this.weakness += hours;
     }
 
     public void updateStats(Map map) {
