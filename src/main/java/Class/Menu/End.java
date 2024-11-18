@@ -17,9 +17,9 @@ public class End extends Menu {
     private final ImageView background = new ImageView("file:assets/menu/end/menu.png");
     private boolean isLoaded = false;
     private final Rectangle backgroundRect = new Rectangle(1280, 720, Color.rgb(0, 0, 0, 0.5));
-    private final Text name = new Text();
+    private final Text playerNameText = new Text();
     private final Text endText = new Text();
-    private final String font = "Press Start 2P";
+    private final static String font = "Press Start 2P";
     private List<String> endTexts = new ArrayList<String>();
     private int grade = 0;
 
@@ -42,28 +42,28 @@ public class End extends Menu {
 
     public void setGrade(Player player) {
         List<Skill> skills = player.getSkills();
-        int grade = 0;
+        int selectedGrade = 0;
         boolean isHungry = player.getHunger() > 0;
         boolean isWeak = player.getWeakness() > 0;
         double isFun = player.getFun();
 
         for (Skill skill : skills) {
             if (skill.getLevel() >= 8) {
-                grade++;
+                selectedGrade++;
             }
         }
 
-        if (grade == skills.size() && isHungry && isWeak && isFun > 0) {
+        if (selectedGrade == skills.size() && isHungry && isWeak && isFun > 0) {
             this.grade = 0; // Excellent
-        } else if (grade == skills.size() && isHungry && isWeak) {
+        } else if (selectedGrade == skills.size() && isHungry && isWeak) {
             this.grade = 1; // Bad
-        } else if (grade == skills.size() && isHungry) {
+        } else if (selectedGrade == skills.size() && isHungry) {
             this.grade = 2; // Average
-        } else if (grade == skills.size() && isWeak) {
+        } else if (selectedGrade == skills.size() && isWeak) {
             this.grade = 3; // Good
-        } else if (grade == skills.size()) {
+        } else if (selectedGrade == skills.size()) {
             this.grade = 4; // Average
-        } else if (grade < skills.size() && isFun > 0) {
+        } else if (selectedGrade < skills.size() && isFun > 0) {
             this.grade = 5; // Average
         } else {
             this.grade = 6; // Bad
@@ -75,18 +75,18 @@ public class End extends Menu {
     }
 
     public void setName(String name) {
-        this.name.setText(name);
-        this.name.setFont(new Font(font, 30));
-        this.name.setFill(Color.BLACK);
-        StackPane.setAlignment(this.name, Pos.CENTER);
-        this.name.setTranslateY(100);
+        this.playerNameText.setText(name);
+        this.playerNameText.setFont(new Font(font, 30));
+        this.playerNameText.setFill(Color.BLACK);
+        StackPane.setAlignment(this.playerNameText, Pos.CENTER);
+        this.playerNameText.setTranslateY(100);
     }
 
     public void show(StackPane gameView, Player player) {
         this.isLoaded = true;
         gameView.getChildren().add(backgroundRect);
         gameView.getChildren().add(background);
-        gameView.getChildren().add(name);
+        gameView.getChildren().add(playerNameText);
 
         setGrade(player);
 
@@ -102,7 +102,7 @@ public class End extends Menu {
         this.isLoaded = false;
         gameView.getChildren().remove(backgroundRect);
         gameView.getChildren().remove(background);
-        gameView.getChildren().remove(name);
+        gameView.getChildren().remove(playerNameText);
         gameView.getChildren().remove(endText);
     }
 }
