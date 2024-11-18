@@ -7,6 +7,7 @@ import Class.Item.Item;
 import Class.Item.ItemTypeAdapter;
 import Class.Item.*;
 import Class.Map.Map;
+import Class.Menu.End;
 import Class.Menu.Profile;
 import Class.Skill.Skill;
 import Class.bar.Feed;
@@ -55,6 +56,7 @@ public class Engine extends Application {
     private final bar hunger;
     private final Media media = new Media(new File("assets/music/ingame.wav").toURI().toString());
     private final Profile profileMenu;
+    private final End endMenu;
 
     //Constructor
     public Engine() {
@@ -63,6 +65,7 @@ public class Engine extends Application {
         this.weakness = new Tiredness("Tiredness");
         this.hunger = new Feed("Hunger");
         this.profileMenu = new Profile();
+        this.endMenu = new End();
         this.mapContainer = map.getMapContainer();
         this.interactImg = new ImageView(new Image("file:assets/interact/e.png"));
         this.interactImg.setFitWidth(32);
@@ -349,14 +352,16 @@ public class Engine extends Application {
         displayPnjs(gameView);
         displayItems(gameView);
         displayTime(gameView);
-        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
-            player.updateTime(map);
-            displayTime(gameView);
-            weakness.update(player, gameView);
-            hunger.update(player, gameView);
-        }));
-        timeline.setCycleCount(Timeline.INDEFINITE);
-        timeline.play();
+            Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
+                if (!endMenu.isLoaded()) {
+                    player.updateTime(map);
+                    displayTime(gameView);
+                    weakness.update(player, gameView);
+                    hunger.update(player, gameView);
+                }
+            }));
+            timeline.setCycleCount(Timeline.INDEFINITE);
+            timeline.play();
         gameView.setOnMousePressed((MouseEvent e) ->{
             double clickX = e.getSceneX();
             double clickY = e.getSceneY();
@@ -407,6 +412,7 @@ public class Engine extends Application {
                 player.setStoreItem(null);
 
                 profileMenu.remove(gameView);
+                endMenu.remove(gameView);
             }
 
             if (this.itemToInteract != null) {
@@ -420,13 +426,13 @@ public class Engine extends Application {
                 mapContainer.getChildren().remove(interactImg);
             }
 
-            if (e.getCode() == KeyCode.E && this.canInteract && !this.isInteracting && !profileMenu.isLoaded()) {
+            if (e.getCode() == KeyCode.E && this.canInteract && !this.isInteracting && !profileMenu.isLoaded() && !endMenu.isLoaded()) {
                 this.isInteracting = true;
                 displayInteractiveMenu();
                 displayActionSelected();
             }
 
-            if (isMoveKey(e.getCode()) && !profileMenu.isLoaded()) {
+            if (isMoveKey(e.getCode()) && !profileMenu.isLoaded() && !endMenu.isLoaded()) {
                 if (this.isInteracting) {
                     moveSelected(e);
                     displaySecondMenu();
@@ -440,8 +446,12 @@ public class Engine extends Application {
                 doActionOnEnter(gameView);
             }
 
-            if (e.getCode() == KeyCode.P && !this.isInteracting && !profileMenu.isLoaded()) {
+            if (e.getCode() == KeyCode.P && !this.isInteracting && !profileMenu.isLoaded() && !endMenu.isLoaded()) {
                 profileMenu.show(gameView, player);
+            }
+
+            if (e.getCode() == KeyCode.W && !this.isInteracting && !profileMenu.isLoaded() && !endMenu.isLoaded()) {
+                endMenu.show(gameView, player);
             }
         });
 
@@ -469,6 +479,7 @@ public class Engine extends Application {
         this.loadItems(map, 1);
         player.loadSkills("./data/skills.json");
         profileMenu.loadSkills(player);
+        endMenu.setName(player.getName());
         weakness.display(gameView);
         hunger.display(gameView);
         this.gameLoop(gameView);

@@ -65,6 +65,7 @@ public class Pc extends Item {
     }
 
     private boolean play(Player player, int time) {
+        player.addFun(time);
         player.addTime(time);
         return true;
     }
