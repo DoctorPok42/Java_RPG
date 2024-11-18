@@ -16,6 +16,7 @@ import java.util.List;
 
 public class Profile extends Menu {
     private final ImageView background = new ImageView("file:assets/menu/profile/carte.png");
+    private final Rectangle backgroundRect = new Rectangle(1280, 720, Color.rgb(0, 0, 0, 0.5));
     private List<Skill> skills;
     private final List<Text> texts = new ArrayList<>();
     private final Text firstName = new Text("");
@@ -77,6 +78,7 @@ public class Profile extends Menu {
 
     public void show(StackPane gameView, Player player) {
         this.isLoaded = true;
+        gameView.getChildren().add(backgroundRect);
         gameView.getChildren().add(background);
 
         skills = player.getSkills();
@@ -101,6 +103,7 @@ public class Profile extends Menu {
 
     public void remove(StackPane gameView) {
         this.isLoaded = false;
+        gameView.getChildren().remove(backgroundRect);
         gameView.getChildren().remove(background);
         gameView.getChildren().remove(firstName);
         gameView.getChildren().remove(lastName);
