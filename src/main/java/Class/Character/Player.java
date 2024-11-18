@@ -196,7 +196,7 @@ public class Player extends Character {
     }
 
     private void timeLogic() {
-        if (this.timeHours == 24) {
+        if (this.timeHours >= 24) {
             this.timeHours = 0;
             this.timeDays++;
         }
