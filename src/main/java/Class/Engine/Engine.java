@@ -55,9 +55,10 @@ public class Engine extends Application {
     private int currentAction;
     private final bar weakness;
     private final bar hunger;
-    private final Music music = new Music("assets/music/ingame.wav", 0.3);
+    private final Music music;
     private final Profile profileMenu;
     private final End endMenu;
+    private final boolean isEnd = false;
 
     //Constructor
     public Engine() {
@@ -67,6 +68,7 @@ public class Engine extends Application {
         this.hunger = new Feed("Hunger");
         this.profileMenu = new Profile();
         this.endMenu = new End();
+        this.music = new Music("assets/music/ingame.wav", 0.3);
         this.mapContainer = map.getMapContainer();
         this.interactImg = new ImageView(new Image("file:assets/interact/e.png"));
         this.interactImg.setFitWidth(32);
@@ -345,6 +347,19 @@ public class Engine extends Application {
             }
         }
     }
+
+    private void checkEndGame(StackPane gameView) {
+        if (player.getTimeDays() >= 60) {
+            music.pause();
+            endMenu.show(gameView, player);
+        }
+
+        if (player.getHunger() <= 0 || player.getWeakness() <= 0) {
+            music.pause();
+            endMenu.show(gameView, player);
+        }
+    }
+
     double X1 = 0;
     double Y1 = 0;
     double X2 = 0;
@@ -360,6 +375,9 @@ public class Engine extends Application {
                     weakness.update(player, gameView);
                     hunger.update(player, gameView);
                 }
+
+                if (!endMenu.isLoaded())
+                    checkEndGame(gameView);
             }));
             timeline.setCycleCount(Timeline.INDEFINITE);
             timeline.play();
@@ -381,6 +399,8 @@ public class Engine extends Application {
                 System.out.println("Width "+w);
                 System.out.println("Height "+h);
                 System.out.println(X1+ ", "+ Y1 + ", "+ w + ", "+ h);
+
+                X1 = X2 = Y1 = Y2 = 0;
             }
         });
         gameView.setOnKeyPressed(e -> {
@@ -451,11 +471,6 @@ public class Engine extends Application {
 
             if (e.getCode() == KeyCode.P && !this.isInteracting && !profileMenu.isLoaded() && !endMenu.isLoaded()) {
                 profileMenu.show(gameView, player);
-            }
-
-            if (e.getCode() == KeyCode.W && !this.isInteracting && !profileMenu.isLoaded() && !endMenu.isLoaded()) {
-                music.pause();
-                endMenu.show(gameView, player);
             }
         });
 
