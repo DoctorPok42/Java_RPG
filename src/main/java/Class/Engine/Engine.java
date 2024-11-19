@@ -21,6 +21,7 @@ import com.google.gson.JsonSyntaxException;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -393,6 +394,7 @@ public class Engine extends Application {
                 this.itemToInteract = null;
                 this.canInteract = false;
                 mapContainer.getChildren().remove(interactImg);
+                gameView.getChildren().remove(gameView.lookup("#dialogBox1"));
 
                 if (player.getStoreItem() != null) {
                     for (ImageView img : player.getStoreItem().getMenu()) {
