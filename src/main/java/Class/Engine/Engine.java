@@ -7,6 +7,8 @@ import Class.Item.Item;
 import Class.Item.ItemTypeAdapter;
 import Class.Item.*;
 import Class.Map.Map;
+import Class.Map.Obstacles;
+import Class.Map.obstaclesTypeAdaptater;
 import Class.Menu.End;
 import Class.Menu.Profile;
 import Class.Music.Music;
@@ -31,16 +33,19 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
 import javafx.application.Application;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -56,9 +61,10 @@ public class Engine extends Application {
     private int currentAction;
     private final bar weakness;
     private final bar hunger;
-    private final Music music = new Music("assets/music/ingame.wav", 0.3);
+    private final Music music;
     private final Profile profileMenu;
     private final End endMenu;
+    private static final boolean isEnd = false;
 
     //Constructor
     public Engine() {
@@ -68,6 +74,7 @@ public class Engine extends Application {
         this.hunger = new Feed("Hunger");
         this.profileMenu = new Profile();
         this.endMenu = new End();
+        this.music = new Music("assets/music/ingame.wav", 0.3);
         this.mapContainer = map.getMapContainer();
         this.interactImg = new ImageView(new Image("file:assets/interact/e.png"));
         this.interactImg.setFitWidth(32);
@@ -346,6 +353,19 @@ public class Engine extends Application {
             }
         }
     }
+
+    private void checkEndGame(StackPane gameView) {
+        if (player.getTimeDays() >= 60) {
+            music.pause();
+            endMenu.show(gameView, player);
+        }
+
+        if (player.getHunger() <= 0 || player.getWeakness() <= 0) {
+            music.pause();
+            endMenu.show(gameView, player);
+        }
+    }
+
     double X1 = 0;
     double Y1 = 0;
     double X2 = 0;
@@ -361,27 +381,110 @@ public class Engine extends Application {
                     weakness.update(player, gameView);
                     hunger.update(player, gameView);
                 }
+
+                if (!endMenu.isLoaded())
+                    checkEndGame(gameView);
             }));
             timeline.setCycleCount(Timeline.INDEFINITE);
             timeline.play();
-        gameView.setOnMousePressed((MouseEvent e) ->{
+        gameView.setOnMousePressed((MouseEvent e) -> {
             double clickX = e.getSceneX();
             double clickY = e.getSceneY();
             javafx.geometry.Point2D clickPoint = map.getMapContainer().sceneToLocal(clickX, clickY);
+            Rectangle previewRect = new Rectangle();
 
             if(e.isPrimaryButtonDown()){
                 X1 = clickPoint.getX();
                 Y1 = clickPoint.getY();
-                System.out.println("X: " + clickPoint.getX());
-                System.out.println("Y: " + clickPoint.getY());
+
+                previewRect.setX(X1);
+                previewRect.setY(Y1);
+                previewRect.setFill(Color.CYAN.deriveColor(0, 1, 1, 0.5));
+                previewRect.setStroke(Color.CYAN);
+                mapContainer.getChildren().add(previewRect);
+                map.getObstacles().add(previewRect);
+
+                Rectangle finalPreviewRect = previewRect;
+                gameView.setOnMouseDragged((MouseEvent dragEvent) -> {
+                    double dragX = dragEvent.getSceneX();
+                    double dragY = dragEvent.getSceneY();
+                    javafx.geometry.Point2D dragPoint = map.getMapContainer().sceneToLocal(dragX, dragY);
+
+                    double width = Math.abs(dragPoint.getX() - X1);
+                    double height = Math.abs(dragPoint.getY() - Y1);
+
+                    finalPreviewRect.setWidth(width);
+                    finalPreviewRect.setHeight(height);
+
+                    finalPreviewRect.setX(Math.min(X1, dragPoint.getX()));
+                    finalPreviewRect.setY(Math.min(Y1, dragPoint.getY()));
+                });
+
+                gameView.setOnMouseReleased((MouseEvent releaseEvent) -> {
+                    gameView.setOnMouseDragged(null);
+                    map.getObstacles().remove(previewRect);
+                });
             } else if (e.isSecondaryButtonDown()) {
+                mapContainer.getChildren().remove(previewRect);
                 X2 = clickPoint.getX();
                 Y2 = clickPoint.getY();
+
                 double w = X2-X1;
                 double h = Y2-Y1;
-                System.out.println("Width "+w);
-                System.out.println("Height "+h);
+
+                if (w < 0) {
+                    X1 = X2;
+                    w = -w;
+                }
+
+                if (h < 0) {
+                    Y1 = Y2;
+                    h = -h;
+                }
+
                 System.out.println(X1+ ", "+ Y1 + ", "+ w + ", "+ h);
+
+                 Obstacles obstacle = new Obstacles(X1, Y1, w, h, 1);
+                 Gson gson = new GsonBuilder().registerTypeAdapter(Obstacles.class, new obstaclesTypeAdaptater()).setPrettyPrinting().create();
+
+                String filePath = "./data/obstacles.json";
+
+                    try {
+                        List<Obstacles> obstaclesList = new ArrayList<>();
+                        if (Files.exists(Paths.get(filePath))) {
+                            Reader reader = Files.newBufferedReader(Paths.get(filePath));
+                            Obstacles[] existingObstacles = gson.fromJson(reader, Obstacles[].class);
+                            if (existingObstacles != null) {
+                                obstaclesList.addAll(Arrays.asList(existingObstacles));
+                            }
+                            reader.close();
+                        }
+
+                        int lastId = 0;
+                        if (!obstaclesList.isEmpty()) {
+                            lastId = obstaclesList.getLast().getId();
+                        }
+
+                        obstaclesList.add(new Obstacles(X1, Y1, w, h, lastId + 1));
+
+                        Writer writer = Files.newBufferedWriter(Paths.get(filePath));
+                        gson.toJson(obstaclesList, writer);
+                        writer.close();
+
+                        System.out.println("Obstacle added to json file");
+
+                        Rectangle rect = new Rectangle(obstacle.getX(), obstacle.getY(), obstacle.getWidth(), obstacle.getHeight());
+                        rect.setFill(javafx.scene.paint.Color.GREEN.deriveColor(1, 1, 1, 0.5));
+                        map.getObstacles().add(rect);
+                        map.getMapContainer().getChildren().add(rect);
+
+                        // enlever le rectangle de la map
+
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+
+                X1 = X2 = Y1 = Y2 = 0;
             }
         });
         gameView.setOnKeyPressed(e -> {
@@ -454,11 +557,6 @@ public class Engine extends Application {
             if (e.getCode() == KeyCode.P && !this.isInteracting && !profileMenu.isLoaded() && !endMenu.isLoaded()) {
                 profileMenu.show(gameView, player);
             }
-
-            if (e.getCode() == KeyCode.W && !this.isInteracting && !profileMenu.isLoaded() && !endMenu.isLoaded()) {
-                music.pause();
-                endMenu.show(gameView, player);
-            }
         });
 
         gameView.setOnKeyReleased(e -> {
@@ -473,6 +571,7 @@ public class Engine extends Application {
         StackPane gameView = new StackPane(map.getMapContainer(), player.getPlayerView());
         gameView.setPrefSize(this.map.getViewWidth(), this.map.getViewHeight());
         music.play();
+        changeId();
 
         Scene scene = new Scene(gameView);
         primaryStage.setScene(scene);

@@ -1,6 +1,5 @@
 package Class.Item;
 
-import Class.Character.Pnj;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
