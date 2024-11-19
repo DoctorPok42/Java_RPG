@@ -63,8 +63,12 @@ public class End extends Menu {
             this.grade = 3; // Good
         } else if (selectedGrade == skills.size()) {
             this.grade = 4; // Average
-        } else if (selectedGrade < skills.size() && isFun > 0) {
+        } else if (selectedGrade < skills.size() && isFun > 0 && isHungry && isWeak) {
             this.grade = 5; // Average
+        } else if (selectedGrade < skills.size() && isHungry) {
+            this.grade = 2; // Bad
+        } else if (selectedGrade < skills.size() && isWeak) {
+            this.grade = 3; // Bad
         } else {
             this.grade = 6; // Bad
         }
