@@ -376,8 +376,8 @@ public class Engine extends Application {
                     hunger.update(player, gameView);
                 }
 
-//                if (!endMenu.isLoaded())
-//                    checkEndGame(gameView);
+                if (!endMenu.isLoaded())
+                    checkEndGame(gameView);
             }));
             timeline.setCycleCount(Timeline.INDEFINITE);
             timeline.play();

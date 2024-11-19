@@ -29,7 +29,7 @@ public class Distributor extends Item {
         return money;
     }
 
-    private boolean buySnack(Player player, String snack) {
+    private boolean buySnack(Player player) {
         money += 1;
         player.eat();
         return true;
@@ -46,7 +46,7 @@ public class Distributor extends Item {
             return false;
 
         return switch ((DistributorTypeAction) action) {
-            case BUY -> buySnack(player, snack);
+            case BUY -> buySnack(player);
             case HACK -> hack(player);
         };
     }

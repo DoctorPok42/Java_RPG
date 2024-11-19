@@ -70,8 +70,10 @@ public class Item {
                         break;
                     case 4:
                         this.itemView = new ImageView(new Image("file:assets/items/table4.png"));
+                        break;
                     case 5:
                         this.itemView = new ImageView(new Image("file:assets/items/table5.png"));
+                        break;
                     default:
                         break;
                 }
