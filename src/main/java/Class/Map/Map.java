@@ -129,7 +129,7 @@ public class Map {
     private void createObstacles(){
         Obstacles[] obstacles = null;
         try (FileReader reader = new FileReader("./data/obstacles.json")){
-            Gson gson = new GsonBuilder().registerTypeAdapter(Obstacles.class, new obstaclesTypeAdaptater()).create();
+            Gson gson = new GsonBuilder().registerTypeAdapter(Obstacles.class, new ObstaclesTypeAdaptater()).create();
             obstacles = gson.fromJson(reader, Obstacles[].class);
             for (Obstacles obstacle : obstacles) {
                 Rectangle rect = new Rectangle(obstacle.getX(), obstacle.getY(), obstacle.getWidth(), obstacle.getHeight());

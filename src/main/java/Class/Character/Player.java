@@ -405,7 +405,6 @@ public class Player extends Character {
 
     //Animate character
     private void animateStatic() {
-        System.out.println("static");
         currentStaticIndex = (currentStaticIndex + 1) % StaticAnim.length;
         playerView.setImage(StaticAnim[currentStaticIndex]);
     }
@@ -419,7 +418,6 @@ public class Player extends Character {
     }
 
     private void animateWalkDown() {
-        System.out.println("walkDown");
         currentWalkDownIndex = (currentWalkDownIndex + 1) % walkDownAnim.length;
         playerView.setImage(walkDownAnim[currentWalkDownIndex]);
     }
@@ -433,7 +431,6 @@ public class Player extends Character {
     }
 
     private void animateWalkUp() {
-        System.out.println("walkUp");
         currentWalkUpIndex = (currentWalkUpIndex + 1) % walkUpAnim.length;
         playerView.setImage(walkUpAnim[currentWalkUpIndex]);
     }
@@ -447,7 +444,6 @@ public class Player extends Character {
     }
 
     private void animateWalkLeft() {
-        System.out.println("walkLeft");
         currentWalkLeftIndex = (currentWalkLeftIndex + 1) % walkLeftAnim.length;
         playerView.setImage(walkLeftAnim[currentWalkLeftIndex]);
     }
@@ -461,7 +457,6 @@ public class Player extends Character {
     }
 
     private void animateWalkRight() {
-        System.out.println("walkRight");
         currentWalkRightIndex = (currentWalkRightIndex + 1) % walkRightAnim.length;
         playerView.setImage(walkRightAnim[currentWalkRightIndex]);
     }
