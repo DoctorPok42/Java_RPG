@@ -6,7 +6,7 @@ import com.google.gson.stream.JsonWriter;
 
 import java.io.IOException;
 
-public class ObstaclesTypeAdaptater extends TypeAdapter<Obstacles> {
+public class obstaclesTypeAdaptater extends TypeAdapter<Obstacles> {
     @Override
     public void write(JsonWriter out, Obstacles obstacles) throws IOException {
         // No need to implement this method
