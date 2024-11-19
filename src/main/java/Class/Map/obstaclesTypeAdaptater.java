@@ -9,7 +9,15 @@ import java.io.IOException;
 public class obstaclesTypeAdaptater extends TypeAdapter<Obstacles> {
     @Override
     public void write(JsonWriter out, Obstacles obstacles) throws IOException {
-        // No need to implement this method
+        out.beginObject();
+
+        out.name("x").value(obstacles.getX());
+        out.name("y").value(obstacles.getY());
+        out.name("width").value(obstacles.getWidth());
+        out.name("height").value(obstacles.getHeight());
+        out.name("id").value(obstacles.getId());
+
+        out.endObject();
     }
 
     @Override
