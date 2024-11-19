@@ -319,11 +319,11 @@ public class Engine extends Application {
     private void gameLoop(StackPane gameView) {
         displayPnjs(gameView);
         displayItems(gameView);
-        time.update(player, gameView);
+        time.update(player);
             Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
                 if (!endMenu.isLoaded()) {
                     player.updateTime(map);
-                    time.update(player, gameView);
+                    time.update(player);
                     weakness.update(player, gameView);
                     hunger.update(player, gameView);
                 }

@@ -55,7 +55,7 @@ public class Time extends bar {
         }
     }
 
-    public void update(Player player, StackPane gameView) {
+    public void update(Player player) {
         years.setText("Year: "+player.getTimeYears());
         days.setText("Day: "+player.getTimeDays());
         hours.setText("Hour: "+player.getTimeHours());
