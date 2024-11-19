@@ -58,7 +58,7 @@ public class Engine extends Application {
     private final Music music;
     private final Profile profileMenu;
     private final End endMenu;
-    private final boolean isEnd = false;
+    private static final boolean isEnd = false;
 
     //Constructor
     public Engine() {
