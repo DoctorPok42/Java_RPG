@@ -8,7 +8,16 @@ import java.io.IOException;
 public class ItemTypeAdapter extends TypeAdapter<Item> {
     @Override
     public void write(JsonWriter out, Item item) throws IOException {
-        // No need to implement this method
+        out.beginObject();
+
+        out.name("name").value(item.getName());
+        out.name("type").value(item.getType().name());
+        out.name("x").value(item.getX());
+        out.name("y").value(item.getY());
+        out.name("z").value(item.getZ());
+        out.name("skin").value(item.getSkin());
+
+        out.endObject();
     }
 
     @Override

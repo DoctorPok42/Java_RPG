@@ -1,36 +1,38 @@
 package Class.Item;
 
 import Class.Character.Player;
+import javafx.scene.image.ImageView;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class Distributor extends Item {
     private int money;
-    private ArrayList<String> snacks = new ArrayList<String>();
 
     public Distributor(String name, Enum<ItemType> type, float x, float y, int z, int money, int skin) {
         super(name, type, x, y, z, skin);
 
         this.money = money;
+
+        this.menu.add(new ImageView("file:assets/interact/distributor/buy.png"));
+
+        this.second_menu.add(null);
+
+        for (int i = 0; i < this.menu.size(); i++) {
+            ImageView img = this.menu.get(i);
+            img.setFitWidth(83.6);
+            img.setFitHeight(32);
+        }
     }
 
     public int getMoney() {
         return money;
     }
 
-    public ArrayList<String> getSnacks() {
-        return snacks;
-    }
-
     private boolean buySnack(Player player, String snack) {
-        if (snacks.contains(snack)) {
-            snacks.remove(snack);
-            money += 1;
-
-            player.eat();
-            return true;
-        }
-        return false;
+        money += 1;
+        player.eat();
+        return true;
     }
 
     private boolean hack(Player player) {

@@ -25,14 +25,18 @@ public class Item {
     protected List<List<ImageView>> second_menu = new ArrayList<List<ImageView>>();
     protected ImageView selected_menu = null;
     protected int skin;
+    protected int id;
 
-    public Item(String name, Enum<ItemType> type, float x, float y, int z, int skin) {
+    public Item(String name, Enum<ItemType> type, float x, float y, int z, int skin, int... id) {
         this.name = name;
         this.type = type;
         this.x = x;
         this.y = y;
         this.z = z;
         this.skin = skin;
+        if (id.length > 0) {
+            this.id = id[0];
+        }
 
         switch (type) {
             case ItemType.PC:
@@ -64,6 +68,10 @@ public class Item {
                     case 3:
                         this.itemView = new ImageView(new Image("file:assets/items/table3.png"));
                         break;
+                    case 4:
+                        this.itemView = new ImageView(new Image("file:assets/items/table4.png"));
+                    case 5:
+                        this.itemView = new ImageView(new Image("file:assets/items/table5.png"));
                     default:
                         break;
                 }
@@ -86,12 +94,16 @@ public class Item {
 
         this.interactionHitbox = new Rectangle((int) x - 40, (int) y - 40, width + 80, height + 80);
         this.interactionHitbox.setFill(Color.TRANSPARENT);
-        this.interactionHitbox.setStroke(Color.RED);
+        this.interactionHitbox.setStroke(Color.TRANSPARENT);
         this.interactionHitbox.setStrokeWidth(2);
 
         this.selected_menu = new ImageView(new Image("file:assets/interact/test4.png"));
         this.selected_menu.setFitWidth(91.96);
         this.selected_menu.setFitHeight(37.5);
+    }
+
+    public int getId() {
+        return id;
     }
 
     public String getName() {
@@ -156,6 +168,10 @@ public class Item {
 
     public int getSkin() {
         return skin;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
 }

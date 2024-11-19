@@ -247,7 +247,7 @@ public class Player extends Character {
     }
 
     public void eat() {
-        this.hunger += 1;
+        this.hunger += 10;
     }
 
     public void sleep(int hours) {
