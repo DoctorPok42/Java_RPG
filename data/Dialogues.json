@@ -1,0 +1,20 @@
+[
+  {
+    "id": 0,
+    "name":"Nicolas",
+    "text": "SALUT LES SALOPES",
+    "choices": [1, 2]
+  },
+    {
+        "id": 1,
+        "name":"Nicolas",
+        "text": "wsh le sang",
+        "choices": [1, 2]
+    },
+    {
+        "id": 2,
+        "name":"Nicolas",
+        "text": "bztmr",
+        "choices": [1, 2]
+    }
+]

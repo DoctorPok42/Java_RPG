@@ -497,7 +497,7 @@ public class Engine extends Application {
                 this.itemToInteract = null;
                 this.canInteract = false;
                 mapContainer.getChildren().remove(interactImg);
-                gameView.getChildren().remove(gameView.lookup("#dialogBox1"));
+                gameView.getChildren().remove(gameView.lookup("#dialogBox"));
 
                 if (player.getStoreItem() != null) {
                     for (ImageView img : player.getStoreItem().getMenu()) {
@@ -571,7 +571,6 @@ public class Engine extends Application {
         StackPane gameView = new StackPane(map.getMapContainer(), player.getPlayerView());
         gameView.setPrefSize(this.map.getViewWidth(), this.map.getViewHeight());
         music.play();
-        changeId();
 
         Scene scene = new Scene(gameView);
         primaryStage.setScene(scene);
