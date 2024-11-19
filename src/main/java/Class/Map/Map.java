@@ -124,6 +124,22 @@ public class Map {
     }
 
     private void createObstacles(){
+<<<<<<< Updated upstream
+=======
+
+        Obstacles[] obstacless = null;
+        try (FileReader reader = new FileReader("./data/obstacles.json")){
+            Gson gson = new GsonBuilder().registerTypeAdapter(Obstacles.class, new ObstaclesTypeAdaptater()).create();
+            obstacless = gson.fromJson(reader, Obstacles[].class);
+            for (Obstacles obstacle : obstacless) {
+                Rectangle rect = new Rectangle(obstacle.getX(), obstacle.getY(), obstacle.getWidth(), obstacle.getHeight());
+                rect.setFill(Color.TRANSPARENT);
+                this.obstacles.add(rect);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+>>>>>>> Stashed changes
 //        Rectangle obstaccle1 = new Rectangle(1548, 965, 200, 80);
 //        obstaccle1.setFill(Color.RED);
 //        obstacles.add(obstaccle1);
