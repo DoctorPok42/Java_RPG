@@ -6,6 +6,7 @@ import Class.Map.Map;
 import com.google.gson.Gson;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
+import javafx.animation.Animation;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.animation.KeyFrame;
@@ -41,10 +42,25 @@ public class Player extends Character {
     private Timeline timelineDOWN;
     private Timeline timelineLEFT;
     private Timeline timelineRIGHT;
-    private Timeline animationTimeline;
+    private Timeline staticAnimationTimeline;
+    private Timeline walkDownAnimationTimeline;
+    private Timeline walkUpAnimationTimeline;
+    private Timeline walkLeftAnimationTimeline;
+    private Timeline walkRightAnimationTimeline;
     private final double movestep = 6;
 
     protected final ImageView playerView;
+    protected final Image[] StaticAnim;
+    private int currentStaticIndex = 0;
+    protected final Image[] walkDownAnim;
+    private int currentWalkDownIndex = 0;
+    private final Image[] walkUpAnim;
+    private int currentWalkUpIndex = 0;
+    private final Image[] walkLeftAnim;
+    private int currentWalkLeftIndex = 0;
+    private final Image[] walkRightAnim;
+    private int currentWalkRightIndex = 0;
+
     private javafx.geometry.Point2D playerCoord;
     private Rectangle playerHitbox;
 
@@ -66,6 +82,64 @@ public class Player extends Character {
         this.fun = 0;
         this.weakness = 115;
         this.hunger = 115;
+
+        this.StaticAnim = new Image[]{
+                new Image("file:assets/perso/anim/AnimStatic0.png"),
+                new Image("file:assets/perso/anim/AnimStatic1.png"),
+                new Image("file:assets/perso/anim/AnimStatic2.png"),
+                new Image("file:assets/perso/anim/AnimStatic3.png"),
+                new Image("file:assets/perso/anim/AnimStatic4.png"),
+                new Image("file:assets/perso/anim/AnimStatic5.png"),
+        };
+        staticAnimationTimeline = new Timeline(new KeyFrame(Duration.millis(100),e->animateStatic()));
+        staticAnimationTimeline.setCycleCount(Animation.INDEFINITE);
+        startStaticAnimation();
+
+        this.walkDownAnim = new Image[]{
+                new Image("file:assets/perso/anim/AnimWalkDown0.png"),
+                new Image("file:assets/perso/anim/AnimWalkDown1.png"),
+                new Image("file:assets/perso/anim/AnimWalkDown2.png"),
+                new Image("file:assets/perso/anim/AnimWalkDown3.png"),
+                new Image("file:assets/perso/anim/AnimWalkDown4.png"),
+                new Image("file:assets/perso/anim/AnimWalkDown5.png"),
+        };
+        walkDownAnimationTimeline = new Timeline(new KeyFrame(Duration.millis(100),e->animateWalkDown()));
+        walkDownAnimationTimeline.setCycleCount(Animation.INDEFINITE);
+
+        this.walkUpAnim = new Image[]{
+                new Image("file:assets/perso/anim/AnimWalkUp0.png"),
+                new Image("file:assets/perso/anim/AnimWalkUp1.png"),
+                new Image("file:assets/perso/anim/AnimWalkUp2.png"),
+                new Image("file:assets/perso/anim/AnimWalkUp3.png"),
+                new Image("file:assets/perso/anim/AnimWalkUp4.png"),
+                new Image("file:assets/perso/anim/AnimWalkUp5.png"),
+        };
+        walkUpAnimationTimeline = new Timeline(new KeyFrame(Duration.millis(100),e->animateWalkUp()));
+        walkUpAnimationTimeline.setCycleCount(Animation.INDEFINITE);
+
+        this.walkLeftAnim = new Image[]{
+                new Image("file:assets/perso/anim/AnimWalkLeft0.png"),
+                new Image("file:assets/perso/anim/AnimWalkLeft1.png"),
+                new Image("file:assets/perso/anim/AnimWalkLeft2.png"),
+                new Image("file:assets/perso/anim/AnimWalkLeft3.png"),
+                new Image("file:assets/perso/anim/AnimWalkLeft4.png"),
+                new Image("file:assets/perso/anim/AnimWalkLeft5.png"),
+        };
+        walkLeftAnimationTimeline = new Timeline(new KeyFrame(Duration.millis(100),e->animateWalkLeft()));
+        walkLeftAnimationTimeline.setCycleCount(Animation.INDEFINITE);
+
+        this.walkRightAnim = new Image[]{
+                new Image("file:assets/perso/anim/AnimWalkRight0.png"),
+                new Image("file:assets/perso/anim/AnimWalkRight1.png"),
+                new Image("file:assets/perso/anim/AnimWalkRight2.png"),
+                new Image("file:assets/perso/anim/AnimWalkRight3.png"),
+                new Image("file:assets/perso/anim/AnimWalkRight4.png"),
+                new Image("file:assets/perso/anim/AnimWalkRight5.png"),
+        };
+        walkRightAnimationTimeline = new Timeline(new KeyFrame(Duration.millis(100),e->animateWalkRight()));
+        walkRightAnimationTimeline.setCycleCount(Animation.INDEFINITE);
+
+
 
         map.getMapContainer().setTranslateX(map.getViewWidth() / 2 - map.getMapWidth() / 2);
         map.getMapContainer().setTranslateY(map.getViewHeight() / 2 - map.getMapHeight() / 2);
@@ -239,15 +313,18 @@ public class Player extends Character {
 
     private Timeline checkKey(KeyCode code) {
         if (code == KeyCode.UP || code == KeyCode.Z) {
+            startWalkUpAnimation();
             return timelineUP;
         } else if (code == KeyCode.DOWN || code == KeyCode.S) {
+            startWalkDownAnimation();
             return timelineDOWN;
         } else if (code == KeyCode.LEFT || code == KeyCode.Q) {
+            startWalkLeftAnimation();
             return timelineLEFT;
         } else if (code == KeyCode.RIGHT || code == KeyCode.D) {
+            startWalkRightAnimation();
             return timelineRIGHT;
         }
-
         return null;
     }
 
@@ -255,11 +332,47 @@ public class Player extends Character {
     @Override
     public void move(ImageView mapView, StackPane gameView, boolean keyUp, KeyEvent e) {
         if (keyUp) {
+            if (e.getCode() == KeyCode.UP || e.getCode() == KeyCode.Z) {
+                timelineDOWN.stop();
+                stopWalkDownAnimation();
+                timelineLEFT.stop();
+                stopWalkLeftAnimation();
+                timelineRIGHT.stop();
+                stopWalkRightAnimation();
+            } else if (e.getCode() == KeyCode.DOWN || e.getCode() == KeyCode.S) {
+                timelineUP.stop();
+                stopWalkUpAnimation();
+                timelineLEFT.stop();
+                stopWalkLeftAnimation();
+                timelineRIGHT.stop();
+                stopWalkRightAnimation();
+            } else if (e.getCode() == KeyCode.LEFT || e.getCode() == KeyCode.Q) {
+                timelineDOWN.stop();
+                stopWalkDownAnimation();
+                timelineUP.stop();
+                stopWalkUpAnimation();
+                timelineRIGHT.stop();
+                stopWalkRightAnimation();
+            } else if (e.getCode() == KeyCode.RIGHT || e.getCode() == KeyCode.D) {
+                timelineDOWN.stop();
+                stopWalkDownAnimation();
+                timelineLEFT.stop();
+                stopWalkLeftAnimation();
+                timelineUP.stop();
+                stopWalkUpAnimation();
+
+            }
+            stopStaticAnimation();
             Timeline timeline = checkKey(e.getCode());
             timeline.play();
         } else {
             Timeline timeline = checkKey(e.getCode());
             timeline.stop();
+            stopWalkDownAnimation();
+            stopWalkLeftAnimation();
+            stopWalkRightAnimation();
+            stopWalkUpAnimation();
+            startStaticAnimation();
         }
     }
     //Create movement timeline
@@ -289,6 +402,74 @@ public class Player extends Character {
         timeline.setCycleCount(Timeline.INDEFINITE);
         return timeline;
     }
+
+    //Animate character
+    private void animateStatic() {
+        currentStaticIndex = (currentStaticIndex + 1) % StaticAnim.length;
+        playerView.setImage(StaticAnim[currentStaticIndex]);
+    }
+    private void startStaticAnimation() {
+        if(staticAnimationTimeline.getStatus() == Animation.Status.STOPPED)
+            staticAnimationTimeline.play();
+    }
+    private void stopStaticAnimation() {
+        if(staticAnimationTimeline.getStatus() == Animation.Status.RUNNING)
+            staticAnimationTimeline.stop();
+    }
+
+    private void animateWalkDown() {
+        currentWalkDownIndex = (currentWalkDownIndex + 1) % walkDownAnim.length;
+        playerView.setImage(walkDownAnim[currentWalkDownIndex]);
+    }
+    private void startWalkDownAnimation() {
+        if(walkDownAnimationTimeline.getStatus() == Animation.Status.STOPPED)
+            walkDownAnimationTimeline.play();
+    }
+    private void stopWalkDownAnimation() {
+        if(walkDownAnimationTimeline.getStatus() == Animation.Status.RUNNING)
+            walkDownAnimationTimeline.stop();
+    }
+
+    private void animateWalkUp() {
+        currentWalkUpIndex = (currentWalkUpIndex + 1) % walkUpAnim.length;
+        playerView.setImage(walkUpAnim[currentWalkUpIndex]);
+    }
+    private void startWalkUpAnimation() {
+        if(walkUpAnimationTimeline.getStatus() == Animation.Status.STOPPED)
+            walkUpAnimationTimeline.play();
+    }
+    private void stopWalkUpAnimation() {
+        if(walkUpAnimationTimeline.getStatus() == Animation.Status.RUNNING)
+            walkUpAnimationTimeline.stop();
+    }
+
+    private void animateWalkLeft() {
+        currentWalkLeftIndex = (currentWalkLeftIndex + 1) % walkLeftAnim.length;
+        playerView.setImage(walkLeftAnim[currentWalkLeftIndex]);
+    }
+    private void startWalkLeftAnimation() {
+        if(walkLeftAnimationTimeline.getStatus() == Animation.Status.STOPPED)
+            walkLeftAnimationTimeline.play();
+    }
+    private void stopWalkLeftAnimation() {
+        if(walkLeftAnimationTimeline.getStatus() == Animation.Status.RUNNING)
+            walkLeftAnimationTimeline.stop();
+    }
+
+    private void animateWalkRight() {
+        currentWalkRightIndex = (currentWalkRightIndex + 1) % walkRightAnim.length;
+        playerView.setImage(walkRightAnim[currentWalkRightIndex]);
+    }
+    private void startWalkRightAnimation() {
+        if(walkRightAnimationTimeline.getStatus() == Animation.Status.STOPPED)
+            walkRightAnimationTimeline.play();
+    }
+    private void stopWalkRightAnimation() {
+        if(walkRightAnimationTimeline.getStatus() == Animation.Status.RUNNING)
+            walkRightAnimationTimeline.stop();
+    }
+
+
     private boolean isCollision(Rectangle targetHitbox, Map map) {
         for (Rectangle obstacle : map.getObstacles()) {
             if (targetHitbox.getBoundsInParent().intersects(obstacle.getBoundsInParent())) {

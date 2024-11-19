@@ -127,7 +127,6 @@ public class Map {
     }
 
     private void createObstacles(){
-
         Obstacles[] obstacles = null;
         try (FileReader reader = new FileReader("./data/obstacles.json")){
             Gson gson = new GsonBuilder().registerTypeAdapter(Obstacles.class, new obstaclesTypeAdaptater()).create();
