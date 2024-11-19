@@ -12,6 +12,7 @@ import Class.Menu.Profile;
 import Class.Music.Music;
 import Class.Skill.Skill;
 import Class.bar.Feed;
+import Class.bar.Time;
 import Class.bar.Tiredness;
 import Class.bar.bar;
 import com.google.gson.Gson;
@@ -40,6 +41,7 @@ import java.util.List;
 import java.util.Objects;
 
 import javafx.application.Application;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -53,8 +55,9 @@ public class Engine extends Application {
     private boolean canInteract;
     private boolean isInteracting;
     private int currentAction;
-    private final bar weakness;
-    private final bar hunger;
+    private final Tiredness weakness;
+    private final Feed hunger;
+    private Time time;
     private final Music music;
     private final Profile profileMenu;
     private final End endMenu;
@@ -66,6 +69,7 @@ public class Engine extends Application {
         this.player = new Player("John Doe", new Image("file:assets/perso/animtest1.png"), this.map);
         this.weakness = new Tiredness("Tiredness");
         this.hunger = new Feed("Hunger");
+        this.time = new Time("Time");
         this.profileMenu = new Profile();
         this.endMenu = new End();
         this.music = new Music("assets/music/ingame.wav", 0.3);
@@ -83,60 +87,8 @@ public class Engine extends Application {
         return key == KeyCode.UP || key == KeyCode.DOWN || key == KeyCode.LEFT || key == KeyCode.RIGHT || key == KeyCode.Z || key == KeyCode.Q || key == KeyCode.S || key == KeyCode.D;
     }
 
-    Text hours = new Text();
-    Text days = new Text();
-    Text years = new Text();
-    private void displayTime(StackPane gameView) {
-        String styles = "-fx-font: 20 arial;";
-        if (!gameView.getChildren().contains(years)) {
-            years.setFill(javafx.scene.paint.Color.WHITE);
-            years.setStyle(styles);
-            StackPane.setAlignment(years, Pos.TOP_LEFT);
-            years.setTranslateX(10);
-            years.setTranslateY(10);
-            gameView.getChildren().add(years);
-        }
-        years.setText("Year: "+player.getTimeYears());
-
-        if (!gameView.getChildren().contains(days)) {
-            days.setFill(javafx.scene.paint.Color.WHITE);
-            days.setStyle(styles);
-            StackPane.setAlignment(days, Pos.TOP_LEFT);
-            days.setTranslateX(100);
-            days.setTranslateY(10);
-            gameView.getChildren().add(days);
-        }
-        days.setText("Day: "+player.getTimeDays());
-
-        if (!gameView.getChildren().contains(hours)) {
-            hours.setFill(javafx.scene.paint.Color.WHITE);
-            hours.setStyle(styles);
-            StackPane.setAlignment(hours, Pos.TOP_LEFT);
-            hours.setTranslateX(200);
-            hours.setTranslateY(10);
-            gameView.getChildren().add(hours);
-        }
-        hours.setText("Hour: "+player.getTimeHours());
-
-    }
-
-    private void changeMap(int floor) {
-        switch (floor) {
-            case 0:
-                map.setMapView(new ImageView(new Image("file:assets/map/mapTest.png")));
-                break;
-            case 1:
-                map.setMapView(new ImageView(new Image("file:assets/map/vraimenttestmap.png")));
-                break;
-            case 2:
-                map.setMapView(new ImageView(new Image("file:assets/map/mapTest3.png")));
-                break;
-            default:
-                break;
-        }
-    }
     private void loadPnj(Map map) {
-        Pnj[] pnjs = null;
+        Pnj[] pnjs;
         try (FileReader reader = new FileReader("./data/pnjs.json")) {
             // Read JSON file
             Gson gson = new GsonBuilder()
@@ -167,7 +119,7 @@ public class Engine extends Application {
     }
 
     private void loadItems(Map map, int mapLevel) {
-        Item[] items = null;
+        Item[] items;
         try (FileReader reader = new FileReader("./data/items.json")) {
             // Read JSON file
             Gson gson = new GsonBuilder()
@@ -367,11 +319,11 @@ public class Engine extends Application {
     private void gameLoop(StackPane gameView) {
         displayPnjs(gameView);
         displayItems(gameView);
-        displayTime(gameView);
+        time.update(player, gameView);
             Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
                 if (!endMenu.isLoaded()) {
                     player.updateTime(map);
-                    displayTime(gameView);
+                    time.update(player, gameView);
                     weakness.update(player, gameView);
                     hunger.update(player, gameView);
                 }
@@ -539,7 +491,6 @@ public class Engine extends Application {
                 this.currentAction = 0;
                 player.setStoreItem(null);
                 profileMenu.remove(gameView);
-                endMenu.remove(gameView);
             }
 
             if (this.itemToInteract != null) {
@@ -601,6 +552,7 @@ public class Engine extends Application {
         endMenu.setName(player.getName());
         weakness.display(gameView);
         hunger.display(gameView);
+        time.display(gameView);
         this.gameLoop(gameView);
         gameView.requestFocus();
     }
