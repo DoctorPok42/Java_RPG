@@ -28,10 +28,12 @@ public class PnjInteraction extends Item{
     private void displayDiaglogBox(StackPane gameView) {
         ImageView dlg = new ImageView(new Image("file:assets/Pnjs/dialogbox2.png"));
         StackPane.setAlignment(dlg, Pos.BOTTOM_CENTER);
+        dlg.setId("dialogBox1");
         gameView.getChildren().add(dlg);
     }
     public boolean speak(Player player , Pnj pnj, StackPane gameView) {
         displayDiaglogBox(gameView);
+
         return  true;
         }
     public boolean doAction(Player player, Enum<?> action, Pnj pnj, StackPane gameView) {
