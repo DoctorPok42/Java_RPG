@@ -7,8 +7,6 @@ import Class.Item.Item;
 import Class.Item.ItemTypeAdapter;
 import Class.Item.*;
 import Class.Map.Map;
-import Class.Map.Obstacles;
-import Class.Map.obstaclesTypeAdaptater;
 import Class.Menu.End;
 import Class.Menu.Profile;
 import Class.Music.Music;
@@ -42,10 +40,6 @@ import java.util.List;
 import java.util.Objects;
 
 import javafx.application.Application;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -391,43 +385,59 @@ public class Engine extends Application {
             double clickX = e.getSceneX();
             double clickY = e.getSceneY();
             javafx.geometry.Point2D clickPoint = map.getMapContainer().sceneToLocal(clickX, clickY);
-            Rectangle previewRect = new Rectangle();
+//            Rectangle previewRect = new Rectangle();
+            ImageView item = new ImageView(new Image("file:assets/items/distributeur.png"));
 
             if(e.isPrimaryButtonDown()){
                 X1 = clickPoint.getX();
                 Y1 = clickPoint.getY();
 
-                previewRect.setX(X1);
-                previewRect.setY(Y1);
-                previewRect.setFill(Color.CYAN.deriveColor(0, 1, 1, 0.5));
-                previewRect.setStroke(Color.CYAN);
-                mapContainer.getChildren().add(previewRect);
-                map.getObstacles().add(previewRect);
+                item.setLayoutX(X1);
+                item.setLayoutY(Y1);
+                mapContainer.getChildren().add(item);
 
-                Rectangle finalPreviewRect = previewRect;
+//                previewRect.setX(X1);
+//                previewRect.setY(Y1);
+//                previewRect.setFill(Color.CYAN.deriveColor(0, 1, 1, 0.5));
+//                previewRect.setStroke(Color.CYAN);
+//                mapContainer.getChildren().add(previewRect);
+//                map.getObstacles().add(previewRect);
+//
+//                Rectangle finalPreviewRect = previewRect;
                 gameView.setOnMouseDragged((MouseEvent dragEvent) -> {
                     double dragX = dragEvent.getSceneX();
                     double dragY = dragEvent.getSceneY();
                     javafx.geometry.Point2D dragPoint = map.getMapContainer().sceneToLocal(dragX, dragY);
 
-                    double width = Math.abs(dragPoint.getX() - X1);
-                    double height = Math.abs(dragPoint.getY() - Y1);
+//                    item.setLayoutX(dragPoint.getX());
+//                    item.setLayoutY(dragPoint.getY());
 
-                    finalPreviewRect.setWidth(width);
-                    finalPreviewRect.setHeight(height);
+                    // mettre la table au millieu du curseur
+                    item.setLayoutX(dragPoint.getX() - item.getImage().getWidth()/2);
+                    item.setLayoutY(dragPoint.getY() - item.getImage().getHeight()/2);
 
-                    finalPreviewRect.setX(Math.min(X1, dragPoint.getX()));
-                    finalPreviewRect.setY(Math.min(Y1, dragPoint.getY()));
+                    mapContainer.getChildren().remove(item);
+                    mapContainer.getChildren().add(item);
+
+//                    finalPreviewRect.setWidth(width);
+//                    finalPreviewRect.setHeight(height);
+//
+//                    finalPreviewRect.setX(Math.min(X1, dragPoint.getX()));
+//                    finalPreviewRect.setY(Math.min(Y1, dragPoint.getY()));
                 });
 
                 gameView.setOnMouseReleased((MouseEvent releaseEvent) -> {
                     gameView.setOnMouseDragged(null);
-                    map.getObstacles().remove(previewRect);
                 });
             } else if (e.isSecondaryButtonDown()) {
-                mapContainer.getChildren().remove(previewRect);
-                X2 = clickPoint.getX();
-                Y2 = clickPoint.getY();
+//                mapContainer.getChildren().remove(previewRect);
+//                X2 = clickPoint.getX();
+//                Y2 = clickPoint.getY();
+
+                // mettre la table au millieu du curseur
+
+                X2 = clickPoint.getX() - item.getImage().getWidth()/2;
+                Y2 = clickPoint.getY() - item.getImage().getHeight()/2;
 
                 double w = X2-X1;
                 double h = Y2-Y1;
@@ -444,16 +454,15 @@ public class Engine extends Application {
 
                 System.out.println(X1+ ", "+ Y1 + ", "+ w + ", "+ h);
 
-                 Obstacles obstacle = new Obstacles(X1, Y1, w, h, 1);
-                 Gson gson = new GsonBuilder().registerTypeAdapter(Obstacles.class, new obstaclesTypeAdaptater()).setPrettyPrinting().create();
+                 Gson gson = new GsonBuilder().registerTypeAdapter(Item.class, new ItemTypeAdapter()).setPrettyPrinting().create();
 
-                String filePath = "./data/obstacles.json";
+                String filePath = "./data/items.json";
 
                     try {
-                        List<Obstacles> obstaclesList = new ArrayList<>();
+                        List<Item> obstaclesList = new ArrayList<>();
                         if (Files.exists(Paths.get(filePath))) {
                             Reader reader = Files.newBufferedReader(Paths.get(filePath));
-                            Obstacles[] existingObstacles = gson.fromJson(reader, Obstacles[].class);
+                            Item[] existingObstacles = gson.fromJson(reader, Item[].class);
                             if (existingObstacles != null) {
                                 obstaclesList.addAll(Arrays.asList(existingObstacles));
                             }
@@ -465,18 +474,28 @@ public class Engine extends Application {
                             lastId = obstaclesList.getLast().getId();
                         }
 
-                        obstaclesList.add(new Obstacles(X1, Y1, w, h, lastId + 1));
+                        obstaclesList.add(
+                                new Item(
+                                        "DISTRIBUTOR",
+                                        ItemType.DISTRIBUTOR,
+                                        (float) X1,
+                                        (float) Y1,
+                                        1,
+                                        3,
+                                        lastId + 1
+                                )
+                        );
 
                         Writer writer = Files.newBufferedWriter(Paths.get(filePath));
                         gson.toJson(obstaclesList, writer);
                         writer.close();
 
-                        System.out.println("Obstacle added to json file");
+                        System.out.println("Item added to json file");
 
-                        Rectangle rect = new Rectangle(obstacle.getX(), obstacle.getY(), obstacle.getWidth(), obstacle.getHeight());
-                        rect.setFill(javafx.scene.paint.Color.GREEN.deriveColor(1, 1, 1, 0.5));
-                        map.getObstacles().add(rect);
-                        map.getMapContainer().getChildren().add(rect);
+//                        Rectangle rect = new Rectangle(obstacle.getX(), obstacle.getY(), obstacle.getWidth(), obstacle.getHeight());
+//                        rect.setFill(javafx.scene.paint.Color.GREEN.deriveColor(1, 1, 1, 0.5));
+//                        map.getObstacles().add(rect);
+//                        map.getMapContainer().getChildren().add(rect);
 
                         // enlever le rectangle de la map
 
@@ -570,8 +589,7 @@ public class Engine extends Application {
     public void start(Stage primaryStage) {
         StackPane gameView = new StackPane(map.getMapContainer(), player.getPlayerView());
         gameView.setPrefSize(this.map.getViewWidth(), this.map.getViewHeight());
-        music.play();
-        changeId();
+//        music.play();
 
         Scene scene = new Scene(gameView);
         primaryStage.setScene(scene);
