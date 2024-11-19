@@ -7,13 +7,12 @@ import Class.Item.Item;
 import Class.Item.ItemTypeAdapter;
 import Class.Item.*;
 import Class.Map.Map;
-import Class.Map.Obstacles;
-import Class.Map.obstaclesTypeAdaptater;
 import Class.Menu.End;
 import Class.Menu.Profile;
 import Class.Music.Music;
 import Class.Skill.Skill;
 import Class.bar.Feed;
+import Class.bar.Time;
 import Class.bar.Tiredness;
 import Class.bar.bar;
 import com.google.gson.Gson;
@@ -42,10 +41,7 @@ import java.util.List;
 import java.util.Objects;
 
 import javafx.application.Application;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -59,8 +55,9 @@ public class Engine extends Application {
     private boolean canInteract;
     private boolean isInteracting;
     private int currentAction;
-    private final bar weakness;
-    private final bar hunger;
+    private final Tiredness weakness;
+    private final Feed hunger;
+    private Time time;
     private final Music music;
     private final Profile profileMenu;
     private final End endMenu;
@@ -72,6 +69,7 @@ public class Engine extends Application {
         this.player = new Player("John Doe", new Image("file:assets/perso/animtest1.png"), this.map);
         this.weakness = new Tiredness("Tiredness");
         this.hunger = new Feed("Hunger");
+        this.time = new Time("Time");
         this.profileMenu = new Profile();
         this.endMenu = new End();
         this.music = new Music("assets/music/ingame.wav", 0.3);
@@ -89,60 +87,8 @@ public class Engine extends Application {
         return key == KeyCode.UP || key == KeyCode.DOWN || key == KeyCode.LEFT || key == KeyCode.RIGHT || key == KeyCode.Z || key == KeyCode.Q || key == KeyCode.S || key == KeyCode.D;
     }
 
-    Text hours = new Text();
-    Text days = new Text();
-    Text years = new Text();
-    private void displayTime(StackPane gameView) {
-        String styles = "-fx-font: 20 arial;";
-        if (!gameView.getChildren().contains(years)) {
-            years.setFill(javafx.scene.paint.Color.WHITE);
-            years.setStyle(styles);
-            StackPane.setAlignment(years, Pos.TOP_LEFT);
-            years.setTranslateX(10);
-            years.setTranslateY(10);
-            gameView.getChildren().add(years);
-        }
-        years.setText("Year: "+player.getTimeYears());
-
-        if (!gameView.getChildren().contains(days)) {
-            days.setFill(javafx.scene.paint.Color.WHITE);
-            days.setStyle(styles);
-            StackPane.setAlignment(days, Pos.TOP_LEFT);
-            days.setTranslateX(100);
-            days.setTranslateY(10);
-            gameView.getChildren().add(days);
-        }
-        days.setText("Day: "+player.getTimeDays());
-
-        if (!gameView.getChildren().contains(hours)) {
-            hours.setFill(javafx.scene.paint.Color.WHITE);
-            hours.setStyle(styles);
-            StackPane.setAlignment(hours, Pos.TOP_LEFT);
-            hours.setTranslateX(200);
-            hours.setTranslateY(10);
-            gameView.getChildren().add(hours);
-        }
-        hours.setText("Hour: "+player.getTimeHours());
-
-    }
-
-    private void changeMap(int floor) {
-        switch (floor) {
-            case 0:
-                map.setMapView(new ImageView(new Image("file:assets/map/mapTest.png")));
-                break;
-            case 1:
-                map.setMapView(new ImageView(new Image("file:assets/map/vraimenttestmap.png")));
-                break;
-            case 2:
-                map.setMapView(new ImageView(new Image("file:assets/map/mapTest3.png")));
-                break;
-            default:
-                break;
-        }
-    }
     private void loadPnj(Map map) {
-        Pnj[] pnjs = null;
+        Pnj[] pnjs;
         try (FileReader reader = new FileReader("./data/pnjs.json")) {
             // Read JSON file
             Gson gson = new GsonBuilder()
@@ -173,7 +119,7 @@ public class Engine extends Application {
     }
 
     private void loadItems(Map map, int mapLevel) {
-        Item[] items = null;
+        Item[] items;
         try (FileReader reader = new FileReader("./data/items.json")) {
             // Read JSON file
             Gson gson = new GsonBuilder()
@@ -373,11 +319,11 @@ public class Engine extends Application {
     private void gameLoop(StackPane gameView) {
         displayPnjs(gameView);
         displayItems(gameView);
-        displayTime(gameView);
+        time.update(player);
             Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
                 if (!endMenu.isLoaded()) {
                     player.updateTime(map);
-                    displayTime(gameView);
+                    time.update(player);
                     weakness.update(player, gameView);
                     hunger.update(player, gameView);
                 }
@@ -391,43 +337,59 @@ public class Engine extends Application {
             double clickX = e.getSceneX();
             double clickY = e.getSceneY();
             javafx.geometry.Point2D clickPoint = map.getMapContainer().sceneToLocal(clickX, clickY);
-            Rectangle previewRect = new Rectangle();
+//            Rectangle previewRect = new Rectangle();
+            ImageView item = new ImageView(new Image("file:assets/items/distributeur.png"));
 
             if(e.isPrimaryButtonDown()){
                 X1 = clickPoint.getX();
                 Y1 = clickPoint.getY();
 
-                previewRect.setX(X1);
-                previewRect.setY(Y1);
-                previewRect.setFill(Color.CYAN.deriveColor(0, 1, 1, 0.5));
-                previewRect.setStroke(Color.CYAN);
-                mapContainer.getChildren().add(previewRect);
-                map.getObstacles().add(previewRect);
+                item.setLayoutX(X1);
+                item.setLayoutY(Y1);
+                mapContainer.getChildren().add(item);
 
-                Rectangle finalPreviewRect = previewRect;
+//                previewRect.setX(X1);
+//                previewRect.setY(Y1);
+//                previewRect.setFill(Color.CYAN.deriveColor(0, 1, 1, 0.5));
+//                previewRect.setStroke(Color.CYAN);
+//                mapContainer.getChildren().add(previewRect);
+//                map.getObstacles().add(previewRect);
+//
+//                Rectangle finalPreviewRect = previewRect;
                 gameView.setOnMouseDragged((MouseEvent dragEvent) -> {
                     double dragX = dragEvent.getSceneX();
                     double dragY = dragEvent.getSceneY();
                     javafx.geometry.Point2D dragPoint = map.getMapContainer().sceneToLocal(dragX, dragY);
 
-                    double width = Math.abs(dragPoint.getX() - X1);
-                    double height = Math.abs(dragPoint.getY() - Y1);
+//                    item.setLayoutX(dragPoint.getX());
+//                    item.setLayoutY(dragPoint.getY());
 
-                    finalPreviewRect.setWidth(width);
-                    finalPreviewRect.setHeight(height);
+                    // mettre la table au millieu du curseur
+                    item.setLayoutX(dragPoint.getX() - item.getImage().getWidth()/2);
+                    item.setLayoutY(dragPoint.getY() - item.getImage().getHeight()/2);
 
-                    finalPreviewRect.setX(Math.min(X1, dragPoint.getX()));
-                    finalPreviewRect.setY(Math.min(Y1, dragPoint.getY()));
+                    mapContainer.getChildren().remove(item);
+                    mapContainer.getChildren().add(item);
+
+//                    finalPreviewRect.setWidth(width);
+//                    finalPreviewRect.setHeight(height);
+//
+//                    finalPreviewRect.setX(Math.min(X1, dragPoint.getX()));
+//                    finalPreviewRect.setY(Math.min(Y1, dragPoint.getY()));
                 });
 
                 gameView.setOnMouseReleased((MouseEvent releaseEvent) -> {
                     gameView.setOnMouseDragged(null);
-                    map.getObstacles().remove(previewRect);
                 });
             } else if (e.isSecondaryButtonDown()) {
-                mapContainer.getChildren().remove(previewRect);
-                X2 = clickPoint.getX();
-                Y2 = clickPoint.getY();
+//                mapContainer.getChildren().remove(previewRect);
+//                X2 = clickPoint.getX();
+//                Y2 = clickPoint.getY();
+
+                // mettre la table au millieu du curseur
+
+                X2 = clickPoint.getX() - item.getImage().getWidth()/2;
+                Y2 = clickPoint.getY() - item.getImage().getHeight()/2;
 
                 double w = X2-X1;
                 double h = Y2-Y1;
@@ -444,16 +406,15 @@ public class Engine extends Application {
 
                 System.out.println(X1+ ", "+ Y1 + ", "+ w + ", "+ h);
 
-                 Obstacles obstacle = new Obstacles(X1, Y1, w, h, 1);
-                 Gson gson = new GsonBuilder().registerTypeAdapter(Obstacles.class, new obstaclesTypeAdaptater()).setPrettyPrinting().create();
+                 Gson gson = new GsonBuilder().registerTypeAdapter(Item.class, new ItemTypeAdapter()).setPrettyPrinting().create();
 
-                String filePath = "./data/obstacles.json";
+                String filePath = "./data/items.json";
 
                     try {
-                        List<Obstacles> obstaclesList = new ArrayList<>();
+                        List<Item> obstaclesList = new ArrayList<>();
                         if (Files.exists(Paths.get(filePath))) {
                             Reader reader = Files.newBufferedReader(Paths.get(filePath));
-                            Obstacles[] existingObstacles = gson.fromJson(reader, Obstacles[].class);
+                            Item[] existingObstacles = gson.fromJson(reader, Item[].class);
                             if (existingObstacles != null) {
                                 obstaclesList.addAll(Arrays.asList(existingObstacles));
                             }
@@ -465,18 +426,28 @@ public class Engine extends Application {
                             lastId = obstaclesList.getLast().getId();
                         }
 
-                        obstaclesList.add(new Obstacles(X1, Y1, w, h, lastId + 1));
+                        obstaclesList.add(
+                                new Item(
+                                        "DISTRIBUTOR",
+                                        ItemType.DISTRIBUTOR,
+                                        (float) X1,
+                                        (float) Y1,
+                                        1,
+                                        3,
+                                        lastId + 1
+                                )
+                        );
 
                         Writer writer = Files.newBufferedWriter(Paths.get(filePath));
                         gson.toJson(obstaclesList, writer);
                         writer.close();
 
-                        System.out.println("Obstacle added to json file");
+                        System.out.println("Item added to json file");
 
-                        Rectangle rect = new Rectangle(obstacle.getX(), obstacle.getY(), obstacle.getWidth(), obstacle.getHeight());
-                        rect.setFill(javafx.scene.paint.Color.GREEN.deriveColor(1, 1, 1, 0.5));
-                        map.getObstacles().add(rect);
-                        map.getMapContainer().getChildren().add(rect);
+//                        Rectangle rect = new Rectangle(obstacle.getX(), obstacle.getY(), obstacle.getWidth(), obstacle.getHeight());
+//                        rect.setFill(javafx.scene.paint.Color.GREEN.deriveColor(1, 1, 1, 0.5));
+//                        map.getObstacles().add(rect);
+//                        map.getMapContainer().getChildren().add(rect);
 
                         // enlever le rectangle de la map
 
@@ -520,7 +491,6 @@ public class Engine extends Application {
                 this.currentAction = 0;
                 player.setStoreItem(null);
                 profileMenu.remove(gameView);
-                endMenu.remove(gameView);
             }
 
             if (this.itemToInteract != null) {
@@ -582,6 +552,7 @@ public class Engine extends Application {
         endMenu.setName(player.getName());
         weakness.display(gameView);
         hunger.display(gameView);
+        time.display(gameView);
         this.gameLoop(gameView);
         gameView.requestFocus();
     }
