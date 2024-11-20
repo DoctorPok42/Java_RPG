@@ -3,6 +3,7 @@ package Class.Engine;
 import Class.Character.Player;
 import Class.Character.Pnj;
 import Class.Character.PnjTypeAdapter;
+import Class.DevMode.DevEngine;
 import Class.Item.Item;
 import Class.Item.ItemTypeAdapter;
 import Class.Item.*;
@@ -38,7 +39,7 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-public class Engine extends Application {
+public class Engine {
     private final Player player;
     private final Map map;
     private final Pane mapContainer;
@@ -53,6 +54,9 @@ public class Engine extends Application {
     private final Profile profileMenu;
     private final End endMenu;
     private final MenuControler menuControler;
+    private boolean isDevMode = false;
+    private final DevEngine devEngine;
+    private boolean isAltPressed = false;
 
     //Constructor
     public Engine() {
@@ -72,7 +76,7 @@ public class Engine extends Application {
         this.itemToInteract = null;
         this.canInteract = false;
         this.isInteracting = false;
-
+        this.devEngine = new DevEngine();
     }
     private boolean isMoveKey(KeyCode key) {
         return key == KeyCode.UP || key == KeyCode.DOWN || key == KeyCode.LEFT || key == KeyCode.RIGHT || key == KeyCode.Z || key == KeyCode.Q || key == KeyCode.S || key == KeyCode.D;
@@ -160,18 +164,6 @@ public class Engine extends Application {
         }
     }
 
-    private void checkEndGame(StackPane gameView) {
-        if (player.getTimeDays() >= 60) {
-            music.pause();
-            endMenu.show(gameView, player);
-        }
-
-        if (player.getHunger() <= 0 || player.getWeakness() <= 0) {
-            music.pause();
-            endMenu.show(gameView, player);
-        }
-    }
-
     double X1 = 0;
     double Y1 = 0;
     double X2 = 0;
@@ -188,11 +180,30 @@ public class Engine extends Application {
                     hunger.update(player, gameView);
                 }
 
-                if (!endMenu.isLoaded())
-                    checkEndGame(gameView);
+                if (!endMenu.isLoaded() && !isDevMode)
+                    endMenu.checkEndGame(gameView, player, music);
             }));
             timeline.setCycleCount(Timeline.INDEFINITE);
             timeline.play();
+        gameView.setOnMouseMoved(e -> {
+            if (isDevMode) {
+                devEngine.listenMouse(e);
+            }
+        });
+
+        // on scroll
+        gameView.setOnScroll(e -> {
+            if (isDevMode && !isAltPressed) {
+                devEngine.imgMouseControler.setMode((devEngine.imgMouseControler.getMode() + 1) % 2, gameView);
+            } else if (isDevMode) {
+                if (e.getDeltaY() > 0) {
+                    devEngine.imgMouseControler.changeSelected((devEngine.imgMouseControler.getSelected() - 1 + devEngine.imgMouseControler.getAllImgItem().size()) % devEngine.imgMouseControler.getAllImgItem().size());
+                } else {
+                    devEngine.imgMouseControler.changeSelected((devEngine.imgMouseControler.getSelected() + 1) % devEngine.imgMouseControler.getAllImgItem().size());
+                }
+            }
+        });
+
         gameView.setOnMousePressed((MouseEvent e) -> {
             double clickX = e.getSceneX();
             double clickY = e.getSceneY();
@@ -204,8 +215,10 @@ public class Engine extends Application {
                 X1 = clickPoint.getX();
                 Y1 = clickPoint.getY();
 
-                item.setLayoutX(X1);
-                item.setLayoutY(Y1);
+                System.out.println(X1+ ", "+ Y1);
+
+                item.setLayoutX(X1 - item.getImage().getWidth()/2);
+                item.setLayoutY(Y1 - item.getImage().getHeight()/2);
                 mapContainer.getChildren().add(item);
 
 //                previewRect.setX(X1);
@@ -224,7 +237,6 @@ public class Engine extends Application {
 //                    item.setLayoutX(dragPoint.getX());
 //                    item.setLayoutY(dragPoint.getY());
 
-                    // mettre la table au millieu du curseur
                     item.setLayoutX(dragPoint.getX() - item.getImage().getWidth()/2);
                     item.setLayoutY(dragPoint.getY() - item.getImage().getHeight()/2);
 
@@ -240,13 +252,12 @@ public class Engine extends Application {
 
                 gameView.setOnMouseReleased((MouseEvent releaseEvent) -> {
                     gameView.setOnMouseDragged(null);
+                    mapContainer.getChildren().remove(item);
                 });
             } else if (e.isSecondaryButtonDown()) {
 //                mapContainer.getChildren().remove(previewRect);
 //                X2 = clickPoint.getX();
 //                Y2 = clickPoint.getY();
-
-                // mettre la table au millieu du curseur
 
                 X2 = clickPoint.getX() - item.getImage().getWidth()/2;
                 Y2 = clickPoint.getY() - item.getImage().getHeight()/2;
@@ -309,6 +320,13 @@ public class Engine extends Application {
 //                        map.getObstacles().add(rect);
 //                        map.getMapContainer().getChildren().add(rect);
 
+                        // Ajouter le rectangle à la map
+                        item.setLayoutX(X1);
+                        item.setLayoutY(Y1);
+                        map.getItems().add(obstaclesList.getLast());
+                        mapContainer.getChildren().add(item);
+
+
                         // enlever le rectangle de la map
 
                     } catch (IOException ex) {
@@ -319,6 +337,8 @@ public class Engine extends Application {
             }
         });
         gameView.setOnKeyPressed(e -> {
+            devEngine.listenKey(e);
+
             this.itemToInteract = player.getStoreItem();
             if (e.getCode() == KeyCode.ESCAPE) {
                 if (!music.isPlaying())
@@ -351,6 +371,10 @@ public class Engine extends Application {
                 menuControler.setCurrentAction(0);
                 player.setStoreItem(null);
                 profileMenu.remove(gameView);
+            }
+
+            if (e.getCode() == KeyCode.ALT) {
+                isAltPressed = true;
             }
 
             if (this.itemToInteract != null) {
@@ -393,15 +417,18 @@ public class Engine extends Application {
             if (isMoveKey(e.getCode())) {
                 player.move(map.getMapView(), gameView, false, e);
             }
+
+            if (e.getCode() == KeyCode.ALT) {
+                isAltPressed = false;
+            }
         });
 
     }
 
-    public void start(Stage primaryStage) {
+    public void start(Stage primaryStage, boolean devMode) {
         StackPane gameView = new StackPane(map.getMapContainer(), player.getPlayerView());
         gameView.setPrefSize(this.map.getViewWidth(), this.map.getViewHeight());
 //        music.play();
-
         Scene scene = new Scene(gameView);
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -410,9 +437,15 @@ public class Engine extends Application {
         player.loadSkills("./data/skills.json");
         profileMenu.loadSkills(player);
         endMenu.setName(player.getName());
-        weakness.display(gameView);
-        hunger.display(gameView);
-        time.display(gameView);
+
+        if (devMode) {
+            this.isDevMode = true;
+            devEngine.displayDevMode(gameView, player, map);
+        } else {
+            weakness.display(gameView);
+            hunger.display(gameView);
+            time.display(gameView);
+        }
         this.gameLoop(gameView);
         gameView.requestFocus();
     }
