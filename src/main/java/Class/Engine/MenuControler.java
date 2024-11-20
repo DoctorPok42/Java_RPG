@@ -93,7 +93,7 @@ public class MenuControler extends Controler implements Menu {
         } else if (currentAction != -1) {
             List<ImageView> secondMenu = itemToInteract.getSecondMenu().get((currentAction / 10) - 1);
 
-            moveSelectedUpDown(e, itemToInteract, secondMenu);
+            moveSelectedUpDown(e, secondMenu);
         }
 
         moveSelectedRL(e, itemToInteract);
