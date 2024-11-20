@@ -4,7 +4,7 @@ public abstract class Controler {
     protected String name;
     protected int currentAction = 0;
 
-    public Controler(String name) {
+    protected Controler(String name) {
         this.name = name;
     }
 

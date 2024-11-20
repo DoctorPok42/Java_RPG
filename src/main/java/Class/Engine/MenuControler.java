@@ -54,6 +54,30 @@ public class MenuControler extends Controler implements Menu {
         }
     }
 
+    private void moveSelectedRL(KeyEvent e, Item itemToInteract) {
+        if (e.getCode() == KeyCode.RIGHT || e.getCode() == KeyCode.D) {
+            if (currentAction < 10 && itemToInteract.getSecondMenu().get(currentAction) != null) {
+                currentAction += 10;
+            }
+        } else if (e.getCode() == KeyCode.LEFT || e.getCode() == KeyCode.Q) {
+            if (currentAction > 10) {
+                currentAction = (currentAction / 10) - 1;
+            }  else if (currentAction >= 10) {
+                currentAction -= 10;
+            }
+        }
+    }
+
+    private void moveSelectedUpDown(KeyEvent e, Item itemToInteract, List<ImageView> secondMenu) {
+        if (e.getCode() == KeyCode.UP || e.getCode() == KeyCode.Z) {
+            if (currentAction > 10) {
+                currentAction -= 1;
+            }
+        } else if ((e.getCode() == KeyCode.DOWN || e.getCode() == KeyCode.S) && (currentAction % 10) < secondMenu.size() - 1) {
+            currentAction += 1;
+        }
+    }
+
     @Override
     public void moveSelected(KeyEvent e, Item itemToInteract) {
         List<ImageView> images = itemToInteract.getMenu();
@@ -69,26 +93,10 @@ public class MenuControler extends Controler implements Menu {
         } else if (currentAction != -1) {
             List<ImageView> secondMenu = itemToInteract.getSecondMenu().get((currentAction / 10) - 1);
 
-            if (e.getCode() == KeyCode.UP || e.getCode() == KeyCode.Z) {
-                if (currentAction > 10) {
-                    currentAction -= 1;
-                }
-            } else if ((e.getCode() == KeyCode.DOWN || e.getCode() == KeyCode.S) && (currentAction % 10) < secondMenu.size() - 1) {
-                currentAction += 1;
-            }
+            moveSelectedUpDown(e, itemToInteract, secondMenu);
         }
 
-        if (e.getCode() == KeyCode.RIGHT || e.getCode() == KeyCode.D) {
-            if (currentAction < 10 && itemToInteract.getSecondMenu().get(currentAction) != null) {
-                currentAction += 10;
-            }
-        } else if (e.getCode() == KeyCode.LEFT || e.getCode() == KeyCode.Q) {
-            if (currentAction > 10) {
-                currentAction = (currentAction / 10) - 1;
-            }  else if (currentAction >= 10) {
-                currentAction -= 10;
-            }
-        }
+        moveSelectedRL(e, itemToInteract);
     }
 
     @Override
