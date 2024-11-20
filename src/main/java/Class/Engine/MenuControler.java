@@ -68,7 +68,7 @@ public class MenuControler extends Controler implements Menu {
         }
     }
 
-    private void moveSelectedUpDown(KeyEvent e, Item itemToInteract, List<ImageView> secondMenu) {
+    private void moveSelectedUpDown(KeyEvent e, List<ImageView> secondMenu) {
         if (e.getCode() == KeyCode.UP || e.getCode() == KeyCode.Z) {
             if (currentAction > 10) {
                 currentAction -= 1;
