@@ -16,6 +16,7 @@ public class ItemTypeAdapter extends TypeAdapter<Item> {
         out.name("y").value(item.getY());
         out.name("z").value(item.getZ());
         out.name("skin").value(item.getSkin());
+        out.name("id").value(item.getId());
 
         out.endObject();
     }
@@ -30,6 +31,7 @@ public class ItemTypeAdapter extends TypeAdapter<Item> {
         float y = 0;
         int z = 0;
         int skin = 0;
+        int id = 0;
 
         while (in.hasNext()) {
             switch (in.nextName()) {
@@ -51,6 +53,9 @@ public class ItemTypeAdapter extends TypeAdapter<Item> {
                 case "skin":
                     skin = in.nextInt();
                     break;
+                case "id":
+                    id = in.nextInt();
+                    break;
                 default:
                     in.skipValue();
                     break;
@@ -62,6 +67,6 @@ public class ItemTypeAdapter extends TypeAdapter<Item> {
         // Convert the type string to an ItemType
         ItemType type = ItemType.valueOf(typeString.toUpperCase());
 
-        return new Item(name, type, x, y, z, skin);
+        return new Item(name, type, x, y, z, skin, id);
     }
 }

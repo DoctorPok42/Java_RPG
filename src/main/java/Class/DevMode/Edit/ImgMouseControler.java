@@ -1,5 +1,6 @@
 package Class.DevMode.Edit;
 
+import Class.DevMode.Edit.Replace.Replace;
 import Class.Item.*;
 import Class.Map.Map;
 import com.google.gson.Gson;
@@ -8,7 +9,6 @@ import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
 
 import java.io.Reader;
 import java.io.Writer;
@@ -36,7 +36,7 @@ public class ImgMouseControler {
     );
     private final ImageView imgSelected = new ImageView("file:assets/interact/mouse/selected.png");
     private int selected = 0;
-    private ImageView itemToDisplay = new ImageView();
+    private final ImageView itemToDisplay = new ImageView();
 
     public ImgMouseControler() {
         for (ImageView img : imgMode) {
@@ -92,9 +92,7 @@ public class ImgMouseControler {
 
                 gameView.getChildren().remove(imgSelected);
 
-                if (itemToDisplay != null) {
-                    gameView.getChildren().remove(itemToDisplay);
-                }
+                gameView.getChildren().remove(itemToDisplay);
             }
         }
     }
@@ -103,11 +101,8 @@ public class ImgMouseControler {
         double fx = x - gameView.getWidth() / 2;
         double fy = y - gameView.getHeight() / 2;
 
-        if (itemToDisplay != null) {
-            gameView.getChildren().remove(itemToDisplay);
-        }
+        gameView.getChildren().remove(itemToDisplay);
 
-        assert itemToDisplay != null;
         itemToDisplay.setImage(allImgItem.get(selected).getImg().getImage());
         itemToDisplay.setTranslateX(fx);
         itemToDisplay.setTranslateY(fy);
@@ -151,10 +146,10 @@ public class ImgMouseControler {
 
             Item items =
                     switch ((ItemType) item.getType()) {
-                        case PC -> new Pc(item.getName(), item.getType(), item.getX(), item.getY(), item.getZ(), item.getSkin());
-                        case CANAP -> new Canap(item.getName(), item.getType(), item.getX(), item.getY(), item.getZ(), item.getSkin());
-                        case DISTRIBUTOR -> new Distributor(item.getName(), item.getType(), item.getX(), item.getY(), item.getZ(), 0, item.getSkin());
-                        case TABLE -> new Item(item.getName(), item.getType(), item.getX(), item.getY(), item.getZ(), item.getSkin());
+                        case PC -> new Pc(item.getName(), item.getType(), item.getX(), item.getY(), item.getZ(), item.getSkin(), lastId + 1);
+                        case CANAP -> new Canap(item.getName(), item.getType(), item.getX(), item.getY(), item.getZ(), item.getSkin(), lastId + 1);
+                        case DISTRIBUTOR -> new Distributor(item.getName(), item.getType(), item.getX(), item.getY(), item.getZ(), 0, item.getSkin(), lastId + 1);
+                        case TABLE -> new Item(item.getName(), item.getType(), item.getX(), item.getY(), item.getZ(), item.getSkin(), lastId + 1);
                         default -> null;
                     };
 
@@ -187,7 +182,7 @@ public class ImgMouseControler {
         displayItemSelected(x, y, gameView);
     }
 
-    public void displayImg(double x, double y, StackPane gameView, Map map) {
+    public void displayImg(double x, double y, StackPane gameView, Map map, Replace replace) {
         double fx = x - gameView.getWidth() / 2;
         double fy = y - gameView.getHeight() / 2;
         imgMode.get(mode).setTranslateX(fx + 10);
@@ -195,21 +190,14 @@ public class ImgMouseControler {
 
         Point2D mouse = map.getMapContainer().sceneToLocal(x, y);
 
-        if (mode == 1) {
-            map.getItems().forEach(item -> {
-                if (item.getHitbox().contains(mouse)) {
-                    item.getHitbox().setStrokeWidth(2);
-                    item.getHitbox().setStroke(Color.RED);
-                } else {
-                    item.getHitbox().setStrokeWidth(0);
-                }
-            });
-        } else if (mode == 0) {
-            actionOnAdd(x, y, gameView);
-        }
-
         if (!gameView.getChildren().contains(imgMode.get(mode)))
             gameView.getChildren().add(imgMode.get(mode));
+
+        if (mode == 0) {
+            actionOnAdd(x, y, gameView);
+        } else if (mode == 1) {
+            replace.move(map, mouse);
+        }
     }
 
     public void removeImg(StackPane gameView) {
@@ -222,8 +210,6 @@ public class ImgMouseControler {
 
         gameView.getChildren().remove(imgSelected);
 
-        if (itemToDisplay != null) {
-            gameView.getChildren().remove(itemToDisplay);
-        }
+        gameView.getChildren().remove(itemToDisplay);
     }
 }

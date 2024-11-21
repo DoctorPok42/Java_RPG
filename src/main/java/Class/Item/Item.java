@@ -27,16 +27,14 @@ public class Item {
     protected int skin;
     protected int id;
 
-    public Item(String name, Enum<ItemType> type, float x, float y, int z, int skin, int... id) {
+    public Item(String name, Enum<ItemType> type, float x, float y, int z, int skin, int id) {
         this.name = name;
         this.type = type;
         this.x = x;
         this.y = y;
         this.z = z;
         this.skin = skin;
-        if (id.length > 0) {
-            this.id = id[0];
-        }
+        this.id = id;
 
         switch (type) {
             case ItemType.PC:
@@ -183,4 +181,11 @@ public class Item {
         this.id = id;
     }
 
+    public void setX(float x) {
+        this.x = x;
+    }
+
+    public void setY(float y) {
+        this.y = y;
+    }
 }

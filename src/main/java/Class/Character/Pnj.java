@@ -11,13 +11,15 @@ import javafx.scene.shape.Rectangle;
 public class Pnj extends Character {
     private List<String> message;
     private Rectangle pnjHitbox;
+    private int id;
 
     //Constructor
-    public Pnj(String name, Enum<Roles> type, Image texture, double x, double y) {
+    public Pnj(String name, Enum<Roles> type, Image texture, double x, double y, int id){
         super(name, type, new ImageView(texture));
         this.message = new ArrayList<>();
         this.setPosX(x);
         this.setPosY(y);
+        this.id = id;
         pnjHitbox = new Rectangle(x,y,32, 46);
         pnjHitbox.setFill(Color.TRANSPARENT);
         pnjHitbox.setStroke(Color.RED);
@@ -38,5 +40,9 @@ public class Pnj extends Character {
     }
     void Speak(){
         //display dialogue
+    }
+
+    public int getId() {
+        return this.id;
     }
 }
