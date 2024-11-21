@@ -65,7 +65,7 @@ public class Engine extends Application {
 
     //Constructor
     public Engine() {
-        this.map = new Map("Map", new ImageView(new Image("file:assets/map/mapavectexture.png")), true, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+        this.map = new Map("Map", new ImageView(new Image("file:assets/map/mapavectextureencoreplus.png")), true, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
         this.player = new Player("John Doe", new Image("file:assets/perso/animtest1.png"), this.map);
         this.weakness = new Tiredness("Tiredness");
         this.hunger = new Feed("Hunger");
@@ -328,8 +328,8 @@ public class Engine extends Application {
                     hunger.update(player, gameView);
                 }
 
-                if (!endMenu.isLoaded())
-                    checkEndGame(gameView);
+//                if (!endMenu.isLoaded())
+//                    checkEndGame(gameView);
             }));
             timeline.setCycleCount(Timeline.INDEFINITE);
             timeline.play();
@@ -459,17 +459,18 @@ public class Engine extends Application {
             }
         });
         gameView.setOnKeyPressed(e -> {
+            System.out.println(e.getCode());
             this.itemToInteract = player.getStoreItem();
             if (e.getCode() == KeyCode.ESCAPE) {
-                if (!music.isPlaying())
-                    music.play();
+//                if (!music.isPlaying())
+//                    music.play();
 
                 this.isInteracting = false;
                 this.itemToInteract = null;
                 this.canInteract = false;
                 mapContainer.getChildren().remove(interactImg);
                 gameView.getChildren().remove(gameView.lookup("#dialogBox"));
-
+                gameView.requestFocus();
                 if (player.getStoreItem() != null) {
                     for (ImageView img : player.getStoreItem().getMenu()) {
                         mapContainer.getChildren().remove(img);
@@ -484,7 +485,6 @@ public class Engine extends Application {
                             }
                         }
                     }
-
                     mapContainer.getChildren().remove(player.getStoreItem().getSelectedMenu());
                 }
 
@@ -540,7 +540,7 @@ public class Engine extends Application {
     public void start(Stage primaryStage) {
         StackPane gameView = new StackPane(map.getMapContainer(), player.getPlayerView());
         gameView.setPrefSize(this.map.getViewWidth(), this.map.getViewHeight());
-        music.play();
+//        music.play();
 
         Scene scene = new Scene(gameView);
         primaryStage.setScene(scene);

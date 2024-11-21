@@ -9,12 +9,67 @@
         "id": 1,
         "name":"Nicolas",
         "text": "wsh le sang",
-        "choices": [1, 2]
+        "choices": [3]
     },
     {
         "id": 2,
         "name":"Nicolas",
         "text": "bztmr",
-        "choices": [1, 2]
-    }
+        "choices": [8]
+    },
+  {
+    "id": 3,
+    "name":"Nicolas",
+    "text": "cv le boss?",
+    "choices": [4, 5]
+  },
+  {
+    "id": 4,
+    "name":"Nicolas",
+    "text": "ouais",
+    "choices": [6]
+  },
+  {
+    "id": 5,
+    "name":"Nicolas",
+    "text": "non",
+    "choices": [7]
+  },
+  {
+    "id": 6,
+    "name":"Nicolas",
+    "text": "ok",
+    "choices": [9,9]
+  },
+  {
+    "id": 7,
+    "name":"Nicolas",
+    "text": "ok",
+    "choices": [9,9]
+  },
+  {
+    "id": 8,
+    "name":"Nicolas",
+    "text": "jvais te demarer!!",
+    "choices": [9,9]
+  },
+    {
+        "id": 9,
+        "name":"Nicolas",
+        "text": "azzz",
+        "choices": [10]
+    },
+  {
+    "id": 10,
+    "name":"Nicolas",
+    "text": "fin",
+    "choices": [11,11]
+  },
+  {
+    "id": 11,
+    "name":"Nicolas",
+    "text": "fin",
+    "choices": []
+  }
+
 ]

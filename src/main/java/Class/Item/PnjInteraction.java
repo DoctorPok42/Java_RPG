@@ -6,11 +6,20 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import javafx.geometry.Pos;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
+import java.awt.*;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -34,10 +43,6 @@ public class PnjInteraction extends Item{
         return this.pnj;
     }
     private void displayDiaglogBox(StackPane gameView) {
-        ImageView dlg = new ImageView(new Image("file:assets/Pnjs/dialogbox2.png"));
-        StackPane.setAlignment(dlg, Pos.BOTTOM_CENTER);
-        StackPane dialogBox = new StackPane(dlg);
-        dialogBox.setId("dialogBox");
 
         Dialogues[] dialogues = null;
         List<Dialogues> pnjDialogues = null;
@@ -48,49 +53,88 @@ public class PnjInteraction extends Item{
              for (Dialogues d : dialogues) {
                  if (d.getName().equals(this.pnj.getName())) {
                      pnjDialogues.add(d);
-                     break;
                  }
              }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Text text = new Text();
-        Text resp1 = new Text();
-        Text resp2 = new Text();
-        for (Dialogues d : pnjDialogues) {
-            if (d.getId() == 0) {
-                text.setText(d.getText());
-            }
-            List<Dialogues> responses = new ArrayList<>();
-            for (int i : d.getChoices()) {
-                for (Dialogues d2 : dialogues) {
-                    if (d2.getId() == i) {
-                        responses.add(d2);
-                    }
-                }
-            }
-            resp1.setText(responses.get(0).getText());
-            resp2.setText(responses.get(1).getText());
-        }
-        resp1.setStyle("-fx-font-family: 'Press Start 2P'; -fx-font-size: 10;");
-        resp1.setFill(javafx.scene.paint.Color.RED);
-        StackPane.setAlignment(resp1, Pos.BOTTOM_CENTER);
-        resp1.setTranslateX(100);
-        resp1.setTranslateY(-100);
-        dialogBox.getChildren().add(resp1);
-        resp2.setStyle("-fx-font-family: 'Press Start 2P'; -fx-font-size: 10;");
-        resp2.setFill(javafx.scene.paint.Color.RED);
-        StackPane.setAlignment(resp2, Pos.BOTTOM_CENTER);
-        resp2.setTranslateX(-100);
-        resp2.setTranslateY(-100);
-        dialogBox.getChildren().add(resp2);
-        text.setStyle("-fx-font-family: 'Press Start 2P'; -fx-font-size: 10;");
-        text.setFill(javafx.scene.paint.Color.WHITE);
-        StackPane.setAlignment(text, Pos.BOTTOM_CENTER);
-        text.setTranslateY(-50);
-        dialogBox.getChildren().add(text);
+
+        VBox dialogBox = new VBox();
+        int idDialogue = 0;
+        dialogBox.setAlignment(Pos.BOTTOM_CENTER);
+        dialogBox.setId("dialogBox");
+        dialogBox.setSpacing(10);
+        Label dialog = new Label(pnjDialogues.get(idDialogue).getText());
+        dialogBox.setStyle("-fx-font-family: 'Press Start 2P';" +
+                "-fx-background-color: rgba(0, 0, 0, 0.2);"
+
+        );
+        dialog.setWrapText(true);
+        dialog.setAlignment(Pos.CENTER);
+
+        HBox pnjdialog = new HBox();
+        Rectangle rect = new Rectangle(450, 87);
+        rect.setFill(new ImagePattern(new Image(getClass().getResource("/assets/pnj/dialogbox2.png").toExternalForm())));
+        StackPane background = new StackPane(rect);
+        pnjdialog.getChildren().add(background);
+        pnjdialog.setAlignment(Pos.CENTER);
+        pnjdialog.setSpacing(10);
+        background.getChildren().add(dialog);
+
+        HBox responses = new HBox();
+        responses.setSpacing(20);
+        responses.setAlignment(Pos.CENTER);
+        Button resp1 = new Button(pnjDialogues.get(pnjDialogues.get(0).getChoices().get(0)).getText());
+        Rectangle resp1rect = new Rectangle(250, 48);
+        resp1rect.setFill(new ImagePattern(new Image(getClass().getResource("/assets/pnj/dialogbox3.png").toExternalForm())));
+        StackPane resp1background = new StackPane(resp1rect);
+        resp1.setStyle("-fx-font-family: 'Press Start 2P'; -fx-font-size: 10;-fx-background-color: transparent;");
+        resp1background.getChildren().add(resp1);
+
+        Button resp2 = new Button(pnjDialogues.get(pnjDialogues.get(idDialogue).getChoices().get(1)).getText());
+        Rectangle resp2rect = new Rectangle(250, 48);
+        resp2rect.setFill(new ImagePattern(new Image(getClass().getResource("/assets/pnj/dialogbox3.png").toExternalForm())));
+        StackPane resp2background = new StackPane(resp2rect);
+        resp2.setStyle("-fx-font-family: 'Press Start 2P'; -fx-font-size: 10;-fx-background-color: transparent;");
+        resp2background.getChildren().add(resp2);
+
+        responses.getChildren().addAll(resp1background, resp2background);
+
+        updateDialogBox(pnjDialogues.get(idDialogue), dialog, resp1, resp2, pnjDialogues, gameView);
+        dialogBox.getChildren().addAll(pnjdialog, responses);
         gameView.getChildren().add(dialogBox);
     }
+
+    private void updateDialogBox(Dialogues currentDialogue, Label pnjDialogue, Button resp1, Button resp2, List<Dialogues> pnjDialogues, StackPane gameView) {
+
+        resp1.setOnAction(e -> {
+            if (!(pnjDialogues.get(currentDialogue.getChoices().get(0)).getChoices().size() == 0)){
+                pnjDialogue.setText(pnjDialogues.get(pnjDialogues.get(currentDialogue.getChoices().get(0)).getChoices().get(0)).getText());
+                resp1.setText(pnjDialogues.get(pnjDialogues.get(pnjDialogues.get(currentDialogue.getChoices().get(0)).getChoices().get(0)).getChoices().get(0)).getText());
+                resp2.setText(pnjDialogues.get(pnjDialogues.get(pnjDialogues.get(currentDialogue.getChoices().get(0)).getChoices().get(0)).getChoices().get(1)).getText());
+                updateDialogBox(pnjDialogues.get(pnjDialogues.get(currentDialogue.getChoices().get(0)).getChoices().get(0)), pnjDialogue, resp1, resp2, pnjDialogues, gameView);
+            }else{
+                gameView.getOnKeyPressed().handle(new KeyEvent(
+                        KeyEvent.KEY_PRESSED, "", "", KeyCode.ESCAPE, false, false, false, false
+                ));
+            }
+        });
+        resp2.setOnAction(e -> {
+            if (!(pnjDialogues.get(currentDialogue.getChoices().get(1)).getChoices().size() == 0)){
+                pnjDialogue.setText(pnjDialogues.get(pnjDialogues.get(currentDialogue.getChoices().get(1)).getChoices().get(0)).getText());
+                resp1.setText(pnjDialogues.get(pnjDialogues.get(pnjDialogues.get(currentDialogue.getChoices().get(1)).getChoices().get(0)).getChoices().get(0)).getText());
+                resp2.setText(pnjDialogues.get(pnjDialogues.get(pnjDialogues.get(currentDialogue.getChoices().get(1)).getChoices().get(0)).getChoices().get(1)).getText());
+                updateDialogBox(pnjDialogues.get(pnjDialogues.get(currentDialogue.getChoices().get(1)).getChoices().get(0)), pnjDialogue, resp1, resp2, pnjDialogues, gameView);
+            }else{
+                gameView.getOnKeyPressed().handle(new KeyEvent(
+                        KeyEvent.KEY_PRESSED, "", "", KeyCode.ESCAPE, false, false, false, false
+                ));
+            }
+
+        });
+
+    }
+
     public boolean speak(Player player , Pnj pnj, StackPane gameView) {
         displayDiaglogBox(gameView);
         return  true;
