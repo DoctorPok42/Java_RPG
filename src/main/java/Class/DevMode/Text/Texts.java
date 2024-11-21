@@ -29,7 +29,7 @@ public class Texts {
         }
 
         StackPane.setAlignment(this.content, Pos.TOP_LEFT);
-        this.content.setTranslateX(10);
+        this.content.setTranslateX(20);
         this.content.setFill(Color.rgb(243, 159, 24));
     }
 

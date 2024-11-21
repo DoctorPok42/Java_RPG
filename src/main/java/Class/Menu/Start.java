@@ -47,7 +47,7 @@ public class Start extends Menu {
     public int selectOption() {
         this.options.get(this.selectedOption).getAction().run();
 
-        if (this.selectedOption == 0) {
+        if (this.selectedOption == 0 || this.selectedOption == 1) {
             music.stop();
         }
 
