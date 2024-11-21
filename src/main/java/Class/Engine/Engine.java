@@ -60,7 +60,7 @@ public class Engine {
 
     //Constructor
     public Engine() {
-        this.map = new Map("Map", new ImageView(new Image("file:assets/map/mapavectexture.png")), true, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+        this.map = new Map("Map", new ImageView(new Image("file:assets/map/mapavectextureencoreplus.png")), true, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
         this.player = new Player("John Doe", new Image("file:assets/perso/animtest1.png"), this.map);
         this.weakness = new Tiredness("Tiredness");
         this.hunger = new Feed("Hunger");
@@ -175,7 +175,6 @@ public class Engine {
                     weakness.update(player, gameView);
                     hunger.update(player, gameView);
                 }
-
                 if (!endMenu.isLoaded() && !isDevMode)
                     endMenu.checkEndGame(gameView, player, music);
             }));
@@ -223,8 +222,8 @@ public class Engine {
                 this.itemToInteract = null;
                 this.canInteract = false;
                 mapContainer.getChildren().remove(interactImg);
-                gameView.getChildren().remove(gameView.lookup("#dialogBox1"));
-
+                gameView.getChildren().remove(gameView.lookup("#dialogBox"));
+                gameView.requestFocus();
                 if (player.getStoreItem() != null) {
                     for (ImageView img : player.getStoreItem().getMenu()) {
                         mapContainer.getChildren().remove(img);
@@ -239,7 +238,6 @@ public class Engine {
                             }
                         }
                     }
-
                     mapContainer.getChildren().remove(player.getStoreItem().getSelectedMenu());
                 }
 

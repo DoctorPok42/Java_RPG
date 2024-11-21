@@ -1064,6 +1064,78 @@
     "skin": 3
   },
   {
+    "name": "DISTRIBUTOR",
+    "type": "DISTRIBUTOR",
+    "x": 0.0,
+    "y": 0.0,
+    "z": 1,
+    "skin": 3
+  },
+  {
+    "name": "DISTRIBUTOR",
+    "type": "DISTRIBUTOR",
+    "x": -73.20001,
+    "y": -104.0,
+    "z": 1,
+    "skin": 3
+  },
+  {
+    "name": "DISTRIBUTOR",
+    "type": "DISTRIBUTOR",
+    "x": -222.8,
+    "y": -73.600006,
+    "z": 1,
+    "skin": 3
+  },
+  {
+    "name": "DISTRIBUTOR",
+    "type": "DISTRIBUTOR",
+    "x": -158.4,
+    "y": -47.200012,
+    "z": 1,
+    "skin": 3
+  },
+  {
+    "name": "DISTRIBUTOR",
+    "type": "DISTRIBUTOR",
+    "x": -158.79999,
+    "y": -81.600006,
+    "z": 1,
+    "skin": 3
+  },
+  {
+    "name": "DISTRIBUTOR",
+    "type": "DISTRIBUTOR",
+    "x": -184.4,
+    "y": -117.600006,
+    "z": 1,
+    "skin": 3
+  },
+  {
+    "name": "DISTRIBUTOR",
+    "type": "DISTRIBUTOR",
+    "x": -244.4,
+    "y": -148.79999,
+    "z": 1,
+    "skin": 3
+  },
+  {
+    "name": "DISTRIBUTOR",
+    "type": "DISTRIBUTOR",
+    "x": -272.8,
+    "y": -96.0,
+    "z": 1,
+    "skin": 3
+  },
+  {
+    "name": "DISTRIBUTOR",
+    "type": "DISTRIBUTOR",
+    "x": -79.2,
+    "y": -129.6,
+    "z": 1,
+    "skin": 3
+  },
+  {
     "name": "CANAP",
     "type": "CANAP",
     "x": 2638.0,
