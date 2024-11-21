@@ -8,6 +8,8 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
+import java.io.IOException;
+
 public class Game extends Application {
     private final Start startMenu = new Start();
     private int currentMenu = 0;
@@ -16,7 +18,7 @@ public class Game extends Application {
         launch(args);
     }
 
-    public void startGame(Stage primaryStage, StackPane root) throws InterruptedException {
+    public void startGame(Stage primaryStage, StackPane root) throws InterruptedException, IOException {
         root.getChildren().clear();
         Engine engine = new Engine();
         engine.start(primaryStage, currentMenu == 2);
@@ -49,7 +51,7 @@ public class Game extends Application {
             if (this.currentMenu == 1 || this.currentMenu == 2) {
                 try {
                     startGame(primaryStage, root);
-                } catch (InterruptedException ex) {
+                } catch (InterruptedException | IOException ex) {
                     throw new RuntimeException(ex);
                 }
             }

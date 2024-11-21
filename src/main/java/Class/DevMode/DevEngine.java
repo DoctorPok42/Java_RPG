@@ -13,6 +13,7 @@ import javafx.scene.input.*;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,14 +30,16 @@ public class DevEngine {
     private final Replace replaceAction;
     private boolean isAdding = true;
     private final List<KeyCode> keysPressed = new ArrayList<>();
+    private Point2D mousePoint = new Point2D(0, 0);
 
-    public DevEngine() {
+    public DevEngine() throws IOException {
         textCollisions = new Collisions("Collisions", "Collisions: true (c)");
         textInteract = new Interact("Interact", "Interact hitBox: false (i)");
         textPlace = new Place("Place", "Edit mod: false (t)");
         List<KeyCode> keys = Texts.getAllKeyListeners();
         keys.add(KeyCode.CONTROL);
         keys.add(KeyCode.Z);
+        keys.add(KeyCode.DELETE);
         keyControler = new KeyControler("KeyControler", keys);
         imgMouseControler = new ImgMouseControler("./data/items.json");
         replaceAction = new Replace("./data/items.json");
@@ -55,6 +58,10 @@ public class DevEngine {
         KeyCode keyPress = keyControler.listenKey(e);
         if (keyPress == null) {
             return;
+        }
+
+        if (keyPress == KeyCode.DELETE) {
+            replaceAction.deleteItem(map, mousePoint);
         }
 
         if (keyPress == KeyCode.CONTROL) {
@@ -89,6 +96,8 @@ public class DevEngine {
     }
 
     public void listenMouse(MouseEvent e) {
+        this.mousePoint = map.getMapContainer().sceneToLocal(e.getSceneX(), e.getSceneY());
+
         if (isEditing) {
             imgMouseControler.displayImg(e.getX(), e.getY(), gameView, map, replaceAction);
         } else {
@@ -124,6 +133,7 @@ public class DevEngine {
             }
             imgMouseControler.displayItemSelected(e.getX(), e.getY(), gameView);
         }
+        imgMouseControler.displayImg(e.getX(), e.getY(), gameView, map, replaceAction);
     }
 
     public void listenMouseDrag(MouseEvent e) {

@@ -63,7 +63,7 @@ public class Engine {
     private boolean isCtrlPressed = false;
 
     //Constructor
-    public Engine() {
+    public Engine() throws IOException {
         this.map = new Map("Map", new ImageView(new Image("file:assets/map/mapavectextureencoreplus.png")), true, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
         this.player = new Player("John Doe", new Image("file:assets/perso/animtest1.png"), this.map);
         this.weakness = new Tiredness("Tiredness");
