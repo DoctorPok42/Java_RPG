@@ -201,7 +201,7 @@ public class Engine {
                 } else {
                     devEngine.imgMouseControler.changeSelected((devEngine.imgMouseControler.getSelected() + 1) % devEngine.imgMouseControler.getAllImgItem().size());
                 }
-                devEngine.imgMouseControler.displayItemSelected(e.getX(), e.getY(), gameView, map);
+                devEngine.imgMouseControler.displayItemSelected(e.getX(), e.getY(), gameView);
             }
         });
 
@@ -211,7 +211,7 @@ public class Engine {
             javafx.geometry.Point2D clickPoint = map.getMapContainer().sceneToLocal(clickX, clickY);
 
             if (e.isPrimaryButtonDown()) {
-                devEngine.imgMouseControler.putItem(map, clickPoint, gameView);
+                devEngine.imgMouseControler.putItem(map, clickPoint);
             }
         });
 
@@ -221,7 +221,7 @@ public class Engine {
             this.itemToInteract = player.getStoreItem();
             if (e.getCode() == KeyCode.ESCAPE) {
                 if (!music.isPlaying())
-//                    music.play();
+                    music.play();
 
                 this.isInteracting = false;
                 this.itemToInteract = null;
@@ -307,7 +307,8 @@ public class Engine {
     public void start(Stage primaryStage, boolean devMode) {
         StackPane gameView = new StackPane(map.getMapContainer(), player.getPlayerView());
         gameView.setPrefSize(this.map.getViewWidth(), this.map.getViewHeight());
-//        music.play();
+        music.play();
+
         Scene scene = new Scene(gameView);
         primaryStage.setScene(scene);
         primaryStage.show();

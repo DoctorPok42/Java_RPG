@@ -82,9 +82,7 @@ public class ImgMouseControler {
         this.mode = mode;
 
         for (int i = 0; i < imgMode.size(); i++) {
-            if (i == mode)
-                continue;
-            else {
+            if (i != mode) {
                 gameView.getChildren().remove(imgMode.get(i));
                 gameView.getChildren().remove(bar);
 
@@ -101,7 +99,7 @@ public class ImgMouseControler {
         }
     }
 
-    public void displayItemSelected(double x, double y, StackPane gameView, Map map) {
+    public void displayItemSelected(double x, double y, StackPane gameView) {
         double fx = x - gameView.getWidth() / 2;
         double fy = y - gameView.getHeight() / 2;
 
@@ -120,7 +118,7 @@ public class ImgMouseControler {
             gameView.getChildren().add(itemToDisplay);
     }
 
-    public void putItem(Map map, Point2D clickPoint, StackPane gameView) {
+    public void putItem(Map map, Point2D clickPoint) {
         Gson gson = new GsonBuilder().registerTypeAdapter(Item.class, new ItemTypeAdapter()).setPrettyPrinting().create();
         String filePath = "./data/items.json";
 
@@ -175,10 +173,6 @@ public class ImgMouseControler {
     }
 
     private void actionOnAdd(double x, double y, StackPane gameView, Map map) {
-        double fx = x - gameView.getWidth() / 2;
-        double fy = y - gameView.getHeight() / 2;
-        Point2D mouse = map.getMapContainer().sceneToLocal(x, y);
-
         if (!gameView.getChildren().contains(bar))
             gameView.getChildren().add(bar);
 
@@ -190,7 +184,7 @@ public class ImgMouseControler {
         if (!gameView.getChildren().contains(imgSelected))
             gameView.getChildren().add(imgSelected);
 
-        displayItemSelected(x, y, gameView, map);
+        displayItemSelected(x, y, gameView);
     }
 
     public void displayImg(double x, double y, StackPane gameView, Map map) {
