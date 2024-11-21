@@ -2,7 +2,7 @@ package Class.DevMode;
 
 import Class.Character.Player;
 import Class.DevMode.Edit.ImgMouseControler;
-import Class.DevMode.Edit.Replace.Replace;
+import Class.DevMode.Edit.Replace;
 import Class.DevMode.Text.Collisions;
 import Class.DevMode.Text.Interact;
 import Class.DevMode.Text.Place;
@@ -26,7 +26,7 @@ public class DevEngine {
     private final Interact textInteract;
     private final Place textPlace;
     private final ImgMouseControler imgMouseControler;
-    private final Replace replaceAction = new Replace();
+    private final Replace replaceAction;
     private boolean isAdding = true;
     private final List<KeyCode> keysPressed = new ArrayList<>();
 
@@ -38,7 +38,8 @@ public class DevEngine {
         keys.add(KeyCode.CONTROL);
         keys.add(KeyCode.Z);
         keyControler = new KeyControler("KeyControler", keys);
-        imgMouseControler = new ImgMouseControler();
+        imgMouseControler = new ImgMouseControler("./data/items.json");
+        replaceAction = new Replace("./data/items.json");
     }
 
     public void displayDevMode(StackPane gameView, Player player, Map map) {

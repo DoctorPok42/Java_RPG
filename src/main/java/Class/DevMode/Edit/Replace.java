@@ -1,5 +1,6 @@
-package Class.DevMode.Edit.Replace;
+package Class.DevMode.Edit;
 
+import Class.DevMode.Edit.Utils.ReadItemFile;
 import Class.Item.Item;
 import Class.Item.ItemTypeAdapter;
 import Class.Map.Map;
@@ -10,20 +11,18 @@ import javafx.scene.paint.Color;
 import javafx.geometry.Point2D;
 
 import java.io.IOException;
-import java.io.Reader;
 import java.io.Writer;
 import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class Replace {
     private final List<Item> itemsToReplace = new ArrayList<>();
     private final List<Item> itemsToReplaceStored = new ArrayList<>();
+    private final ReadItemFile readItemFile;
 
-    public Replace() {
+    public Replace(String filePath) {
+        readItemFile = new ReadItemFile(filePath);
     }
 
     public void move(Map map, Point2D mouse) {
@@ -52,19 +51,9 @@ public class Replace {
 
     public void saveInJson() {
         Gson gson = new GsonBuilder().registerTypeAdapter(Item.class, new ItemTypeAdapter()).setPrettyPrinting().create();
-        String filePath = "./data/items.json";
 
         try {
-            List<Item> itemList = new ArrayList<>();
-            Path itemFilePath = Paths.get(filePath);
-            if (Files.exists(itemFilePath)) {
-                Reader reader = Files.newBufferedReader(itemFilePath);
-                Item[] existingObstacles = gson.fromJson(reader, Item[].class);
-                if (existingObstacles != null) {
-                    itemList.addAll(Arrays.asList(existingObstacles));
-                }
-                reader.close();
-            }
+            List<Item> itemList = readItemFile.readItems(gson);
 
             itemsToReplaceStored.forEach(item ->
                 itemList.forEach(itemStored -> {
@@ -75,7 +64,7 @@ public class Replace {
                 })
             );
 
-            Writer writer = Files.newBufferedWriter(itemFilePath);
+            Writer writer = Files.newBufferedWriter(readItemFile.getItemFilePath());
             gson.toJson(itemList, writer);
             writer.close();
 
@@ -107,8 +96,6 @@ public class Replace {
 
     public void undo() {
         List<Item> itemsCopy = new ArrayList<>(itemsToReplaceStored);
-
-        System.out.println("itemsCopy: " + itemsCopy);
 
         itemsCopy.forEach(item -> {
             item.getItemView().setLayoutX(item.getX());

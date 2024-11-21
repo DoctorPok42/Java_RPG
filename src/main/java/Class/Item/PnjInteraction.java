@@ -153,8 +153,4 @@ public class PnjInteraction extends Item{
     public List<PnjTypeAction> getActions() {
         return List.of(PnjTypeAction.class.getEnumConstants());
     }
-
-    public int getId() {
-        return this.id;
-    }
 }

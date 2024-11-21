@@ -1,6 +1,6 @@
 package Class.DevMode.Edit;
 
-import Class.DevMode.Edit.Replace.Replace;
+import Class.DevMode.Edit.Utils.ReadItemFile;
 import Class.Item.*;
 import Class.Map.Map;
 import com.google.gson.Gson;
@@ -10,13 +10,8 @@ import javafx.geometry.Pos;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 
-import java.io.Reader;
 import java.io.Writer;
 import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class ImgMouseControler {
@@ -37,8 +32,9 @@ public class ImgMouseControler {
     private final ImageView imgSelected = new ImageView("file:assets/interact/mouse/selected.png");
     private int selected = 0;
     private final ImageView itemToDisplay = new ImageView();
+    private final ReadItemFile readItemFile;
 
-    public ImgMouseControler() {
+    public ImgMouseControler(String filePath) {
         for (ImageView img : imgMode) {
             img.setFitWidth(20);
             img.setFitHeight(20);
@@ -58,6 +54,8 @@ public class ImgMouseControler {
         StackPane.setAlignment(imgSelected, Pos.BOTTOM_CENTER);
         imgSelected.setTranslateX(-allImgItem.size() * 20);
         imgSelected.setTranslateY(-9);
+
+        readItemFile = new ReadItemFile(filePath);
     }
 
     public int getMode() {
@@ -115,19 +113,9 @@ public class ImgMouseControler {
 
     public void putItem(Map map, Point2D clickPoint) {
         Gson gson = new GsonBuilder().registerTypeAdapter(Item.class, new ItemTypeAdapter()).setPrettyPrinting().create();
-        String filePath = "./data/items.json";
 
         try {
-            List<Item> itemList = new ArrayList<>();
-            Path itemFilePath = Paths.get(filePath);
-            if (Files.exists(itemFilePath)) {
-                Reader reader = Files.newBufferedReader(itemFilePath);
-                Item[] existingObstacles = gson.fromJson(reader, Item[].class);
-                if (existingObstacles != null) {
-                    itemList.addAll(Arrays.asList(existingObstacles));
-                }
-                reader.close();
-            }
+            List<Item> itemList = readItemFile.readItems(gson);
 
             int lastId = 0;
             if (!itemList.isEmpty()) {
@@ -140,7 +128,7 @@ public class ImgMouseControler {
             Item item = new Item(allImgItem.get(selected).getName(), allImgItem.get(selected).getType(), (float) itemX, (float) itemY, 1, allImgItem.get(selected).getSkin(), lastId + 1);
             itemList.add(item);
 
-            Writer writer = Files.newBufferedWriter(itemFilePath);
+            Writer writer = Files.newBufferedWriter(readItemFile.getItemFilePath());
             gson.toJson(itemList, writer);
             writer.close();
 
