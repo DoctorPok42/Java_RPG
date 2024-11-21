@@ -9,9 +9,11 @@ import Class.DevMode.Text.Place;
 import Class.DevMode.Text.Texts;
 import Class.Map.Map;
 import javafx.geometry.Point2D;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.geometry.Pos;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -31,6 +33,7 @@ public class DevEngine {
     private boolean isAdding = true;
     private final List<KeyCode> keysPressed = new ArrayList<>();
     private Point2D mousePoint = new Point2D(0, 0);
+    private ImageView textBlock = new ImageView("file:assets/menu/creative/block.png");
 
     public DevEngine() throws IOException {
         textCollisions = new Collisions("Collisions", "Collisions: true (c)");
@@ -43,12 +46,17 @@ public class DevEngine {
         keyControler = new KeyControler("KeyControler", keys);
         imgMouseControler = new ImgMouseControler("./data/items.json");
         replaceAction = new Replace("./data/items.json");
+
+        StackPane.setAlignment(textBlock, Pos.TOP_LEFT);
+        textBlock.setTranslateX(10);
+        textBlock.setTranslateY(10);
     }
 
     public void displayDevMode(StackPane gameView, Player player, Map map) {
         this.player = player;
         this.map = map;
         this.gameView = gameView;
+        gameView.getChildren().add(textBlock);
         textCollisions.displayText(gameView);
         textInteract.displayText(gameView);
         textPlace.displayText(gameView);
@@ -60,7 +68,7 @@ public class DevEngine {
             return;
         }
 
-        if (keyPress == KeyCode.DELETE) {
+        if (keyPress == KeyCode.DELETE && isEditing && !isAdding) {
             replaceAction.deleteItem(map, mousePoint);
         }
 
