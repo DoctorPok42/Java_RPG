@@ -14,7 +14,7 @@ public class Texts {
     protected String name;
     protected Text content;
     protected final Font font = Font.loadFont("file:assets/font/PressStart2P-Regular.ttf", 13);
-    protected final String styles = "-fx-font-size: 13;" + "-fx-font-family: 'Press Start 2P';" + "-fx-font-weight: bold;";
+    protected static final String styles = "-fx-font-size: 13;" + "-fx-font-family: 'Press Start 2P';" + "-fx-font-weight: bold;";
     protected final KeyCode keyListener;
     protected boolean display = true;
     private static final List<Texts> allTexts = new ArrayList<>();

@@ -164,10 +164,6 @@ public class Engine {
         }
     }
 
-    double X1 = 0;
-    double Y1 = 0;
-    double X2 = 0;
-    double Y2 = 0;
     private void gameLoop(StackPane gameView) {
         displayPnjs(gameView);
         displayItems(gameView);
@@ -186,9 +182,8 @@ public class Engine {
             timeline.setCycleCount(Timeline.INDEFINITE);
             timeline.play();
         gameView.setOnMouseMoved(e -> {
-            if (isDevMode) {
+            if (isDevMode)
                 devEngine.listenMouse(e);
-            }
         });
 
         // on scroll
@@ -216,7 +211,8 @@ public class Engine {
         });
 
         gameView.setOnKeyPressed(e -> {
-            devEngine.listenKey(e);
+            if (isDevMode)
+                devEngine.listenKey(e);
 
             this.itemToInteract = player.getStoreItem();
             if (e.getCode() == KeyCode.ESCAPE) {

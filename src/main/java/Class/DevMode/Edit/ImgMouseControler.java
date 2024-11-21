@@ -172,7 +172,7 @@ public class ImgMouseControler {
         }
     }
 
-    private void actionOnAdd(double x, double y, StackPane gameView, Map map) {
+    private void actionOnAdd(double x, double y, StackPane gameView) {
         if (!gameView.getChildren().contains(bar))
             gameView.getChildren().add(bar);
 
@@ -205,7 +205,7 @@ public class ImgMouseControler {
                 }
             });
         } else if (mode == 0) {
-            actionOnAdd(x, y, gameView, map);
+            actionOnAdd(x, y, gameView);
         }
 
         if (!gameView.getChildren().contains(imgMode.get(mode)))
