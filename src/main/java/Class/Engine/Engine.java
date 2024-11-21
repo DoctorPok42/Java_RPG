@@ -215,8 +215,8 @@ public class Engine {
 
             this.itemToInteract = player.getStoreItem();
             if (e.getCode() == KeyCode.ESCAPE) {
-//                if (!music.isPlaying())
-//                    music.play();
+                if (!music.isPlaying())
+                    music.play();
 
                 this.isInteracting = false;
                 this.itemToInteract = null;

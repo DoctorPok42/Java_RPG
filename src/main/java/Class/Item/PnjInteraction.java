@@ -108,7 +108,7 @@ public class PnjInteraction extends Item{
     private void updateDialogBox(Dialogues currentDialogue, Label pnjDialogue, Button resp1, Button resp2, List<Dialogues> pnjDialogues, StackPane gameView) {
 
         resp1.setOnAction(e -> {
-            if (!(pnjDialogues.get(currentDialogue.getChoices().get(0)).getChoices().size() == 0)){
+            if (pnjDialogues.get(currentDialogue.getChoices().get(0)).getChoices().size() != 0){
                 pnjDialogue.setText(pnjDialogues.get(pnjDialogues.get(currentDialogue.getChoices().get(0)).getChoices().get(0)).getText());
                 resp1.setText(pnjDialogues.get(pnjDialogues.get(pnjDialogues.get(currentDialogue.getChoices().get(0)).getChoices().get(0)).getChoices().get(0)).getText());
                 resp2.setText(pnjDialogues.get(pnjDialogues.get(pnjDialogues.get(currentDialogue.getChoices().get(0)).getChoices().get(0)).getChoices().get(1)).getText());
@@ -120,7 +120,7 @@ public class PnjInteraction extends Item{
             }
         });
         resp2.setOnAction(e -> {
-            if (!(pnjDialogues.get(currentDialogue.getChoices().get(1)).getChoices().size() == 0)){
+            if (pnjDialogues.get(currentDialogue.getChoices().get(1)).getChoices().size() != 0){
                 pnjDialogue.setText(pnjDialogues.get(pnjDialogues.get(currentDialogue.getChoices().get(1)).getChoices().get(0)).getText());
                 resp1.setText(pnjDialogues.get(pnjDialogues.get(pnjDialogues.get(currentDialogue.getChoices().get(1)).getChoices().get(0)).getChoices().get(0)).getText());
                 resp2.setText(pnjDialogues.get(pnjDialogues.get(pnjDialogues.get(currentDialogue.getChoices().get(1)).getChoices().get(0)).getChoices().get(1)).getText());
