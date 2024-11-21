@@ -204,7 +204,7 @@ public class Engine {
             double clickY = e.getSceneY();
             javafx.geometry.Point2D clickPoint = map.getMapContainer().sceneToLocal(clickX, clickY);
 
-            if (e.isPrimaryButtonDown()) {
+            if (e.isPrimaryButtonDown() && isDevMode) {
                 devEngine.imgMouseControler.putItem(map, clickPoint);
             }
         });
