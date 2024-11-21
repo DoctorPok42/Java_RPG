@@ -1,6 +1,7 @@
 package Class.Menu;
 
 import Class.Character.Player;
+import Class.Music.Music;
 import Class.Skill.Skill;
 import javafx.geometry.Pos;
 import javafx.scene.image.ImageView;
@@ -38,6 +39,18 @@ public class End extends Menu {
                 "You lost! But in swag!",
                 "What a loser!"
         );
+    }
+
+    public void checkEndGame(StackPane gameView, Player player, Music music) {
+        if (player.getTimeDays() >= 60) {
+            music.pause();
+            show(gameView, player);
+        }
+
+        if (player.getHunger() <= 0 || player.getWeakness() <= 0) {
+            music.pause();
+            show(gameView, player);
+        }
     }
 
     public void setGrade(Player player) {

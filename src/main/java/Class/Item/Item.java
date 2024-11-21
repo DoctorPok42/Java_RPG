@@ -102,6 +102,13 @@ public class Item {
         this.selected_menu = new ImageView(new Image("file:assets/interact/test4.png"));
         this.selected_menu.setFitWidth(91.96);
         this.selected_menu.setFitHeight(37.5);
+
+        if (type == ItemType.TABLE) {
+            this.interactionHitbox.setWidth(0);
+            this.interactionHitbox.setHeight(0);
+            this.interactionHitbox.setX(-1280);
+            this.interactionHitbox.setY(-720);
+        }
     }
 
     public int getId() {
