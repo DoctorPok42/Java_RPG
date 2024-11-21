@@ -83,6 +83,7 @@ public class Item {
                 break;
         }
 
+        assert itemView != null;
         this.width = (int) itemView.getImage().getWidth();
         this.height = (int) itemView.getImage().getHeight();
         if (type == ItemType.PNJ) {

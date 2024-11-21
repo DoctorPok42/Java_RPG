@@ -144,12 +144,14 @@ public class ImgMouseControler {
             map.getItems().add(items);
             map.getItems().getLast().getItemView().toFront();
 
-            map.getMapContainer().getChildren().add(item.getInteractionHitbox());
-            map.getMapContainer().getChildren().add(item.getHitbox());
+            assert items != null;
+            map.getMapContainer().getChildren().add(items.getInteractionHitbox());
+            map.getMapContainer().getChildren().add(items.getHitbox());
 
-            item.getItemView().setLayoutX(itemX);
-            item.getItemView().setLayoutY(itemY);
-            map.getMapContainer().getChildren().add(item.getItemView());
+            items.getItemView().setLayoutX(itemX);
+            items.getItemView().setLayoutY(itemY);
+            map.getMapContainer().getChildren().add(items.getItemView());
+
         } catch (Exception ex) {
             ex.printStackTrace();
         }

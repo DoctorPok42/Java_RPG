@@ -21,8 +21,11 @@ public class Replace {
     private final List<Item> itemsToReplaceStored = new ArrayList<>();
     private final ReadItemFile readItemFile;
 
-    public Replace(String filePath) {
+    private List<Item> itemField = new ArrayList<>();
+
+    public Replace(String filePath) throws IOException {
         readItemFile = new ReadItemFile(filePath);
+        this.itemField = readItemFile.readItems(new GsonBuilder().registerTypeAdapter(Item.class, new ItemTypeAdapter()).create());
     }
 
     public void move(Map map, Point2D mouse) {
@@ -53,7 +56,7 @@ public class Replace {
         Gson gson = new GsonBuilder().registerTypeAdapter(Item.class, new ItemTypeAdapter()).setPrettyPrinting().create();
 
         try {
-            List<Item> itemList = readItemFile.readItems(gson);
+            List<Item> itemList = this.itemField;
 
             itemsToReplaceStored.forEach(item ->
                 itemList.forEach(itemStored -> {
@@ -67,6 +70,8 @@ public class Replace {
             Writer writer = Files.newBufferedWriter(readItemFile.getItemFilePath());
             gson.toJson(itemList, writer);
             writer.close();
+
+            this.itemField = itemList;
 
             itemsToReplaceStored.clear();
             itemsToReplace.clear();
@@ -112,5 +117,42 @@ public class Replace {
 
             saveInJson();
         });
+    }
+
+    public void deleteItem(Map map, Point2D mouse) {
+        List<Item> itemsToRemove = new ArrayList<>();
+
+        map.getItems().forEach(item -> {
+            if (item.getHitbox().contains(mouse)) {
+                itemsToRemove.add(item);
+            }
+        });
+
+        if (!itemsToRemove.isEmpty()) {
+            itemsToRemove.forEach(item -> {
+                map.getMapContainer().getChildren().remove(item.getHitbox());
+                map.getMapContainer().getChildren().remove(item.getInteractionHitbox());
+                map.getItems().remove(item);
+                map.getMapContainer().getChildren().remove(item.getItemView());
+            });
+
+            Gson gson = new GsonBuilder().registerTypeAdapter(Item.class, new ItemTypeAdapter()).setPrettyPrinting().create();
+
+            try {
+                List<Item> itemList = this.itemField;
+
+                itemsToRemove.forEach(item -> {
+                    itemList.removeIf(itemStored -> itemStored.getId() == item.getId());
+                });
+
+                Writer writer = Files.newBufferedWriter(readItemFile.getItemFilePath());
+                gson.toJson(itemList, writer);
+                writer.close();
+
+                this.itemField = itemList;
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 }
