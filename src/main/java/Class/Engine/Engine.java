@@ -20,6 +20,7 @@ import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.geometry.Point2D;
 import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -30,6 +31,7 @@ import javafx.scene.layout.StackPane;
 
 import java.io.*;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -38,6 +40,7 @@ import java.util.List;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import org.jetbrains.annotations.NotNull;
 
 public class Engine {
     private final Player player;
@@ -57,6 +60,7 @@ public class Engine {
     private boolean isDevMode = false;
     private final DevEngine devEngine;
     private boolean isAltPressed = false;
+    private boolean isCtrlPressed = false;
 
     //Constructor
     public Engine() {
@@ -94,7 +98,7 @@ public class Engine {
             pnjs = gson.fromJson(reader, Pnj[].class);
             for (Pnj pnj : pnjs) {
                 map.getPnjs().add(pnj);
-                map.getItems().add(new PnjInteraction(pnj.getName(), ItemType.PNJ, (float) pnj.getPosX(), (float) pnj.getPosY(), 1, -1, pnj));
+                map.getItems().add(new PnjInteraction(pnj.getName(), ItemType.PNJ, (float) pnj.getPosX(), (float) pnj.getPosY(), 1, -1, pnj, pnj.getId()));
             }
         } catch (NullPointerException | IOException | JsonIOException | JsonSyntaxException e) {
             e.printStackTrace();
@@ -128,13 +132,13 @@ public class Engine {
                 if (item.getZ() == mapLevel) {
                     switch ((ItemType) item.getType()) {
                         case PC:
-                            map.getItems().add(new Pc(item.getName(), item.getType(), item.getX(), item.getY(), item.getZ(), item.getSkin()));
+                            map.getItems().add(new Pc(item.getName(), item.getType(), item.getX(), item.getY(), item.getZ(), item.getSkin(), item.getId()));
                             break;
                         case CANAP:
-                            map.getItems().add(new Canap(item.getName(), item.getType(), item.getX(), item.getY(), item.getZ(), item.getSkin()));
+                            map.getItems().add(new Canap(item.getName(), item.getType(), item.getX(), item.getY(), item.getZ(), item.getSkin(), item.getId()));
                             break;
                         case DISTRIBUTOR:
-                            map.getItems().add(new Distributor(item.getName(), item.getType(), item.getX(), item.getY(), item.getZ(), 0, item.getSkin()));
+                            map.getItems().add(new Distributor(item.getName(), item.getType(), item.getX(), item.getY(), item.getZ(), 0, item.getSkin(), item.getId()));
                             break;
                         case PNJ:
                             break;
@@ -164,50 +168,53 @@ public class Engine {
         }
     }
 
+    public Point2D getClickPoint(MouseEvent e) {
+        double clickX = e.getSceneX();
+        double clickY = e.getSceneY();
+        return map.getMapContainer().sceneToLocal(clickX, clickY);
+    }
+
+    @NotNull
+    private Timeline getTimeline(StackPane gameView) {
+        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
+            if (!endMenu.isLoaded()) {
+                player.updateTime(map);
+                time.update(player);
+                weakness.update(player, gameView);
+                hunger.update(player, gameView);
+            }
+            if (!endMenu.isLoaded() && !isDevMode)
+                endMenu.checkEndGame(gameView, player, music);
+        }));
+        timeline.setCycleCount(Timeline.INDEFINITE);
+        return timeline;
+    }
+
     private void gameLoop(StackPane gameView) {
         displayPnjs(gameView);
         displayItems(gameView);
         time.update(player);
-            Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
-                if (!endMenu.isLoaded()) {
-                    player.updateTime(map);
-                    time.update(player);
-                    weakness.update(player, gameView);
-                    hunger.update(player, gameView);
-                }
-                if (!endMenu.isLoaded() && !isDevMode)
-                    endMenu.checkEndGame(gameView, player, music);
-            }));
-            timeline.setCycleCount(Timeline.INDEFINITE);
-            timeline.play();
-        gameView.setOnMouseMoved(e -> {
-            if (isDevMode)
+        Timeline timeline = getTimeline(gameView);
+        timeline.play();
+
+        if (isDevMode) {
+            gameView.setOnMouseMoved(devEngine::listenMouse);
+
+            gameView.setOnScroll(e -> {
+                    devEngine.listenScroll(e, e.getDeltaY(), isAltPressed);
+            });
+
+            gameView.setOnMouseDragged(e -> {
                 devEngine.listenMouse(e);
-        });
+                devEngine.listenMouseDrag(e);
+            });
 
-        // on scroll
-        gameView.setOnScroll(e -> {
-            if (isDevMode && !isAltPressed) {
-                devEngine.imgMouseControler.setMode((devEngine.imgMouseControler.getMode() + 1) % 2, gameView);
-            } else if (isDevMode) {
-                if (e.getDeltaY() > 0) {
-                    devEngine.imgMouseControler.changeSelected((devEngine.imgMouseControler.getSelected() - 1 + devEngine.imgMouseControler.getAllImgItem().size()) % devEngine.imgMouseControler.getAllImgItem().size());
-                } else {
-                    devEngine.imgMouseControler.changeSelected((devEngine.imgMouseControler.getSelected() + 1) % devEngine.imgMouseControler.getAllImgItem().size());
+            gameView.setOnMousePressed((MouseEvent e) -> {
+                if ((e.isPrimaryButtonDown() || e.isSecondaryButtonDown())) {
+                    devEngine.listenMouseClick(e, getClickPoint(e));
                 }
-                devEngine.imgMouseControler.displayItemSelected(e.getX(), e.getY(), gameView);
-            }
-        });
-
-        gameView.setOnMousePressed((MouseEvent e) -> {
-            double clickX = e.getSceneX();
-            double clickY = e.getSceneY();
-            javafx.geometry.Point2D clickPoint = map.getMapContainer().sceneToLocal(clickX, clickY);
-
-            if (e.isPrimaryButtonDown() && isDevMode) {
-                devEngine.imgMouseControler.putItem(map, clickPoint);
-            }
-        });
+            });
+        }
 
         gameView.setOnKeyPressed(e -> {
             if (isDevMode)
@@ -246,9 +253,8 @@ public class Engine {
                 profileMenu.remove(gameView);
             }
 
-            if (e.getCode() == KeyCode.ALT) {
-                isAltPressed = true;
-            }
+            if (e.getCode() == KeyCode.ALT) isAltPressed = true;
+            if (e.getCode() == KeyCode.CONTROL) isCtrlPressed = true;
 
             if (this.itemToInteract != null) {
                 this.canInteract = true;
@@ -272,7 +278,7 @@ public class Engine {
                     menuControler.moveSelected(e, this.itemToInteract);
                     menuControler.displaySecondMenu(this.itemToInteract, mapContainer);
                     menuControler.displayActionSelected(this.itemToInteract, mapContainer);
-                } else {
+                } else if (!this.isCtrlPressed) {
                     player.move(map.getMapView(), gameView, true, e);
                 }
             }

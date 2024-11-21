@@ -24,6 +24,7 @@ public class PnjTypeAdapter extends TypeAdapter<Pnj> {
         double x = 0;
         double y = 0;
         Image texture = null;
+        int id = 0;
 
         while (in.hasNext()) {
             switch (in.nextName()) {
@@ -42,6 +43,9 @@ public class PnjTypeAdapter extends TypeAdapter<Pnj> {
                 case "texture":
                     texture = new Image(in.nextString());
                     break;
+                case "id":
+                    id = in.nextInt();
+                    break;
                 default:
                     in.skipValue();
                     break;
@@ -53,6 +57,6 @@ public class PnjTypeAdapter extends TypeAdapter<Pnj> {
         // Convert the role string to a role
         Roles type = Roles.valueOf(roleString.toUpperCase());
 
-        return new Pnj(name, type, texture, x, y);
+        return new Pnj(name, type, texture, x, y, id);
     }
 }

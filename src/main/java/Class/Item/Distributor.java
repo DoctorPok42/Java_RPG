@@ -9,8 +9,8 @@ import java.util.List;
 public class Distributor extends Item {
     private int money;
 
-    public Distributor(String name, Enum<ItemType> type, float x, float y, int z, int money, int skin) {
-        super(name, type, x, y, z, skin);
+    public Distributor(String name, Enum<ItemType> type, float x, float y, int z, int money, int skin, int id) {
+        super(name, type, x, y, z, skin, id);
 
         this.money = money;
 

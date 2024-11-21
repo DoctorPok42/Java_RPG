@@ -28,9 +28,12 @@ import java.util.List;
 public class PnjInteraction extends Item{
     Pnj pnj;
     private final Font font = Font.loadFont("file:assets/font/PressStart2P-Regular.ttf", 20);
-    public PnjInteraction (String name, Enum<ItemType> type, float x, float y, int z, int skin, Pnj pnj) {
-        super(name, type, x, y, z, skin);
+    private int id;
+
+    public PnjInteraction (String name, Enum<ItemType> type, float x, float y, int z, int skin, Pnj pnj, int id) {
+        super(name, type, x, y, z, skin, id);
         this.pnj = pnj;
+        this.id = id;
         this.menu.add(new ImageView("file:assets/interact/pnj/speak.png"));
 
         for (ImageView img : this.menu) {
