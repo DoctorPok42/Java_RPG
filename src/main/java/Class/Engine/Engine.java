@@ -201,6 +201,7 @@ public class Engine {
                 } else {
                     devEngine.imgMouseControler.changeSelected((devEngine.imgMouseControler.getSelected() + 1) % devEngine.imgMouseControler.getAllImgItem().size());
                 }
+                devEngine.imgMouseControler.displayItemSelected(e.getX(), e.getY(), gameView, map);
             }
         });
 
@@ -208,141 +209,19 @@ public class Engine {
             double clickX = e.getSceneX();
             double clickY = e.getSceneY();
             javafx.geometry.Point2D clickPoint = map.getMapContainer().sceneToLocal(clickX, clickY);
-//            Rectangle previewRect = new Rectangle();
-            ImageView item = new ImageView(new Image("file:assets/items/distributeur.png"));
 
-            if(e.isPrimaryButtonDown()){
-                X1 = clickPoint.getX();
-                Y1 = clickPoint.getY();
-
-                System.out.println(X1+ ", "+ Y1);
-
-                item.setLayoutX(X1 - item.getImage().getWidth()/2);
-                item.setLayoutY(Y1 - item.getImage().getHeight()/2);
-                mapContainer.getChildren().add(item);
-
-//                previewRect.setX(X1);
-//                previewRect.setY(Y1);
-//                previewRect.setFill(Color.CYAN.deriveColor(0, 1, 1, 0.5));
-//                previewRect.setStroke(Color.CYAN);
-//                mapContainer.getChildren().add(previewRect);
-//                map.getObstacles().add(previewRect);
-//
-//                Rectangle finalPreviewRect = previewRect;
-                gameView.setOnMouseDragged((MouseEvent dragEvent) -> {
-                    double dragX = dragEvent.getSceneX();
-                    double dragY = dragEvent.getSceneY();
-                    javafx.geometry.Point2D dragPoint = map.getMapContainer().sceneToLocal(dragX, dragY);
-
-//                    item.setLayoutX(dragPoint.getX());
-//                    item.setLayoutY(dragPoint.getY());
-
-                    item.setLayoutX(dragPoint.getX() - item.getImage().getWidth()/2);
-                    item.setLayoutY(dragPoint.getY() - item.getImage().getHeight()/2);
-
-                    mapContainer.getChildren().remove(item);
-                    mapContainer.getChildren().add(item);
-
-//                    finalPreviewRect.setWidth(width);
-//                    finalPreviewRect.setHeight(height);
-//
-//                    finalPreviewRect.setX(Math.min(X1, dragPoint.getX()));
-//                    finalPreviewRect.setY(Math.min(Y1, dragPoint.getY()));
-                });
-
-                gameView.setOnMouseReleased((MouseEvent releaseEvent) -> {
-                    gameView.setOnMouseDragged(null);
-                    mapContainer.getChildren().remove(item);
-                });
-            } else if (e.isSecondaryButtonDown()) {
-//                mapContainer.getChildren().remove(previewRect);
-//                X2 = clickPoint.getX();
-//                Y2 = clickPoint.getY();
-
-                X2 = clickPoint.getX() - item.getImage().getWidth()/2;
-                Y2 = clickPoint.getY() - item.getImage().getHeight()/2;
-
-                double w = X2-X1;
-                double h = Y2-Y1;
-
-                if (w < 0) {
-                    X1 = X2;
-                    w = -w;
-                }
-
-                if (h < 0) {
-                    Y1 = Y2;
-                    h = -h;
-                }
-
-                System.out.println(X1+ ", "+ Y1 + ", "+ w + ", "+ h);
-
-                 Gson gson = new GsonBuilder().registerTypeAdapter(Item.class, new ItemTypeAdapter()).setPrettyPrinting().create();
-
-                String filePath = "./data/items.json";
-
-                    try {
-                        List<Item> obstaclesList = new ArrayList<>();
-                        if (Files.exists(Paths.get(filePath))) {
-                            Reader reader = Files.newBufferedReader(Paths.get(filePath));
-                            Item[] existingObstacles = gson.fromJson(reader, Item[].class);
-                            if (existingObstacles != null) {
-                                obstaclesList.addAll(Arrays.asList(existingObstacles));
-                            }
-                            reader.close();
-                        }
-
-                        int lastId = 0;
-                        if (!obstaclesList.isEmpty()) {
-                            lastId = obstaclesList.getLast().getId();
-                        }
-
-                        obstaclesList.add(
-                                new Item(
-                                        "DISTRIBUTOR",
-                                        ItemType.DISTRIBUTOR,
-                                        (float) X1,
-                                        (float) Y1,
-                                        1,
-                                        3,
-                                        lastId + 1
-                                )
-                        );
-
-                        Writer writer = Files.newBufferedWriter(Paths.get(filePath));
-                        gson.toJson(obstaclesList, writer);
-                        writer.close();
-
-                        System.out.println("Item added to json file");
-
-//                        Rectangle rect = new Rectangle(obstacle.getX(), obstacle.getY(), obstacle.getWidth(), obstacle.getHeight());
-//                        rect.setFill(javafx.scene.paint.Color.GREEN.deriveColor(1, 1, 1, 0.5));
-//                        map.getObstacles().add(rect);
-//                        map.getMapContainer().getChildren().add(rect);
-
-                        // Ajouter le rectangle à la map
-                        item.setLayoutX(X1);
-                        item.setLayoutY(Y1);
-                        map.getItems().add(obstaclesList.getLast());
-                        mapContainer.getChildren().add(item);
-
-
-                        // enlever le rectangle de la map
-
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
-                    }
-
-                X1 = X2 = Y1 = Y2 = 0;
+            if (e.isPrimaryButtonDown()) {
+                devEngine.imgMouseControler.putItem(map, clickPoint, gameView);
             }
         });
+
         gameView.setOnKeyPressed(e -> {
             devEngine.listenKey(e);
 
             this.itemToInteract = player.getStoreItem();
             if (e.getCode() == KeyCode.ESCAPE) {
                 if (!music.isPlaying())
-                    music.play();
+//                    music.play();
 
                 this.isInteracting = false;
                 this.itemToInteract = null;
