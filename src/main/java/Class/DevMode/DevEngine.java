@@ -30,7 +30,7 @@ public class DevEngine {
     private final Replace replaceAction;
     private boolean isAdding = true;
     private final List<KeyCode> keysPressed = new ArrayList<>();
-    private Point2D dragPoint = new Point2D(0, 0);
+    private Point2D mousePoint = new Point2D(0, 0);
 
     public DevEngine() throws IOException {
         textCollisions = new Collisions("Collisions", "Collisions: true (c)");
@@ -61,7 +61,7 @@ public class DevEngine {
         }
 
         if (keyPress == KeyCode.DELETE) {
-            replaceAction.deleteItem(map, dragPoint);
+            replaceAction.deleteItem(map, mousePoint);
         }
 
         if (keyPress == KeyCode.CONTROL) {
@@ -96,7 +96,7 @@ public class DevEngine {
     }
 
     public void listenMouse(MouseEvent e) {
-        this.dragPoint = map.getMapContainer().sceneToLocal(e.getSceneX(), e.getSceneY());
+        this.mousePoint = map.getMapContainer().sceneToLocal(e.getSceneX(), e.getSceneY());
 
         if (isEditing) {
             imgMouseControler.displayImg(e.getX(), e.getY(), gameView, map, replaceAction);
