@@ -3,6 +3,7 @@ package Class.Engine;
 import Class.Character.Player;
 import Class.Character.Pnj;
 import Class.Character.PnjTypeAdapter;
+import Class.DevMode.DevEngine;
 import Class.Item.Item;
 import Class.Item.ItemTypeAdapter;
 import Class.Item.*;
@@ -10,24 +11,19 @@ import Class.Map.Map;
 import Class.Menu.End;
 import Class.Menu.Profile;
 import Class.Music.Music;
-import Class.Skill.Skill;
 import Class.bar.Feed;
 import Class.bar.Time;
 import Class.bar.Tiredness;
-import Class.bar.bar;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.image.Image;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
@@ -38,15 +34,12 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 import javafx.application.Application;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-public class Engine extends Application {
+public class Engine {
     private final Player player;
     private final Map map;
     private final Pane mapContainer;
@@ -54,14 +47,16 @@ public class Engine extends Application {
     private Item itemToInteract;
     private boolean canInteract;
     private boolean isInteracting;
-    private int currentAction;
     private final Tiredness weakness;
     private final Feed hunger;
-    private Time time;
+    private final Time time;
     private final Music music;
     private final Profile profileMenu;
     private final End endMenu;
-    private static final boolean isEnd = false;
+    private final MenuControler menuControler;
+    private boolean isDevMode = false;
+    private final DevEngine devEngine;
+    private boolean isAltPressed = false;
 
     //Constructor
     public Engine() {
@@ -72,6 +67,7 @@ public class Engine extends Application {
         this.time = new Time("Time");
         this.profileMenu = new Profile();
         this.endMenu = new End();
+        this.menuControler = new MenuControler("MenuControler");
         this.music = new Music("assets/music/ingame.wav", 0.3);
         this.mapContainer = map.getMapContainer();
         this.interactImg = new ImageView(new Image("file:assets/interact/e.png"));
@@ -80,8 +76,7 @@ public class Engine extends Application {
         this.itemToInteract = null;
         this.canInteract = false;
         this.isInteracting = false;
-        this.currentAction = 0;
-
+        this.devEngine = new DevEngine();
     }
     private boolean isMoveKey(KeyCode key) {
         return key == KeyCode.UP || key == KeyCode.DOWN || key == KeyCode.LEFT || key == KeyCode.RIGHT || key == KeyCode.Z || key == KeyCode.Q || key == KeyCode.S || key == KeyCode.D;
@@ -169,153 +164,6 @@ public class Engine extends Application {
         }
     }
 
-
-    private void displayInteractiveMenu() {
-        if (this.itemToInteract != null && this.itemToInteract.getType() == ItemType.PC || this.itemToInteract.getType() == ItemType.DISTRIBUTOR || this.itemToInteract.getType() == ItemType.CANAP|| this.itemToInteract.getType() == ItemType.PNJ) {
-            List<ImageView> images = this.itemToInteract.getMenu();
-
-            for (int i = 0; i < images.size(); i++) {
-                images.get(i).setLayoutX(this.itemToInteract.getX() + 37);
-                images.get(i).setLayoutY(this.itemToInteract.getY() + (i * 35) - 1);
-                if (!mapContainer.getChildren().contains(images.get(i))) {
-                    mapContainer.getChildren().add(images.get(i));
-                }
-            }
-        }
-    }
-
-    private void displayActionSelected() {
-        if (this.itemToInteract != null && this.itemToInteract.getType() == ItemType.PC || Objects.requireNonNull(this.itemToInteract).getType() == ItemType.DISTRIBUTOR || this.itemToInteract.getType() == ItemType.CANAP|| this.itemToInteract.getType() == ItemType.PNJ) {
-            ImageView img = this.itemToInteract.getSelectedMenu();
-
-            if (this.currentAction < 10) {
-                img.setLayoutX(this.itemToInteract.getX() + 33.5);
-                img.setLayoutY(this.itemToInteract.getY() + (this.currentAction * 35) - 4.5);
-            } else {
-                img.setLayoutX(this.itemToInteract.getX() + 121);
-                img.setLayoutY(this.itemToInteract.getY() + (this.currentAction - 10) * 36 - 4.5);
-            }
-
-            if (!mapContainer.getChildren().contains(img)) {
-                mapContainer.getChildren().add(img);
-            } else {
-                mapContainer.getChildren().remove(img);
-                mapContainer.getChildren().add(img);
-            }
-        }
-    }
-
-    private void moveSelected(KeyEvent e) {
-        List<ImageView> images = this.itemToInteract.getMenu();
-
-        if (this.currentAction != -1 && this.currentAction < 10) {
-            if (e.getCode() == KeyCode.UP || e.getCode() == KeyCode.Z) {
-                if (this.currentAction > 0) {
-                    this.currentAction -= 1;
-                }
-            } else if ((e.getCode() == KeyCode.DOWN || e.getCode() == KeyCode.S) && this.currentAction < images.size() - 1) {
-                this.currentAction += 1;
-            }
-        } else if (this.currentAction != -1) {
-            List<ImageView> secondMenu = this.itemToInteract.getSecondMenu().get((this.currentAction / 10) - 1);
-
-            if (e.getCode() == KeyCode.UP || e.getCode() == KeyCode.Z) {
-                if (this.currentAction > 10) {
-                    this.currentAction -= 1;
-                }
-            } else if ((e.getCode() == KeyCode.DOWN || e.getCode() == KeyCode.S) && (this.currentAction % 10) < secondMenu.size() - 1) {
-                this.currentAction += 1;
-            }
-        }
-
-        if (e.getCode() == KeyCode.RIGHT || e.getCode() == KeyCode.D) {
-            if (this.currentAction < 10 && this.itemToInteract.getSecondMenu().get(this.currentAction) != null) {
-                this.currentAction += 10;
-            }
-        } else if (e.getCode() == KeyCode.LEFT || e.getCode() == KeyCode.Q) {
-            if (this.currentAction > 10) {
-                this.currentAction = (this.currentAction / 10) - 1;
-            }  else if (this.currentAction >= 10) {
-                this.currentAction -= 10;
-            }
-        }
-    }
-
-    private void removeSecondMenu() {
-        List<List<ImageView>> images = this.itemToInteract.getSecondMenu();
-
-        for (List<ImageView> image : images) {
-            if (image != null) {
-                for (ImageView imageView : image) {
-                    mapContainer.getChildren().remove(imageView);
-                }
-            }
-        }
-    }
-
-    private void displaySecondMenu() {
-        if (this.currentAction < 10) {
-            removeSecondMenu();
-            return;
-        }
-
-        List<List<ImageView>> images = this.itemToInteract.getSecondMenu();
-        List<ImageView> secondMenu = images.get((this.currentAction / 10) - 1);
-
-        if (secondMenu == null) return;
-
-        for (int i = 0; i < secondMenu.size(); i++) {
-            secondMenu.get(i).setLayoutX(this.itemToInteract.getX() + 125);
-            secondMenu.get(i).setLayoutY(this.itemToInteract.getY() + (i * 36) - 1);
-            if (!mapContainer.getChildren().contains(secondMenu.get(i))) {
-                mapContainer.getChildren().add(secondMenu.get(i));
-            }
-        }
-    }
-
-    private void doActionOnEnter(StackPane gameView) {
-        List<Skill> skills = player.getSkills();
-
-        if (this.itemToInteract != null) {
-            int firstMenu;
-            if (this.currentAction < 10) {
-                firstMenu = this.currentAction;
-            } else {
-                firstMenu = (this.currentAction / 10) -1;
-            }
-
-            if (this.itemToInteract.getType() == ItemType.PC) {
-                Pc pc = (Pc) this.itemToInteract;
-                pc.doAction(player, pc.getActions().get(firstMenu), 2, skills.get(this.currentAction % 10).getName());
-            } else if (this.itemToInteract.getType() == ItemType.DISTRIBUTOR) {
-                Distributor distributor = (Distributor) this.itemToInteract;
-                distributor.doAction(player, distributor.getActions().get(firstMenu), 1, "module");
-            } else if (this.itemToInteract.getType() == ItemType.CANAP) {
-                Canap canap = (Canap) this.itemToInteract;
-                canap.doAction(player, canap.getActions().get(firstMenu), 1, "module");
-            } else if ( this.itemToInteract.getType() == ItemType.PNJ) {
-                PnjInteraction pnj = (PnjInteraction) this.itemToInteract;
-                pnj.doAction(this.player, pnj.getActions().get(firstMenu), pnj.getPnj(), gameView);
-            }
-        }
-    }
-
-    private void checkEndGame(StackPane gameView) {
-        if (player.getTimeDays() >= 60) {
-            music.pause();
-            endMenu.show(gameView, player);
-        }
-
-        if (player.getHunger() <= 0 || player.getWeakness() <= 0) {
-            music.pause();
-            endMenu.show(gameView, player);
-        }
-    }
-
-    double X1 = 0;
-    double Y1 = 0;
-    double X2 = 0;
-    double Y2 = 0;
     private void gameLoop(StackPane gameView) {
         displayPnjs(gameView);
         displayItems(gameView);
@@ -327,139 +175,44 @@ public class Engine extends Application {
                     weakness.update(player, gameView);
                     hunger.update(player, gameView);
                 }
-
-//                if (!endMenu.isLoaded())
-//                    checkEndGame(gameView);
+                if (!endMenu.isLoaded() && !isDevMode)
+                    endMenu.checkEndGame(gameView, player, music);
             }));
             timeline.setCycleCount(Timeline.INDEFINITE);
             timeline.play();
+        gameView.setOnMouseMoved(e -> {
+            if (isDevMode)
+                devEngine.listenMouse(e);
+        });
+
+        // on scroll
+        gameView.setOnScroll(e -> {
+            if (isDevMode && !isAltPressed) {
+                devEngine.imgMouseControler.setMode((devEngine.imgMouseControler.getMode() + 1) % 2, gameView);
+            } else if (isDevMode) {
+                if (e.getDeltaY() > 0) {
+                    devEngine.imgMouseControler.changeSelected((devEngine.imgMouseControler.getSelected() - 1 + devEngine.imgMouseControler.getAllImgItem().size()) % devEngine.imgMouseControler.getAllImgItem().size());
+                } else {
+                    devEngine.imgMouseControler.changeSelected((devEngine.imgMouseControler.getSelected() + 1) % devEngine.imgMouseControler.getAllImgItem().size());
+                }
+                devEngine.imgMouseControler.displayItemSelected(e.getX(), e.getY(), gameView);
+            }
+        });
+
         gameView.setOnMousePressed((MouseEvent e) -> {
             double clickX = e.getSceneX();
             double clickY = e.getSceneY();
             javafx.geometry.Point2D clickPoint = map.getMapContainer().sceneToLocal(clickX, clickY);
-//            Rectangle previewRect = new Rectangle();
-            ImageView item = new ImageView(new Image("file:assets/items/distributeur.png"));
 
-            if(e.isPrimaryButtonDown()){
-                X1 = clickPoint.getX();
-                Y1 = clickPoint.getY();
-
-                item.setLayoutX(X1);
-                item.setLayoutY(Y1);
-                mapContainer.getChildren().add(item);
-
-//                previewRect.setX(X1);
-//                previewRect.setY(Y1);
-//                previewRect.setFill(Color.CYAN.deriveColor(0, 1, 1, 0.5));
-//                previewRect.setStroke(Color.CYAN);
-//                mapContainer.getChildren().add(previewRect);
-//                map.getObstacles().add(previewRect);
-//
-//                Rectangle finalPreviewRect = previewRect;
-                gameView.setOnMouseDragged((MouseEvent dragEvent) -> {
-                    double dragX = dragEvent.getSceneX();
-                    double dragY = dragEvent.getSceneY();
-                    javafx.geometry.Point2D dragPoint = map.getMapContainer().sceneToLocal(dragX, dragY);
-
-//                    item.setLayoutX(dragPoint.getX());
-//                    item.setLayoutY(dragPoint.getY());
-
-                    // mettre la table au millieu du curseur
-                    item.setLayoutX(dragPoint.getX() - item.getImage().getWidth()/2);
-                    item.setLayoutY(dragPoint.getY() - item.getImage().getHeight()/2);
-
-                    mapContainer.getChildren().remove(item);
-                    mapContainer.getChildren().add(item);
-
-//                    finalPreviewRect.setWidth(width);
-//                    finalPreviewRect.setHeight(height);
-//
-//                    finalPreviewRect.setX(Math.min(X1, dragPoint.getX()));
-//                    finalPreviewRect.setY(Math.min(Y1, dragPoint.getY()));
-                });
-
-                gameView.setOnMouseReleased((MouseEvent releaseEvent) -> {
-                    gameView.setOnMouseDragged(null);
-                });
-            } else if (e.isSecondaryButtonDown()) {
-//                mapContainer.getChildren().remove(previewRect);
-//                X2 = clickPoint.getX();
-//                Y2 = clickPoint.getY();
-
-                // mettre la table au millieu du curseur
-
-                X2 = clickPoint.getX() - item.getImage().getWidth()/2;
-                Y2 = clickPoint.getY() - item.getImage().getHeight()/2;
-
-                double w = X2-X1;
-                double h = Y2-Y1;
-
-                if (w < 0) {
-                    X1 = X2;
-                    w = -w;
-                }
-
-                if (h < 0) {
-                    Y1 = Y2;
-                    h = -h;
-                }
-
-                System.out.println(X1+ ", "+ Y1 + ", "+ w + ", "+ h);
-
-                 Gson gson = new GsonBuilder().registerTypeAdapter(Item.class, new ItemTypeAdapter()).setPrettyPrinting().create();
-
-                String filePath = "./data/items.json";
-
-                    try {
-                        List<Item> obstaclesList = new ArrayList<>();
-                        if (Files.exists(Paths.get(filePath))) {
-                            Reader reader = Files.newBufferedReader(Paths.get(filePath));
-                            Item[] existingObstacles = gson.fromJson(reader, Item[].class);
-                            if (existingObstacles != null) {
-                                obstaclesList.addAll(Arrays.asList(existingObstacles));
-                            }
-                            reader.close();
-                        }
-
-                        int lastId = 0;
-                        if (!obstaclesList.isEmpty()) {
-                            lastId = obstaclesList.getLast().getId();
-                        }
-
-                        obstaclesList.add(
-                                new Item(
-                                        "DISTRIBUTOR",
-                                        ItemType.DISTRIBUTOR,
-                                        (float) X1,
-                                        (float) Y1,
-                                        1,
-                                        3,
-                                        lastId + 1
-                                )
-                        );
-
-                        Writer writer = Files.newBufferedWriter(Paths.get(filePath));
-                        gson.toJson(obstaclesList, writer);
-                        writer.close();
-
-                        System.out.println("Item added to json file");
-
-//                        Rectangle rect = new Rectangle(obstacle.getX(), obstacle.getY(), obstacle.getWidth(), obstacle.getHeight());
-//                        rect.setFill(javafx.scene.paint.Color.GREEN.deriveColor(1, 1, 1, 0.5));
-//                        map.getObstacles().add(rect);
-//                        map.getMapContainer().getChildren().add(rect);
-
-                        // enlever le rectangle de la map
-
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
-                    }
-
-                X1 = X2 = Y1 = Y2 = 0;
+            if (e.isPrimaryButtonDown()) {
+                devEngine.imgMouseControler.putItem(map, clickPoint);
             }
         });
+
         gameView.setOnKeyPressed(e -> {
-            System.out.println(e.getCode());
+            if (isDevMode)
+                devEngine.listenKey(e);
+
             this.itemToInteract = player.getStoreItem();
             if (e.getCode() == KeyCode.ESCAPE) {
 //                if (!music.isPlaying())
@@ -488,9 +241,13 @@ public class Engine extends Application {
                     mapContainer.getChildren().remove(player.getStoreItem().getSelectedMenu());
                 }
 
-                this.currentAction = 0;
+                menuControler.setCurrentAction(0);
                 player.setStoreItem(null);
                 profileMenu.remove(gameView);
+            }
+
+            if (e.getCode() == KeyCode.ALT) {
+                isAltPressed = true;
             }
 
             if (this.itemToInteract != null) {
@@ -506,22 +263,22 @@ public class Engine extends Application {
 
             if (e.getCode() == KeyCode.E && this.canInteract && !this.isInteracting && !profileMenu.isLoaded() && !endMenu.isLoaded()) {
                 this.isInteracting = true;
-                displayInteractiveMenu();
-                displayActionSelected();
+                menuControler.displayInteractiveMenu(this.itemToInteract, mapContainer);
+                menuControler.displayActionSelected(this.itemToInteract, mapContainer);
             }
 
             if (isMoveKey(e.getCode()) && !profileMenu.isLoaded() && !endMenu.isLoaded()) {
                 if (this.isInteracting) {
-                    moveSelected(e);
-                    displaySecondMenu();
-                    displayActionSelected();
+                    menuControler.moveSelected(e, this.itemToInteract);
+                    menuControler.displaySecondMenu(this.itemToInteract, mapContainer);
+                    menuControler.displayActionSelected(this.itemToInteract, mapContainer);
                 } else {
                     player.move(map.getMapView(), gameView, true, e);
                 }
             }
 
             if (e.getCode() == KeyCode.ENTER && this.isInteracting) {
-                doActionOnEnter(gameView);
+                menuControler.doActionOnEnter(player, this.itemToInteract, gameView);
             }
 
             if (e.getCode() == KeyCode.P && !this.isInteracting && !profileMenu.isLoaded() && !endMenu.isLoaded()) {
@@ -533,14 +290,18 @@ public class Engine extends Application {
             if (isMoveKey(e.getCode())) {
                 player.move(map.getMapView(), gameView, false, e);
             }
+
+            if (e.getCode() == KeyCode.ALT) {
+                isAltPressed = false;
+            }
         });
 
     }
 
-    public void start(Stage primaryStage) {
+    public void start(Stage primaryStage, boolean devMode) {
         StackPane gameView = new StackPane(map.getMapContainer(), player.getPlayerView());
         gameView.setPrefSize(this.map.getViewWidth(), this.map.getViewHeight());
-//        music.play();
+        music.play();
 
         Scene scene = new Scene(gameView);
         primaryStage.setScene(scene);
@@ -550,9 +311,15 @@ public class Engine extends Application {
         player.loadSkills("./data/skills.json");
         profileMenu.loadSkills(player);
         endMenu.setName(player.getName());
-        weakness.display(gameView);
-        hunger.display(gameView);
-        time.display(gameView);
+
+        if (devMode) {
+            this.isDevMode = true;
+            devEngine.displayDevMode(gameView, player, map);
+        } else {
+            weakness.display(gameView);
+            hunger.display(gameView);
+            time.display(gameView);
+        }
         this.gameLoop(gameView);
         gameView.requestFocus();
     }

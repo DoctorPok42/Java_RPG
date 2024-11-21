@@ -7,7 +7,6 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
-import static java.lang.Thread.sleep;
 
 public class Game extends Application {
     private final Start startMenu = new Start();
@@ -20,7 +19,7 @@ public class Game extends Application {
     public void startGame(Stage primaryStage, StackPane root) throws InterruptedException {
         root.getChildren().clear();
         Engine engine = new Engine();
-        engine.start(primaryStage);
+        engine.start(primaryStage, currentMenu == 2);
     }
 
     @Override
@@ -47,7 +46,7 @@ public class Game extends Application {
                     break;
             }
 
-            if (this.currentMenu == 1) {
+            if (this.currentMenu == 1 || this.currentMenu == 2) {
                 try {
                     startGame(primaryStage, root);
                 } catch (InterruptedException ex) {

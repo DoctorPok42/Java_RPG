@@ -23,6 +23,7 @@ public class Start extends Menu {
 
         this.options = List.of(
             new Option("newGame", "Start New Game", System::console),
+            new Option("newDevGame", "Dev Mode", System::console),
             new Option("exit", "Exit", () -> System.exit(0))
         );
 

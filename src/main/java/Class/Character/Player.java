@@ -64,6 +64,9 @@ public class Player extends Character {
     private javafx.geometry.Point2D playerCoord;
     private Rectangle playerHitbox;
 
+    // Dev engine
+    private boolean hasToCheckCollision = true;
+
     //Constructor
     public Player(String name, Image texture, Map map) {
         super(name, Roles.PLAYER, new ImageView(texture), map);
@@ -311,6 +314,11 @@ public class Player extends Character {
         }
     }
 
+    // Dev engine
+    public void setIsCollision(boolean isCollision) {
+        this.hasToCheckCollision = isCollision;
+    }
+
     private Timeline checkKey(KeyCode code) {
         if (code == KeyCode.UP || code == KeyCode.Z) {
             startWalkUpAnimation();
@@ -471,6 +479,8 @@ public class Player extends Character {
 
 
     private boolean isCollision(Rectangle targetHitbox, Map map) {
+        if (!hasToCheckCollision) return false;
+
         for (Rectangle obstacle : map.getObstacles()) {
             if (targetHitbox.getBoundsInParent().intersects(obstacle.getBoundsInParent())) {
                 return true;
