@@ -51,8 +51,8 @@ public class DevEngine {
         keys.add(KeyCode.Z);
         keys.add(KeyCode.DELETE);
         keyControler = new KeyControler("KeyControler", keys);
-        imgMouseControler = new ImgMouseControler("./data/items.json");
-        replaceAction = new Replace("./data/items.json");
+        imgMouseControler = new ImgMouseControler(filePath);
+        replaceAction = new Replace(filePath);
 
         StackPane.setAlignment(textBlock, Pos.TOP_LEFT);
         textBlock.setTranslateX(10);
