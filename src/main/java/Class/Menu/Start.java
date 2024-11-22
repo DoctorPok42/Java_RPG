@@ -85,7 +85,7 @@ public class Start extends Menu {
         gameView.getChildren().add(titleScene);
 
         // play the media
-//        music.play();
+        music.play();
 
         // display option
         for (int i = 0; i < this.options.size(); i++) {

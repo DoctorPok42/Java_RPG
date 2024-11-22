@@ -69,6 +69,8 @@ public class Pnj extends Character {
                         new Image("file:assets/Pnjs/skin3/AnimSkin3-5.png")
                 };
                 break;
+            default:
+                break;
 
         }
         staticAnimationTimeline = new Timeline(new KeyFrame(Duration.millis(100), e->animateStatic()));
@@ -92,10 +94,6 @@ public class Pnj extends Character {
     private void startStaticAnimation() {
         if(staticAnimationTimeline.getStatus() == Animation.Status.STOPPED)
             staticAnimationTimeline.play();
-    }
-    private void stopStaticAnimation() {
-        if(staticAnimationTimeline.getStatus() == Animation.Status.RUNNING)
-            staticAnimationTimeline.stop();
     }
 
     public int getId() {

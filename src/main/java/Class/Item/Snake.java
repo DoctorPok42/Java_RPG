@@ -37,7 +37,7 @@ public class Snake {
     private Direction direction = Direction.RIGHT;
 
 
-    private final List<Point> snake = new ArrayList<>();
+    private final List<Point> ssnake = new ArrayList<>();
     private boolean gameOver = false;
 
 
@@ -70,9 +70,9 @@ public class Snake {
         snakeWindow.setId("snakeWindow");
 
 
-        snake.add(new Point(5, 5));
-        snake.add(new Point(4, 5));
-        snake.add(new Point(3, 5));
+        ssnake.add(new Point(5, 5));
+        ssnake.add(new Point(4, 5));
+        ssnake.add(new Point(3, 5));
         spawnFood();
 
         Timeline timeline = new Timeline(new KeyFrame(Duration.millis(150), e -> {
@@ -80,7 +80,7 @@ public class Snake {
                 update();
                 render(gc, scoreLabel);
             } else {
-                renderGameOver(gc, scoreLabel);
+                renderGameOver(gc);
             }
         }));
         timeline.setCycleCount(Timeline.INDEFINITE);
@@ -104,7 +104,7 @@ public class Snake {
     }
 
     private void update() {
-        Point head = snake.get(0);
+        Point head = ssnake.get(0);
         Point newHead = switch (direction) {
             case UP -> new Point(head.x, head.y - 1);
             case DOWN -> new Point(head.x, head.y + 1);
@@ -113,18 +113,18 @@ public class Snake {
         };
 
         if (newHead.x < 0 || newHead.y < 0 || newHead.x >= WIDTH / TILE_SIZE || newHead.y >= HEIGHT / TILE_SIZE
-                || snake.contains(newHead)) {
+                || ssnake.contains(newHead)) {
             gameOver = true;
             return;
         }
 
-        snake.add(0, newHead);
+        ssnake.add(0, newHead);
 
         if (newHead.equals(food)) {
             spawnFood();
             score++;
         } else {
-            snake.remove(snake.size() - 1);
+            ssnake.remove(ssnake.size() - 1);
         }
     }
     private void render(GraphicsContext gc, Label scoreLabel) {
@@ -137,11 +137,11 @@ public class Snake {
         gc.fillOval(food.x * TILE_SIZE, food.y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
 
         gc.setFill(Color.GREEN);
-        for (Point p : snake) {
+        for (Point p : ssnake) {
             gc.fillRect(p.x * TILE_SIZE, p.y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
         }
     }
-    private void renderGameOver(GraphicsContext gc, Label scoreLabel) {
+    private void renderGameOver(GraphicsContext gc) {
         gc.setFill(Color.BLACK);
         gc.fillRect(0, 0, WIDTH, HEIGHT);
 
@@ -150,20 +150,21 @@ public class Snake {
 
     }
     private void spawnFood() {
-        int x, y;
+        int x;
+        int y;
         do {
             x = random.nextInt(WIDTH / TILE_SIZE);
             y = random.nextInt(HEIGHT / TILE_SIZE);
-        } while (snake.contains(new Point(x, y)));
+        } while (ssnake.contains(new Point(x, y)));
 
         food = new Point(x, y);
     }
 
     public void resetGame() {
-        snake.clear();
-        snake.add(new Point(5, 5));
-        snake.add(new Point(4, 5));
-        snake.add(new Point(3, 5));
+        ssnake.clear();
+        ssnake.add(new Point(5, 5));
+        ssnake.add(new Point(4, 5));
+        ssnake.add(new Point(3, 5));
         direction = Direction.RIGHT;
         spawnFood();
         score = 0;

@@ -225,8 +225,8 @@ public class Engine {
 
             this.itemToInteract = player.getStoreItem();
             if (e.getCode() == KeyCode.ESCAPE) {
-//                if (!music.isPlaying())
-//                    music.play();
+                if (!music.isPlaying())
+                    music.play();
 
                 this.isInteracting = false;
                 this.itemToInteract = null;
@@ -326,7 +326,7 @@ public class Engine {
     public void start(Stage primaryStage, boolean devMode) {
         StackPane gameView = new StackPane(map.getMapContainer(), player.getPlayerView());
         gameView.setPrefSize(this.map.getViewWidth(), this.map.getViewHeight());
-//        music.play();
+        music.play();
 
         Scene scene = new Scene(gameView);
         primaryStage.setScene(scene);
