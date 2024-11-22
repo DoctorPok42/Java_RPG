@@ -33,7 +33,7 @@ public class DevEngine {
     private boolean isAdding = true;
     private final List<KeyCode> keysPressed = new ArrayList<>();
     private Point2D mousePoint = new Point2D(0, 0);
-    private ImageView textBlock = new ImageView("file:assets/menu/creative/block.png");
+    private final ImageView textBlock = new ImageView("file:assets/menu/creative/block.png");
 
     public DevEngine() throws IOException {
         textCollisions = new Collisions("Collisions", "Collisions: true (c)");

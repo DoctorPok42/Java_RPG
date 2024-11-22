@@ -1,5 +1,7 @@
 package Class.DevMode.Edit;
 
+import Class.Character.Pnj;
+import Class.Character.Roles;
 import Class.DevMode.Edit.Utils.ReadItemFile;
 import Class.Item.*;
 import Class.Map.Map;
@@ -7,6 +9,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 
@@ -27,7 +30,8 @@ public class ImgMouseControler {
         new EditItems(new ImageView("file:assets/items/canapplusgros2.png"), ItemType.CANAP, "CANAP", 2),
         new EditItems(new ImageView("file:assets/items/distributeur.png"), ItemType.DISTRIBUTOR, "DISTRIBUTOR", 0),
         new EditItems(new ImageView("file:assets/items/table3.png"), ItemType.TABLE, "Table", 3),
-        new EditItems(new ImageView("file:assets/items/table5.png"), ItemType.TABLE, "Table", 5)
+        new EditItems(new ImageView("file:assets/items/table5.png"), ItemType.TABLE, "Table", 5),
+        new EditItems(new ImageView("file:assets/Pnjs/Pnj_test.png"), ItemType.PNJ, "PNJ", 0)
     );
     private final ImageView imgSelected = new ImageView("file:assets/interact/mouse/selected.png");
     private int selected = 0;
@@ -138,20 +142,27 @@ public class ImgMouseControler {
                         case CANAP -> new Canap(item.getName(), item.getType(), item.getX(), item.getY(), item.getZ(), item.getSkin(), lastId + 1);
                         case DISTRIBUTOR -> new Distributor(item.getName(), item.getType(), item.getX(), item.getY(), item.getZ(), 0, item.getSkin(), lastId + 1);
                         case TABLE -> new Item(item.getName(), item.getType(), item.getX(), item.getY(), item.getZ(), item.getSkin(), lastId + 1);
-                        default -> null;
+                        case PNJ -> new PnjInteraction(item.getName(), item.getType(), item.getX(), item.getY(), item.getZ(), item.getSkin(), null, lastId + 1);
                     };
 
             map.getItems().add(items);
             map.getItems().getLast().getItemView().toFront();
 
-            assert items != null;
             map.getMapContainer().getChildren().add(items.getInteractionHitbox());
             map.getMapContainer().getChildren().add(items.getHitbox());
 
             items.getItemView().setLayoutX(itemX);
             items.getItemView().setLayoutY(itemY);
-            map.getMapContainer().getChildren().add(items.getItemView());
 
+            if (items.getType() == ItemType.PNJ) {
+                Pnj pnj = new Pnj("Pnj", Roles.PEDAGO, new Image("file:assets/Pnjs/Pnj_test.png"), items.getX(), items.getY(), lastId + 1);
+                map.getObstacles().add(pnj.getPnjHitbox());
+                pnj.getCharacView().setLayoutX(pnj.getPosX());
+                pnj.getCharacView().setLayoutY(pnj.getPosY());
+                map.getMapContainer().getChildren().add(pnj.getCharacView());
+            }
+
+            map.getMapContainer().getChildren().add(items.getItemView());
         } catch (Exception ex) {
             ex.printStackTrace();
         }
