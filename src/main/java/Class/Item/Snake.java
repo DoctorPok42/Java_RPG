@@ -19,7 +19,6 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.scene.control.Button;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;

@@ -10,7 +10,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.shape.Rectangle;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 

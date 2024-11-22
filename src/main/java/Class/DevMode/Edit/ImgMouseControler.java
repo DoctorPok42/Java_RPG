@@ -13,8 +13,10 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 
+import java.io.IOException;
 import java.io.Writer;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ImgMouseControler {
@@ -37,8 +39,9 @@ public class ImgMouseControler {
     private int selected = 0;
     private final ImageView itemToDisplay = new ImageView();
     private final ReadItemFile readItemFile;
+    private List<Item> itemField = new ArrayList<>();
 
-    public ImgMouseControler(String filePath) {
+    public ImgMouseControler(String filePath) throws IOException {
         for (ImageView img : imgMode) {
             img.setFitWidth(20);
             img.setFitHeight(20);
@@ -60,6 +63,7 @@ public class ImgMouseControler {
         imgSelected.setTranslateY(-9);
 
         readItemFile = new ReadItemFile(filePath);
+        this.itemField = readItemFile.readItems(new GsonBuilder().registerTypeAdapter(Item.class, new ItemTypeAdapter()).create());
     }
 
     public int getMode() {
@@ -119,7 +123,7 @@ public class ImgMouseControler {
         Gson gson = new GsonBuilder().registerTypeAdapter(Item.class, new ItemTypeAdapter()).setPrettyPrinting().create();
 
         try {
-            List<Item> itemList = readItemFile.readItems(gson);
+            List<Item> itemList = this.itemField;
 
             int lastId = 0;
             if (!itemList.isEmpty()) {
@@ -212,5 +216,9 @@ public class ImgMouseControler {
         gameView.getChildren().remove(imgSelected);
 
         gameView.getChildren().remove(itemToDisplay);
+    }
+
+    public void setItemField(List<Item> itemField) {
+        this.itemField = itemField;
     }
 }

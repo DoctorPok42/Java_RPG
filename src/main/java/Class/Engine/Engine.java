@@ -203,7 +203,7 @@ public class Engine {
             gameView.setOnMouseMoved(devEngine::listenMouse);
 
             gameView.setOnScroll(e -> {
-                    devEngine.listenScroll(e, e.getDeltaY(), isAltPressed);
+                devEngine.listenScroll(e, e.getDeltaY(), isAltPressed);
             });
 
             gameView.setOnMouseDragged(e -> {
@@ -213,7 +213,11 @@ public class Engine {
 
             gameView.setOnMousePressed((MouseEvent e) -> {
                 if ((e.isPrimaryButtonDown() || e.isSecondaryButtonDown())) {
-                    devEngine.listenMouseClick(e, getClickPoint(e));
+                    try {
+                        devEngine.listenMouseClick(e, getClickPoint(e));
+                    } catch (IOException ex) {
+                        throw new RuntimeException(ex);
+                    }
                 }
             });
         }
