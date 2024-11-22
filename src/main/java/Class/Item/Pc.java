@@ -41,6 +41,11 @@ public class Pc extends Item {
             }
         }
 
+        this.actions = List.of(
+                "You have just worked for 2 hours",
+                "You have just played for 2 hours",
+                "You have just searched for 2 hours"
+        );
     }
 
     public void displayMenu() {

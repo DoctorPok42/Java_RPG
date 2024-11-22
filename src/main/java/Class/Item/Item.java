@@ -26,6 +26,7 @@ public class Item {
     protected ImageView selected_menu = null;
     protected int skin;
     protected int id;
+    protected List<String> actions = new ArrayList<String>();
 
     public Item(String name, Enum<ItemType> type, float x, float y, int z, int skin, int id) {
         this.name = name;
@@ -188,5 +189,9 @@ public class Item {
 
     public void setY(float y) {
         this.y = y;
+    }
+
+    public List<String> getListActions() {
+        return actions;
     }
 }

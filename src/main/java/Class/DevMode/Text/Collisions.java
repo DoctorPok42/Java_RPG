@@ -11,7 +11,7 @@ public class Collisions extends Texts implements TextInterface {
     @Override
     public void displayText(StackPane gameView) {
         content.setStyle(styles);
-        content.setTranslateY(30);
+        content.setTranslateY(25);
         gameView.getChildren().add(content);
     }
 

@@ -23,6 +23,10 @@ public class Distributor extends Item {
             img.setFitWidth(83.6);
             img.setFitHeight(32);
         }
+
+        this.actions = List.of(
+            "You have just bought a snack"
+        );
     }
 
     public int getMoney() {

@@ -8,6 +8,7 @@ import Class.Character.Pnj;
 import Class.Item.Item;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import javafx.scene.Node;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -21,7 +22,6 @@ public class Map {
     private List<Pnj> pnjs;
     private ImageView mapView;
     private Pane mapContainer;
-    private boolean isNight;
     private List<Rectangle> obstacles;
     private double mapTranslateX = 0;
     private double mapTranslateY = 0;
@@ -40,7 +40,6 @@ public class Map {
         this.items = items;
         this.pnjs = pnjs;
         this.mapContainer = new Pane(mapView);
-        this.isNight = false;
         mapWidth = mapView.getImage().getWidth();
         mapHeight = mapView.getImage().getHeight();
         obstacles =new ArrayList<>();
@@ -77,9 +76,6 @@ public class Map {
         return mapContainer;
     }
 
-    public boolean getIsNight() {
-        return isNight;
-    }
     public List<Rectangle> getObstacles() {
         return obstacles;
     }
@@ -120,10 +116,6 @@ public class Map {
 
     public void setMapView(ImageView mapView) {
         this.mapView = mapView;
-    }
-
-    public void setIsNight(boolean isNight) {
-        this.isNight = isNight;
     }
 
     private void createObstacles(){

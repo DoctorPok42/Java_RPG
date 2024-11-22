@@ -18,6 +18,10 @@ public class Canap extends Item {
             img.setFitHeight(32);
         }
         this.second_menu.add(null);
+
+        this.actions = List.of(
+            "You have just slept for 2 hours"
+        );
     }
 
     private boolean sleep(Player player, int time) {

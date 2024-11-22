@@ -11,7 +11,7 @@ public class Place extends Texts implements TextInterface {
     @Override
     public void displayText(StackPane gameView) {
         content.setStyle(styles);
-        content.setTranslateY(70);
+        content.setTranslateY(75);
         gameView.getChildren().add(content);
     }
 
