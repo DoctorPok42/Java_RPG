@@ -25,7 +25,7 @@ jobs:
       - uses: actions/checkout@v3
       - name: Set up JDK
         run: |
-          sudo apt update && sudo apt install -y openjdk-23-jdk maven
+          sudo apt update && sudo apt install -y openjdk-21-jdk maven
           java -version
           mvn -version
       - name: Cache Maven dependencies
@@ -43,6 +43,25 @@ jobs:
           name: coverage-report
           path: target/site/jacoco
 
+      - uses: actions/checkout@v3
+      - name: Get coverage percentage
+        id: get-coverage
+        run: |
+          COVERAGE=$(grep -A 1 'Total' target/site/jacoco/index.html | grep -oP '(?<=<td class="ctr2">)[^<]+')
+          echo "Coverage is $COVERAGE"
+          echo "::set-output name=coverage::$COVERAGE"
+
+      - name: Update README
+        uses: actions/github-script@v3
+        with:
+          github-token: ${{ secrets.TOKEN }}
+          script: |
+            const fs = require('fs');
+            let readme = fs.readFileSync('README.md', 'utf8');
+            let coverage = process.env.COVERAGE;
+            let updatedReadme = readme.replace(/Coverage: \d+.\d+%/g, `Coverage: ${coverage}%`);
+            fs.writeFileSync('README.md', updatedReadme);
+            console.log('Updated README');
 
   push_to_mirror:
     runs-on: self-hosted
