@@ -155,4 +155,8 @@ public class Replace {
             }
         }
     }
+
+    public void setItemField(List<Item> itemField) {
+        this.itemField = itemField;
+    }
 }
