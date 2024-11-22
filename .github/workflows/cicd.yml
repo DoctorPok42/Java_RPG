@@ -42,18 +42,28 @@ jobs:
         with:
           name: coverage-report
           path: target/site/jacoco
-      - name: Download coverage artifact
-        uses: actions/download-artifact@v3
-        with:
-            name: coverage-report
-            path: coverage-report
 
-      - name: Extract coverage percentage
+  getCoverageInReadme:
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v3
+      - name: Get coverage percentage
+        id: get-coverage
         run: |
-          # Exemple pour extraire le pourcentage de couverture de `index.html`
-          COVERAGE=$(grep -oP 'Coverage:\s+\K[0-9.]+%' coverage-report/index.html)
-          echo "Coverage: $COVERAGE"
-          echo "COVERAGE=$COVERAGE" >> $GITHUB_ENV
+          COVERAGE=$(grep -A 1 'Total' target/site/jacoco/index.html | grep -oP '(?<=<td class="ctr2">)[^<]+')
+          echo "Coverage is $COVERAGE"
+          echo "::set-output name=coverage::$COVERAGE"
+      - name: Update README
+        uses: actions/github-script@v3
+        with:
+          github-token: ${{ secrets.TOKEN }}
+          script: |
+            const fs = require('fs');
+            let readme = fs.readFileSync('README.md', 'utf8');
+            let coverage = process.env.COVERAGE;
+            let updatedReadme = readme.replace(/Coverage: \d+.\d+%/g, `Coverage: ${coverage}%`);
+            fs.writeFileSync('README.md', updatedReadme);
+            console.log('Updated README');
 
   push_to_mirror:
     runs-on: self-hosted
