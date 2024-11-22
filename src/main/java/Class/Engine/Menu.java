@@ -12,5 +12,6 @@ public interface Menu {
     void moveSelected(KeyEvent e, Item itemToInteract);
     void removeSecondMenu(Item itemToInteract, Pane mapContainer);
     void displaySecondMenu(Item itemToInteract, Pane mapContainer);
-    void doActionOnEnter(Player player, Item itemToInteract, StackPane gameView);
+    void doActionOnEnter(Player player, Item itemToInteract, StackPane gameView, Pane mapContainer);
+    void removeAlert(StackPane gameView);
 }

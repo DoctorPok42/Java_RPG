@@ -3,18 +3,36 @@ package Class.Engine;
 import Class.Character.Player;
 import Class.Item.*;
 import Class.Skill.Skill;
+import javafx.geometry.Pos;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 
 import java.util.List;
 import java.util.Objects;
 
 public class MenuControler extends Controler implements Menu {
+    private final ImageView action = new ImageView("file:assets/interact/alert.png");
+    private final Text actionText = new Text();
+
     public MenuControler(String name) {
         super(name);
+
+        StackPane.setAlignment(action, Pos.TOP_RIGHT);
+        action.setTranslateX(-10);
+        action.setTranslateY(10);
+
+        Font font = Font.loadFont("file:assets/font/PressStart2P-Regular.ttf", 8);
+        actionText.setFont(font);
+        actionText.setFill(Color.WHITE);
+        StackPane.setAlignment(actionText, Pos.TOP_RIGHT);
+        actionText.setTranslateX(-32);
+        actionText.setTranslateY(25);
     }
 
     @Override
@@ -134,8 +152,9 @@ public class MenuControler extends Controler implements Menu {
     }
 
     @Override
-    public void doActionOnEnter(Player player, Item itemToInteract, StackPane gameView) {
+    public void doActionOnEnter(Player player, Item itemToInteract, StackPane gameView, Pane mapContainer) {
         List<Skill> skills = player.getSkills();
+
 
         if (itemToInteract != null) {
             int firstMenu;
@@ -158,6 +177,23 @@ public class MenuControler extends Controler implements Menu {
                 PnjInteraction pnj = (PnjInteraction) itemToInteract;
                 pnj.doAction(player, pnj.getActions().get(firstMenu), pnj.getPnj(), gameView);
             }
+
+            String text = itemToInteract.getListActions().get(firstMenu);
+            if (!gameView.getChildren().contains(action)) {
+                actionText.setText(text);
+                action.setFitWidth(text.length() * 9.5);
+
+                gameView.getChildren().add(action);
+                gameView.getChildren().add(actionText);
+            } else {
+                actionText.setText(text);
+            }
         }
+    }
+
+    @Override
+    public void removeAlert(StackPane gameView) {
+        gameView.getChildren().remove(action);
+        gameView.getChildren().remove(actionText);
     }
 }

@@ -38,15 +38,15 @@ public class Player extends Character {
 
     private List<Skill> skills;
 
-    private Timeline timelineUP;
-    private Timeline timelineDOWN;
-    private Timeline timelineLEFT;
-    private Timeline timelineRIGHT;
-    private Timeline staticAnimationTimeline;
-    private Timeline walkDownAnimationTimeline;
-    private Timeline walkUpAnimationTimeline;
-    private Timeline walkLeftAnimationTimeline;
-    private Timeline walkRightAnimationTimeline;
+    private final Timeline timelineUP;
+    private final Timeline timelineDOWN;
+    private final Timeline timelineLEFT;
+    private final Timeline timelineRIGHT;
+    private final Timeline staticAnimationTimeline;
+    private final Timeline walkDownAnimationTimeline;
+    private final Timeline walkUpAnimationTimeline;
+    private final Timeline walkLeftAnimationTimeline;
+    private final Timeline walkRightAnimationTimeline;
     private final double movestep = 6;
 
     protected final ImageView playerView;
@@ -94,7 +94,7 @@ public class Player extends Character {
                 new Image("file:assets/perso/anim/AnimStatic4.png"),
                 new Image("file:assets/perso/anim/AnimStatic5.png"),
         };
-        staticAnimationTimeline = new Timeline(new KeyFrame(Duration.millis(100),e->animateStatic()));
+        staticAnimationTimeline = new Timeline(new KeyFrame(Duration.millis(200),e->animateStatic()));
         staticAnimationTimeline.setCycleCount(Animation.INDEFINITE);
         startStaticAnimation();
 
@@ -257,11 +257,11 @@ public class Player extends Character {
         this.weakness += hours;
     }
 
-    public void updateStats(Map map) {
+    public void updateStats() {
         double fatigueMultiplier = (this.weakness / 50.0) + 1;
         double hungerMultiplier = (this.hunger / 10.0) + 1;
 
-        if (map.getIsNight()) {
+        if (this.timeHours >= 20 || this.timeHours < 6) {
             this.weakness -= (int) (3 * fatigueMultiplier);
         } else {
             this.weakness -= (int) (1 * fatigueMultiplier);
@@ -283,22 +283,17 @@ public class Player extends Character {
         }
     }
 
-    public void updateTime(Map map) {
+    public void updateTime() {
         this.timeHours++;
-        if (this.timeHours >= 20 || this.timeHours < 6) {
-            if (!map.getIsNight())
-                map.setIsNight(true);
-        } else if (map.getIsNight()) {
-            map.setIsNight(false);
-        }
 
         timeLogic();
-        this.updateStats(map);
+        this.updateStats();
     }
 
     public void addTime(int hours) {
-        this.timeHours += hours;
-        timeLogic();
+        for (int i = 0; i < hours; i++) {
+            updateTime();
+        }
     }
 
     public void addSkill(Skill skill) {

@@ -178,7 +178,7 @@ public class Engine {
     private Timeline getTimeline(StackPane gameView) {
         Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
             if (!endMenu.isLoaded()) {
-                player.updateTime(map);
+                player.updateTime();
                 time.update(player);
                 weakness.update(player, gameView);
                 hunger.update(player, gameView);
@@ -249,6 +249,7 @@ public class Engine {
                 }
 
                 menuControler.setCurrentAction(0);
+                menuControler.removeAlert(gameView);
                 player.setStoreItem(null);
                 profileMenu.remove(gameView);
             }
@@ -284,7 +285,7 @@ public class Engine {
             }
 
             if (e.getCode() == KeyCode.ENTER && this.isInteracting) {
-                menuControler.doActionOnEnter(player, this.itemToInteract, gameView);
+                menuControler.doActionOnEnter(player, this.itemToInteract, gameView, mapContainer);
             }
 
             if (e.getCode() == KeyCode.P && !this.isInteracting && !profileMenu.isLoaded() && !endMenu.isLoaded()) {
