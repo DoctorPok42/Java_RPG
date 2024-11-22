@@ -42,7 +42,18 @@ jobs:
         with:
           name: coverage-report
           path: target/site/jacoco
+      - name: Download coverage artifact
+        uses: actions/download-artifact@v3
+        with:
+            name: coverage-report
+            path: coverage-report
 
+      - name: Extract coverage percentage
+        run: |
+          # Exemple pour extraire le pourcentage de couverture de `index.html`
+          COVERAGE=$(grep -oP 'Coverage:\s+\K[0-9.]+%' coverage-report/index.html)
+          echo "Coverage: $COVERAGE"
+          echo "COVERAGE=$COVERAGE" >> $GITHUB_ENV
 
   push_to_mirror:
     runs-on: self-hosted
