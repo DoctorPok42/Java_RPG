@@ -3,10 +3,14 @@ package Class.Item;
 import Class.Character.Player;
 import Class.Skill.Skill;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.layout.StackPane;
 
 import java.util.List;
 
 public class Pc extends Item {
+    boolean snaking = false;
+    Snake snake;
     public Pc(String name, Enum<ItemType> type, float x, float y, int z, int skin, int id) {
         super(name, type, x, y, z, skin, id);
 
@@ -69,7 +73,9 @@ public class Pc extends Item {
         return true;
     }
 
-    private boolean play(Player player, int time) {
+    private boolean play(Player player, int time, StackPane gameView) {
+        snaking = true;
+        snake = new Snake(gameView);
         player.addFun(time);
         player.addTime(time);
         return true;
@@ -80,14 +86,20 @@ public class Pc extends Item {
         return true;
     }
 
-    public boolean doAction(Player player, Enum<?> action, int time, String module) {
+    public boolean doAction(Player player, Enum<?> action, int time, String module, StackPane gameView) {
         if (!(action instanceof PcTypeAction))
             return false;
         return switch ((PcTypeAction) action) {
             case WORK -> work(player, time, module);
-            case PLAY -> play(player, time);
+            case PLAY -> play(player, time, gameView);
             case SEARCH -> search(player, time);
         };
+    }
+    public boolean isSnaking() {
+        return snaking;
+    }
+    public Snake getSnake() {
+        return snake;
     }
 
     @Override

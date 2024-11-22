@@ -155,7 +155,7 @@ public class ImgMouseControler {
             items.getItemView().setLayoutY(itemY);
 
             if (items.getType() == ItemType.PNJ) {
-                Pnj pnj = new Pnj("Pnj", Roles.PEDAGO, new Image("file:assets/Pnjs/Pnj_test.png"), items.getX(), items.getY(), lastId + 1);
+                Pnj pnj = new Pnj("Pnj", Roles.PEDAGO, 3, items.getX(), items.getY(), lastId + 1);
                 map.getObstacles().add(pnj.getPnjHitbox());
                 pnj.getCharacView().setLayoutX(pnj.getPosX());
                 pnj.getCharacView().setLayoutY(pnj.getPosY());

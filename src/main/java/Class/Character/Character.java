@@ -8,7 +8,7 @@ import javafx.scene.shape.Rectangle;
 
 public abstract class Character {
     private String name;
-    protected final ImageView characView;
+    protected ImageView characView;
     private double posX;
     private double posY;
     private int posZ;
@@ -27,12 +27,10 @@ public abstract class Character {
         this.posX = characCoord.getX();
         this.posY = characCoord.getY();
     }
-    protected Character(String name, Enum<Roles> type, ImageView characView) {
+    protected Character(String name, Enum<Roles> type) {
         this.name = name;
         this.type = type;
-        this.characView = characView;
-        this.characView.setFitWidth(37.5);
-        this.characView.setFitHeight(50);
+        this.characView = null;
     }
 
     //Getter
