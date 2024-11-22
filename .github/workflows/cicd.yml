@@ -43,9 +43,6 @@ jobs:
           name: coverage-report
           path: target/site/jacoco
 
-  getCoverageInReadme:
-    runs-on: self-hosted
-    steps:
       - uses: actions/checkout@v3
       - name: Get coverage percentage
         id: get-coverage
@@ -53,6 +50,7 @@ jobs:
           COVERAGE=$(grep -A 1 'Total' target/site/jacoco/index.html | grep -oP '(?<=<td class="ctr2">)[^<]+')
           echo "Coverage is $COVERAGE"
           echo "::set-output name=coverage::$COVERAGE"
+
       - name: Update README
         uses: actions/github-script@v3
         with:
