@@ -2,74 +2,67 @@
   {
     "id": 0,
     "name":"Nicolas",
-    "text": "SALUT LES SALOPES",
-    "choices": [1, 2]
+    "text": "Welcome to Epitech, the school of excellence in\ncomputer science! We are thrilled to have you\njoin this dynamic community, where innovation and\nhard work pave the way to success.",
+    "choices": [1,2]
   },
     {
         "id": 1,
         "name":"Nicolas",
-        "text": "wsh le sang",
+        "text": "...",
         "choices": [3]
     },
     {
         "id": 2,
         "name":"Nicolas",
-        "text": "bztmr",
-        "choices": [8]
+        "text": "...",
+        "choices": [3]
     },
   {
     "id": 3,
     "name":"Nicolas",
-    "text": "cv le boss?",
+    "text": "As we embark on this journey, remember that your\nmission is clear: by the end of the year, aim to\nvalidate as many skills as possible. The tools for\nyour success are right here—our computers and\nresources are at your disposal, ready to help you\nachieve your goals.",
     "choices": [4, 5]
   },
   {
     "id": 4,
     "name":"Nicolas",
-    "text": "ouais",
+    "text": "...",
     "choices": [6]
   },
   {
     "id": 5,
     "name":"Nicolas",
-    "text": "non",
-    "choices": [7]
+    "text": "...",
+    "choices": [6]
   },
   {
     "id": 6,
     "name":"Nicolas",
-    "text": "ok",
-    "choices": [9,9]
+    "text": "However, excellence comes with balance. Don’t\nforget to eat and rest—skipping meals or sleep is\nnot just unproductive, it’s unsustainable. Let’s\navoid coding ourselves into exhaustion!",
+    "choices": [7,8]
   },
   {
+    "name":"Nicolas",
     "id": 7,
-    "name":"Nicolas",
-    "text": "ok",
-    "choices": [9,9]
-  },
-  {
-    "id": 8,
-    "name":"Nicolas",
-    "text": "jvais te demarer!!",
-    "choices": [9,9]
+    "text": "...",
+    "choices": [9]
   },
     {
-        "id": 9,
         "name":"Nicolas",
-        "text": "azzz",
-        "choices": [10]
+        "id": 8,
+        "text": "...",
+        "choices": [9]
+    },
+    {
+        "name":"Nicolas",
+        "id": 9,
+        "text": "Here’s to a year of growth, learning, and\nbreakthroughs. Once again, welcome to Epitech!\nLet’s make it unforgettable.",
+        "choices": [10, 10]
     },
   {
+    "name":"Nicolas",
     "id": 10,
-    "name":"Nicolas",
-    "text": "fin",
-    "choices": [11,11]
-  },
-  {
-    "id": 11,
-    "name":"Nicolas",
-    "text": "fin",
+    "text": "Let's go",
     "choices": []
   }
-
 ]

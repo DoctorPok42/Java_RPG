@@ -50,6 +50,8 @@ public class Engine {
     private Item itemToInteract;
     private boolean canInteract;
     private boolean isInteracting;
+    private boolean snaking = false;
+    private Snake snake;
     private final Tiredness weakness;
     private final Feed hunger;
     private final Time time;
@@ -217,6 +219,7 @@ public class Engine {
         }
 
         gameView.setOnKeyPressed(e -> {
+
             if (isDevMode)
                 devEngine.listenKey(e);
 
@@ -286,6 +289,21 @@ public class Engine {
 
             if (e.getCode() == KeyCode.ENTER && this.isInteracting) {
                 menuControler.doActionOnEnter(player, this.itemToInteract, gameView, mapContainer);
+                if (this.itemToInteract.getType() == ItemType.PC) {
+                    Pc pc =(Pc) this.itemToInteract;
+                    snaking = pc.isSnaking();
+                    this.snake = pc.getSnake();
+                }
+            }
+            if (snaking){
+                snake.play(e.getCode());
+                if (snake.isGameOver()&&e.getCode()==KeyCode.ENTER){
+                    snake.resetGame();
+                }
+                if (e.getCode()==KeyCode.ESCAPE){
+                    snaking = false;
+                    gameView.getChildren().remove(gameView.lookup("#snakeWindow"));
+                }
             }
 
             if (e.getCode() == KeyCode.P && !this.isInteracting && !profileMenu.isLoaded() && !endMenu.isLoaded()) {
