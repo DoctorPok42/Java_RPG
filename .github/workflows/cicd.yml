@@ -19,6 +19,34 @@ jobs:
             exit 1
           fi
 
+  tests:
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      - name: Cache Maven dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-maven
+      - name: Run tests
+        run: |
+          mvn clean verify
+      - name: Generate coverage report
+        run: |
+          mvn jacoco:report
+      - name: Upload coverage to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.TOKEN }}
+          publish_dir: target/site/jacoco
+
+
   push_to_mirror:
     runs-on: self-hosted
     if: github.event_name == 'push'
