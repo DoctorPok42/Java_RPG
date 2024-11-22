@@ -68,6 +68,10 @@ public class PnjInteraction extends Item{
         dialogBox.setId("dialogBox");
         dialogBox.setSpacing(10);
         Label dialog = new Label(pnjDialogues.get(idDialogue).getText());
+        dialog.setStyle("-fx-font-size: 10;" +
+                "-fx-font-fill: white ;" +
+                "-fx-font-family: 'Press Start 2P';"
+        );
         dialogBox.setStyle("-fx-font-family: 'Press Start 2P';" +
                 "-fx-background-color: rgba(0, 0, 0, 0.2);"
 
@@ -76,8 +80,8 @@ public class PnjInteraction extends Item{
         dialog.setAlignment(Pos.CENTER);
 
         HBox pnjdialog = new HBox();
-        Rectangle rect = new Rectangle(450, 87);
-        rect.setFill(new ImagePattern(new Image(getClass().getResource("/assets/pnj/dialogbox2.png").toExternalForm())));
+        Rectangle rect = new Rectangle(520, 101);
+        rect.setFill(new ImagePattern(new Image(getClass().getResource("/assets/pnj/dialogbox5.png").toExternalForm())));
         StackPane background = new StackPane(rect);
         pnjdialog.getChildren().add(background);
         pnjdialog.setAlignment(Pos.CENTER);
@@ -91,14 +95,14 @@ public class PnjInteraction extends Item{
         Rectangle resp1rect = new Rectangle(250, 48);
         resp1rect.setFill(new ImagePattern(new Image(getClass().getResource("/assets/pnj/dialogbox3.png").toExternalForm())));
         StackPane resp1background = new StackPane(resp1rect);
-        resp1.setStyle("-fx-font-family: 'Press Start 2P'; -fx-font-size: 10;-fx-background-color: transparent;");
+        resp1.setStyle("-fx-font-family: 'Press Start 2P';-fx-font-fill: white; -fx-font-size: 10;-fx-background-color: transparent;");
         resp1background.getChildren().add(resp1);
 
         Button resp2 = new Button(pnjDialogues.get(pnjDialogues.get(idDialogue).getChoices().get(1)).getText());
         Rectangle resp2rect = new Rectangle(250, 48);
         resp2rect.setFill(new ImagePattern(new Image(getClass().getResource("/assets/pnj/dialogbox3.png").toExternalForm())));
         StackPane resp2background = new StackPane(resp2rect);
-        resp2.setStyle("-fx-font-family: 'Press Start 2P'; -fx-font-size: 10;-fx-background-color: transparent;");
+        resp2.setStyle("-fx-font-family: 'Press Start 2P';-fx-font-fill: white; -fx-font-size: 10;-fx-background-color: transparent;");
         resp2background.getChildren().add(resp2);
 
         responses.getChildren().addAll(resp1background, resp2background);

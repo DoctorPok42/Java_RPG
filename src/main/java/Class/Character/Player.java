@@ -1,6 +1,7 @@
 package Class.Character;
 
 import Class.Item.Item;
+import Class.Music.Music;
 import Class.Skill.Skill;
 import Class.Map.Map;
 import com.google.gson.Gson;
@@ -48,6 +49,7 @@ public class Player extends Character {
     private final Timeline walkLeftAnimationTimeline;
     private final Timeline walkRightAnimationTimeline;
     private final double movestep = 6;
+    private final Music walkSound = new Music("assets/music/walk.wav",0.2);
 
     protected final ImageView playerView;
     protected final Image[] StaticAnim;
@@ -317,15 +319,19 @@ public class Player extends Character {
     private Timeline checkKey(KeyCode code) {
         if (code == KeyCode.UP || code == KeyCode.Z) {
             startWalkUpAnimation();
+            walkSound.play();
             return timelineUP;
         } else if (code == KeyCode.DOWN || code == KeyCode.S) {
             startWalkDownAnimation();
+            walkSound.play();
             return timelineDOWN;
         } else if (code == KeyCode.LEFT || code == KeyCode.Q) {
             startWalkLeftAnimation();
+            walkSound.play();
             return timelineLEFT;
         } else if (code == KeyCode.RIGHT || code == KeyCode.D) {
             startWalkRightAnimation();
+            walkSound.play();
             return timelineRIGHT;
         }
         return null;
@@ -371,6 +377,7 @@ public class Player extends Character {
         } else {
             Timeline timeline = checkKey(e.getCode());
             timeline.stop();
+            walkSound.stop();
             stopWalkDownAnimation();
             stopWalkLeftAnimation();
             stopWalkRightAnimation();

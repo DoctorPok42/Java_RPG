@@ -50,6 +50,8 @@ public class Engine {
     private Item itemToInteract;
     private boolean canInteract;
     private boolean isInteracting;
+    private boolean snaking = false;
+    private Snake snake;
     private final Tiredness weakness;
     private final Feed hunger;
     private final Time time;
@@ -217,13 +219,14 @@ public class Engine {
         }
 
         gameView.setOnKeyPressed(e -> {
+
             if (isDevMode)
                 devEngine.listenKey(e);
 
             this.itemToInteract = player.getStoreItem();
             if (e.getCode() == KeyCode.ESCAPE) {
-                if (!music.isPlaying())
-                    music.play();
+//                if (!music.isPlaying())
+//                    music.play();
 
                 this.isInteracting = false;
                 this.itemToInteract = null;
@@ -286,6 +289,21 @@ public class Engine {
 
             if (e.getCode() == KeyCode.ENTER && this.isInteracting) {
                 menuControler.doActionOnEnter(player, this.itemToInteract, gameView, mapContainer);
+                if (this.itemToInteract.getType() == ItemType.PC) {
+                    Pc pc =(Pc) this.itemToInteract;
+                    snaking = pc.isSnaking();
+                    this.snake = pc.getSnake();
+                }
+            }
+            if (snaking){
+                snake.play(e.getCode());
+                if (snake.isGameOver()&&e.getCode()==KeyCode.ENTER){
+                    snake.resetGame();
+                }
+                if (e.getCode()==KeyCode.ESCAPE){
+                    snaking = false;
+                    gameView.getChildren().remove(gameView.lookup("#snakeWindow"));
+                }
             }
 
             if (e.getCode() == KeyCode.P && !this.isInteracting && !profileMenu.isLoaded() && !endMenu.isLoaded()) {
@@ -308,7 +326,7 @@ public class Engine {
     public void start(Stage primaryStage, boolean devMode) {
         StackPane gameView = new StackPane(map.getMapContainer(), player.getPlayerView());
         gameView.setPrefSize(this.map.getViewWidth(), this.map.getViewHeight());
-        music.play();
+//        music.play();
 
         Scene scene = new Scene(gameView);
         primaryStage.setScene(scene);

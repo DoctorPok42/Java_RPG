@@ -166,7 +166,7 @@ public class MenuControler extends Controler implements Menu {
 
             if (itemToInteract.getType() == ItemType.PC) {
                 Pc pc = (Pc) itemToInteract;
-                pc.doAction(player, pc.getActions().get(firstMenu), 2, skills.get(currentAction % 10).getName());
+                pc.doAction(player, pc.getActions().get(firstMenu), 2, skills.get(currentAction % 10).getName(), gameView);
             } else if (itemToInteract.getType() == ItemType.DISTRIBUTOR) {
                 Distributor distributor = (Distributor) itemToInteract;
                 distributor.doAction(player, distributor.getActions().get(firstMenu), 1, "module");
