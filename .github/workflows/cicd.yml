@@ -37,11 +37,11 @@ jobs:
       - name: Generate coverage report
         run: |
           mvn jacoco:report
-      - name: Upload Coverage Report
-        uses: codecov/codecov-action@v4
+      - name: Upload coverage reports to Codecov with GitHub Action
+        uses: codecov/codecov-action@v4.2.0
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./target/coverage.json
+          file: ./target/site/jacoco/jacoco.xml
           flags: unittests
           name: codecov-umbrella
           fail_ci_if_error: true
