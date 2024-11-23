@@ -59,20 +59,24 @@ public class Profile extends Menu {
             this.texts.add(text);
         }
 
-        this.firstName.setText(player.getName().split(" ")[0]);
-        this.lastName.setText(player.getName().split(" ")[1]);
+        try {
+            this.firstName.setText(player.getName().split(" ")[0]);
+            this.lastName.setText(player.getName().split(" ")[1]);
 
-        this.lastName.setFont(new Font(font, 20));
-        this.lastName.setFill(Color.GREY);
-        StackPane.setAlignment(this.lastName, Pos.TOP_LEFT);
-        this.lastName.setTranslateX(320);
-        this.lastName.setTranslateY(309);
+            this.lastName.setFont(new Font(font, 20));
+            this.lastName.setFill(Color.GREY);
+            StackPane.setAlignment(this.lastName, Pos.TOP_LEFT);
+            this.lastName.setTranslateX(320);
+            this.lastName.setTranslateY(309);
 
-        this.firstName.setFont(new Font(font, 20));
-        this.firstName.setFill(Color.GREY);
-        StackPane.setAlignment(this.firstName, Pos.TOP_LEFT);
-        this.firstName.setTranslateX(320);
-        this.firstName.setTranslateY(340);
+            this.firstName.setFont(new Font(font, 20));
+            this.firstName.setFill(Color.GREY);
+            StackPane.setAlignment(this.firstName, Pos.TOP_LEFT);
+            this.firstName.setTranslateX(320);
+            this.firstName.setTranslateY(340);
+        } catch (Exception e) {
+            System.exit(0);
+        }
     }
 
     public void show(StackPane gameView, Player player) {
