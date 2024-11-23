@@ -1,17 +1,17 @@
 package Class.Character;
 
 import Class.Item.Item;
+import Class.Map.Map;
 import Class.Music.Music;
 import Class.Skill.Skill;
-import Class.Map.Map;
 import com.google.gson.Gson;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
 import javafx.animation.Animation;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
@@ -29,12 +29,14 @@ public class Player extends Character {
     private int money;
     private int timeDays;
     private int timeYears;
-    private int timeHours;
+    private int timeMonths;
+    private int secondsCounter = 0;
     private int nbHoursOfSearch;
     private Item storeItem;
 
+
     private double fun;
-    private int weakness;
+    private double weakness;
     private double hunger;
 
     private List<Skill> skills;
@@ -48,7 +50,6 @@ public class Player extends Character {
     private final Timeline walkUpAnimationTimeline;
     private final Timeline walkLeftAnimationTimeline;
     private final Timeline walkRightAnimationTimeline;
-    private final double movestep = 6;
     private final Music walkSound = new Music("assets/music/walk.wav",0.2);
 
     protected final ImageView playerView;
@@ -64,7 +65,7 @@ public class Player extends Character {
     private int currentWalkRightIndex = 0;
 
     private javafx.geometry.Point2D playerCoord;
-    private Rectangle playerHitbox;
+    private final Rectangle playerHitbox;
 
     // Dev engine
     private boolean hasToCheckCollision = true;
@@ -82,7 +83,7 @@ public class Player extends Character {
         this.money = 0;
         this.timeDays = 0;
         this.timeYears = 0;
-        this.timeHours = 0;
+        this.timeMonths = 0;
         this.nbHoursOfSearch = 0;
         this.fun = 0;
         this.weakness = 115;
@@ -156,6 +157,7 @@ public class Player extends Character {
         this.playerHitbox.setStrokeWidth(2);
         map.addMapContainer(this.playerHitbox);
 
+        double movestep = 6;
         timelineUP = createMovementTimeline(0, movestep, map);
         timelineDOWN = createMovementTimeline(0, -movestep, map);
         timelineLEFT = createMovementTimeline(movestep, 0, map);
@@ -187,8 +189,8 @@ public class Player extends Character {
     public int getTimeYears(){
         return this.timeYears;
     }
-    public int getTimeHours(){
-        return this.timeHours;
+    public int getTimeMonths() {
+        return this.timeMonths;
     }
     public int getNbHoursOfSearch(){
         return this.nbHoursOfSearch;
@@ -197,7 +199,7 @@ public class Player extends Character {
         return this.fun;
     }
 
-    public int getWeakness() {
+    public double getWeakness() {
         return this.weakness;
     }
 
@@ -229,16 +231,6 @@ public class Player extends Character {
     }
 
     //Method
-    void interact(){
-        //interact with...
-    }
-    void profile(){
-        //display profile
-    }
-    void menu(){
-        //display menu
-    }
-
     public void addTimeOfSearch(int hours){
         this.nbHoursOfSearch += hours;
     }
@@ -252,7 +244,7 @@ public class Player extends Character {
     }
 
     public void eat() {
-        this.hunger += 10;
+        this.hunger += 7;
     }
 
     public void sleep(int hours) {
@@ -260,36 +252,36 @@ public class Player extends Character {
     }
 
     public void updateStats() {
-        double fatigueMultiplier = (this.weakness / 50.0) + 1;
-        double hungerMultiplier = (this.hunger / 10.0) + 1;
+        double weaknessPerSecond = 23.0 / 60.0;
+        double hungerPerSecond = 15.0 / 60.0;
 
-        if (this.timeHours >= 20 || this.timeHours < 6) {
-            this.weakness -= (int) (3 * fatigueMultiplier);
-        } else {
-            this.weakness -= (int) (1 * fatigueMultiplier);
-        }
-        this.hunger -= 1 * hungerMultiplier;
+        this.weakness -= weaknessPerSecond;
+        this.hunger -= hungerPerSecond;
 
         this.weakness = Math.clamp(this.weakness, 0, 115);
         this.hunger = Math.clamp(this.hunger, 0, 115);
     }
 
     private void timeLogic() {
-        if (this.timeHours >= 24) {
-            this.timeHours = 0;
-            this.timeDays++;
+        if (timeDays >= 10) {
+            timeDays = 0;
+            timeMonths++;
         }
-        if (this.timeDays == 60) {
-            this.timeDays = 0;
-            this.timeYears++;
+        if (timeMonths >= 12) {
+            timeMonths = 0;
+            timeYears++;
         }
     }
 
     public void updateTime() {
-        this.timeHours++;
-
-        timeLogic();
+        this.secondsCounter++;
         this.updateStats();
+
+        if (this.secondsCounter >= 60) {
+            this.timeDays++;
+            this.secondsCounter = 0;
+            timeLogic();
+        }
     }
 
     public void addTime(int hours) {
@@ -385,6 +377,11 @@ public class Player extends Character {
             startStaticAnimation();
         }
     }
+
+    public void stopWalkSound() {
+        walkSound.stop();
+    }
+
     //Create movement timeline
     private Timeline createMovementTimeline(double x, double y, Map map) {
         Timeline timeline = new Timeline(

@@ -42,13 +42,9 @@ public class End extends Menu {
     }
 
     public void checkEndGame(StackPane gameView, Player player, Music music) {
-        if (player.getTimeDays() >= 60) {
-            music.pause();
-            show(gameView, player);
-        }
-
-        if (player.getHunger() <= 0 || player.getWeakness() <= 0) {
-            music.pause();
+        if (player.getTimeYears() >= 1 || (player.getHunger() <= 0 || player.getWeakness() <= 0)) {
+            music.stop();
+            player.stopWalkSound();
             show(gameView, player);
         }
     }

@@ -173,20 +173,22 @@ public class MenuControler extends Controler implements Menu {
             } else if (itemToInteract.getType() == ItemType.CANAP) {
                 Canap canap = (Canap) itemToInteract;
                 canap.doAction(player, canap.getActions().get(firstMenu), 1, "module");
-            } else if ( itemToInteract.getType() == ItemType.PNJ) {
+            } else if (itemToInteract.getType() == ItemType.PNJ) {
                 PnjInteraction pnj = (PnjInteraction) itemToInteract;
                 pnj.doAction(player, pnj.getActions().get(firstMenu), pnj.getPnj(), gameView);
             }
 
-            String text = itemToInteract.getListActions().get(firstMenu);
-            if (!gameView.getChildren().contains(action)) {
-                actionText.setText(text);
-                action.setFitWidth(text.length() * 9.5);
+            if (itemToInteract.getType() != ItemType.PNJ) {
+                String text = itemToInteract.getListActions().get(firstMenu);
+                if (!gameView.getChildren().contains(action)) {
+                    actionText.setText(text);
+                    action.setFitWidth(text.length() * 9.5);
 
-                gameView.getChildren().add(action);
-                gameView.getChildren().add(actionText);
-            } else {
-                actionText.setText(text);
+                    gameView.getChildren().add(action);
+                    gameView.getChildren().add(actionText);
+                } else {
+                    actionText.setText(text);
+                }
             }
         }
     }
