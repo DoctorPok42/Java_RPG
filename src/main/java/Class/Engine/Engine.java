@@ -4,8 +4,6 @@ import Class.Character.Player;
 import Class.Character.Pnj;
 import Class.Character.PnjTypeAdapter;
 import Class.DevMode.DevEngine;
-import Class.Item.Item;
-import Class.Item.ItemTypeAdapter;
 import Class.Item.*;
 import Class.Map.Map;
 import Class.Menu.End;
@@ -22,25 +20,20 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.geometry.Point2D;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
-import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
-
-import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.jetbrains.annotations.NotNull;
+
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Engine {
     private final Player player;
@@ -223,7 +216,6 @@ public class Engine {
         }
 
         gameView.setOnKeyPressed(e -> {
-
             if (isDevMode)
                 devEngine.listenKey(e);
 
@@ -259,6 +251,10 @@ public class Engine {
                 menuControler.removeAlert(gameView);
                 player.setStoreItem(null);
                 profileMenu.remove(gameView);
+
+
+                snaking = false;
+                gameView.getChildren().remove(gameView.lookup("#snakeWindow"));
             }
 
             if (e.getCode() == KeyCode.ALT) isAltPressed = true;
@@ -303,10 +299,6 @@ public class Engine {
                 snake.play(e.getCode());
                 if (snake.isGameOver()&&e.getCode()==KeyCode.ENTER){
                     snake.resetGame();
-                }
-                if (e.getCode()==KeyCode.ESCAPE){
-                    snaking = false;
-                    gameView.getChildren().remove(gameView.lookup("#snakeWindow"));
                 }
             }
 

@@ -2,22 +2,16 @@ package Class.Item;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.application.Application;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
-import javafx.scene.control.skin.TextInputControlSkin;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.stage.Stage;
 import javafx.util.Duration;
-import javafx.scene.control.Button;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -103,7 +97,7 @@ public class Snake {
     }
 
     private void update() {
-        Point head = ssnake.get(0);
+        Point head = ssnake.getFirst();
         Point newHead = switch (direction) {
             case UP -> new Point(head.x, head.y - 1);
             case DOWN -> new Point(head.x, head.y + 1);
@@ -117,13 +111,13 @@ public class Snake {
             return;
         }
 
-        ssnake.add(0, newHead);
+        ssnake.addFirst(newHead);
 
         if (newHead.equals(food)) {
             spawnFood();
             score++;
         } else {
-            ssnake.remove(ssnake.size() - 1);
+            ssnake.removeLast();
         }
     }
     private void render(GraphicsContext gc, Label scoreLabel) {
@@ -145,7 +139,7 @@ public class Snake {
         gc.fillRect(0, 0, WIDTH, HEIGHT);
 
         gc.setFill(Color.RED);
-        gc.fillText("GAME OVER," + "\nScore: "+score+ "\nPress Enter to play again.", WIDTH / 2 - 50, HEIGHT / 2);
+        gc.fillText("GAME OVER," + "\nScore: "+score+ "\nPress Enter to play again.", (double) WIDTH / 2 - 50, (double) HEIGHT / 2);
 
     }
     private void spawnFood() {

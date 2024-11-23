@@ -1,16 +1,16 @@
 package Class.Character;
 
-import Class.Item.Item;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.image.Image;
-import java.util.ArrayList;
-import java.util.List;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Pnj extends Character {
     private List<String> message;
@@ -73,7 +73,7 @@ public class Pnj extends Character {
                 break;
 
         }
-        staticAnimationTimeline = new Timeline(new KeyFrame(Duration.millis(100), e->animateStatic()));
+        staticAnimationTimeline = new Timeline(new KeyFrame(Duration.millis(200), e->animateStatic()));
         staticAnimationTimeline.setCycleCount(Animation.INDEFINITE);
         startStaticAnimation();
     }

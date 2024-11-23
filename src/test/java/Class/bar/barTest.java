@@ -33,4 +33,13 @@ public class barTest {
         // Vérification que getName renvoie une chaîne vide
         assertEquals("", emptyBar.getName(), "getName should return an empty string if name is empty");
     }
+
+    @Test
+    public void testGetNameWithNullName() {
+        // Création d'un objet bar avec un nom null
+        bar nullBar = new bar(null, new ImageView());
+
+        // Vérification que getName renvoie null
+        assertEquals(null, nullBar.getName(), "getName should return null if name is null");
+    }
 }
