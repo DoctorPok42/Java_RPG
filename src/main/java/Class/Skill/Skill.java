@@ -5,7 +5,7 @@ public class Skill {
     private int level;
 
     //Constructor
-    public Skill(String name){
+    public Skill(String name) {
         this.name = name;
         this.level = 0;
     }
