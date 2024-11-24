@@ -1,6 +1,3 @@
-src/main/java/test/PatientZero.java
-
-
 target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/

@@ -61,6 +61,7 @@ public class Engine {
     private boolean isAltPressed = false;
     private boolean isCtrlPressed = false;
     private final Text pnjName = new Text();
+    private boolean isEnd = false;
 
     //Constructor
     public Engine() throws IOException {
@@ -189,7 +190,7 @@ public class Engine {
                 hunger.update(player, gameView);
             }
             if (!endMenu.isLoaded() && !isDevMode)
-                endMenu.checkEndGame(gameView, player, music);
+                this.isEnd = endMenu.checkEndGame(gameView, player, music);
         }));
         timeline.setCycleCount(Timeline.INDEFINITE);
         return timeline;
@@ -199,6 +200,7 @@ public class Engine {
         displayPnjs(gameView);
         displayItems(gameView);
         time.update(player);
+        money.update(player);
         Timeline timeline = getTimeline(gameView);
         timeline.play();
 
@@ -231,6 +233,8 @@ public class Engine {
 
             this.itemToInteract = player.getStoreItem();
             if (e.getCode() == KeyCode.ESCAPE) {
+                if (isEnd) return;
+
                 if (!music.isPlaying())
                     music.play();
 

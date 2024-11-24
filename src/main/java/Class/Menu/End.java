@@ -41,12 +41,14 @@ public class End extends Menu {
         );
     }
 
-    public void checkEndGame(StackPane gameView, Player player, Music music) {
+    public boolean checkEndGame(StackPane gameView, Player player, Music music) {
         if (player.getTimeYears() >= 1 || (player.getHunger() <= 0 || player.getWeakness() <= 0)) {
             music.stop();
             player.stopWalkSound();
             show(gameView, player);
+            return true;
         }
+        return false;
     }
 
     public void setGrade(Player player) {

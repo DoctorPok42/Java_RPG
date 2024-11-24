@@ -1,132 +1,325 @@
 @startuml
-class Class.bar.bar {
-# String name
-# float maxCapacity
-# float currentCapacity
-# String color
-# Image texture
-+ String getName()
-+ float getMaxCapacity()
-+ float getCurrentCapacity()
-+ String getColor()
-+ void setTexture(Image)
+class Class.Character.Player {
+- int money
+- boolean jobbing
+- int timeDays
+- int timeYears
+- int timeMonths
+- int secondsCounter
+- int nbHoursOfSearch
+- Item storeItem
+- double fun
+- double weakness
+- double hunger
+- List<Skill> skills
+- Timeline timelineUP
+- Timeline timelineDOWN
+- Timeline timelineLEFT
+- Timeline timelineRIGHT
+- Timeline staticAnimationTimeline
+- Timeline walkDownAnimationTimeline
+- Timeline walkUpAnimationTimeline
+- Timeline walkLeftAnimationTimeline
+- Timeline walkRightAnimationTimeline
+- Music walkSound
+# ImageView playerView
+# Image[] StaticAnim
+- int currentStaticIndex
+# Image[] walkDownAnim
+- int currentWalkDownIndex
+- Image[] walkUpAnim
+- int currentWalkUpIndex
+- Image[] walkLeftAnim
+- int currentWalkLeftIndex
+- Image[] walkRightAnim
+- int currentWalkRightIndex
+- javafx.geometry.Point2D playerCoord
+- Rectangle playerHitbox
+- boolean hasToCheckCollision
++ <<Create>> Player(String,Image,Map)
+- void pickName()
++ int getMoney()
++ void setMoney(int)
++ int getTimeDays()
++ int getTimeYears()
++ int getTimeMonths()
++ int getNbHoursOfSearch()
++ double getFun()
++ double getWeakness()
++ boolean isJobbing()
++ void setJobbing(boolean)
++ double getHunger()
++ List<Skill> getSkills()
++ Item getStoreItem()
++ void setStoreItem(Item)
++ Skill getSkill(String)
++ ImageView getPlayerView()
++ void addTimeOfSearch(int)
++ void addMoney(int)
++ void addFun(double)
++ void eat()
++ void sleep(int)
++ void updateStats()
+- void timeLogic()
++ void updateTime()
++ void addTime(int)
++ void addSkill(Skill)
++ void setSkills(Skill)
++ void setIsCollision(boolean)
+- Timeline checkKey(KeyCode)
++ void move(ImageView,StackPane,boolean,KeyEvent)
++ void stopWalkSound()
+- Timeline createMovementTimeline(double,double,Map)
+- void animateStatic()
+- void startStaticAnimation()
+- void stopStaticAnimation()
+- void animateWalkDown()
+- void startWalkDownAnimation()
+- void stopWalkDownAnimation()
+- void animateWalkUp()
+- void startWalkUpAnimation()
+- void stopWalkUpAnimation()
+- void animateWalkLeft()
+- void startWalkLeftAnimation()
+- void stopWalkLeftAnimation()
+- void animateWalkRight()
+- void startWalkRightAnimation()
+- void stopWalkRightAnimation()
+- boolean isCollision(Rectangle,Map)
+- Item detectInteraction(Rectangle,Map)
++ void loadSkills(String)
++ Rectangle getPlayerHitbox()
+}
+note left of Class.Character.Player::hasToCheckCollision
+ Dev engine
+end note
+
+note left of Class.Character.Player::Player(String,Image,Map)
+Constructor
+end note
+note right of Class.Character.Player::getMoney()
+Getter
+end note
+note left of Class.Character.Player::addTimeOfSearch(int)
+Method
+end note
+note right of Class.Character.Player::setIsCollision(boolean)
+ Dev engine
+end note
+note left of Class.Character.Player::move(ImageView,StackPane,boolean,KeyEvent)
+Move method
+end note
+note right of Class.Character.Player::createMovementTimeline(double,double,Map)
+Create movement timeline
+end note
+note left of Class.Character.Player::animateStatic()
+Animate character
+end note
+note right of Class.Character.Player::getPlayerHitbox()
+ getPlayerHitbox
+end note
+
+enum Class.Item.PnjTypeAction {
++  SPEAK
 }
 
-
-class Class.Skill.Skill {
+class Class.DevMode.Edit.EditItems {
+- ImageView img
+- ItemType type
 - String name
+- int skin
+- {static} List<EditItems> allitems
++ <<Create>> EditItems(ImageView,ItemType,String,int)
++ ImageView getImg()
++ ItemType getType()
 + String getName()
++ int getSkin()
++ {static} List<ImageView> getAllItemsView()
 }
 
 
-class Class.bar.Feed {
-+ void feedMe(float)
-+ void decreaseFeed(float)
+class Class.bar.Money {
+- Text money
+- Text job
++ <<Create>> Money(String)
++ void display(StackPane)
++ void update(Player)
+}
+
+
+class Class.Item.Dialogues {
+- String namePnj
+- String text
+- int id
+- List<Integer> choices
++ <<Create>> Dialogues(String,String,int,List<Integer>)
++ String getText()
++ int getId()
++ String getName()
++ List<Integer> getChoices()
+}
+
+
+class Class.Menu.Menu {
+# String name
+# String title
+# List<Option> options
+# int selectedOption
+# int id
++ <<Create>> Menu(String,String,int)
++ String getName()
++ String getTitle()
++ List<Option> getOptions()
++ int selectOption()
++ int getSelectedOption()
++ int getId()
+}
+
+
+class Class.DevMode.Text.Cords {
++ <<Create>> Cords(String,String)
++ void displayText(StackPane)
++ void updateText(String)
++ void removeText(StackPane)
+}
+
+class Class.Item.SkillTypeAdapter {
++ void write(JsonWriter,Skill)
++ Skill read(JsonReader)
+}
+
+enum Class.Item.ItemType {
++  PC
++  CANAP
++  DISTRIBUTOR
++  TABLE
++  PNJ
+}
+
+class Class.Skill.SkillTest {
++ void testGetNameWithValidName()
++ void testGetNameWithDifferentName()
++ void testGetNameWithEmptyName()
++ void testGetNameWithNullName()
++ void testGetLevelWithValidLevel()
++ void testSetLevelWithValidLevel()
++ void testSetLevelWithNegativeLevel()
+}
+
+class Class.DevMode.Edit.Utils.ReadItemFile {
+- List<Item> itemList
+- String filePath
++ <<Create>> ReadItemFile(String)
++ List<Item> readItems(Gson)
++ Path getItemFilePath()
+}
+
+
+class Class.Music.Music {
+~ MediaPlayer mediaPlayer
+- double volume
++ <<Create>> Music(String,double)
++ void play()
++ void stop()
++ void pause()
++ void setVolume(double)
++ double getVolume()
++ boolean isPlaying()
+}
+
+
+class Class.Map.Obstacles {
+- double x
+- double y
+- double width
+- double height
+- int id
++ <<Create>> Obstacles(double,double,double,double,int)
++ int getId()
++ void setId(int)
++ double getX()
++ void setX(double)
++ double getY()
++ void setY(double)
++ double getWidth()
++ void setWidth(double)
++ double getHeight()
++ void setHeight(double)
+}
+
+
+class Class.Menu.End {
+- ImageView background
+- boolean isLoaded
+- Rectangle backgroundRect
+- Text playerNameText
+- Text endText
+- {static} String font
+- List<String> endTexts
+- int grade
++ <<Create>> End()
++ boolean checkEndGame(StackPane,Player,Music)
++ void setGrade(Player)
++ boolean isLoaded()
++ void setName(String)
++ void show(StackPane,Player)
++ void remove(StackPane)
+}
+
+
+class Class.Item.Canap {
++ <<Create>> Canap(String,Enum<ItemType>,float,float,int,int,int)
+- boolean sleep(Player,int)
++ boolean doAction(Player,Enum<?>,int,String)
++ List<CanapTypeAction> getActions()
 }
 
 class Class.Item.Distributor {
 - int money
-- ArrayList<String> snacks
++ <<Create>> Distributor(String,Enum<ItemType>,float,float,int,int,int,int)
 + int getMoney()
-+ ArrayList<String> getSnacks()
-+ boolean buySnack(String)
-+ boolean hack()
+- boolean buySnack(Player)
+- boolean hack(Player)
++ boolean doAction(Player,Enum<?>,int,String)
++ List<DistributorTypeAction> getActions()
 }
 
 
-class Class.Character.Pnj {
-- List<String> message
-+ List<String> getMessage()
-~ void addMessage(String)
-~ void Speak()
-}
-
-
-class Class.Map.Map {
-- String name
-- boolean isLoaded
-- List<Room> rooms
-- List<Item> items
-- ImageView mapView
-- Pane mapContainer
-- boolean isNight
-+ String getName()
-+ boolean getIsLoaded()
-+ List<Room> getRooms()
-+ List<Item> getItems()
-+ ImageView getMapView()
-+ Pane getMapContainer()
-+ boolean getIsNight()
-+ void setMapView(ImageView)
-+ void setIsNight(boolean)
-}
-
-
-enum Class.Character.role {
-+  PLAYER
-+  STUDENT
-+  TEACHER
-+  MONSTER
-}
-
-class Class.Item.Item {
+abstract class Class.Engine.Controler {
 # String name
-# Enum<ItemType> type
-# float x
-# float y
-# int z
+# int currentAction
+# <<Create>> Controler(String)
 + String getName()
-+ Enum<ItemType> getType()
-+ float getX()
-+ float getY()
-+ int getZ()
++ int getCurrentAction()
++ void setCurrentAction(int)
 }
 
 
-class Class.bar.Fun {
-+ void play(float)
-+ void decreasePlay(float)
-}
-
-class Class.Menu.Start {
-+ void selectOption()
-+ void up()
-+ void down()
-}
-
-class Class.Item.Canap {
-+ void sleep()
+class Class.Map.obstaclesTypeAdaptater {
++ void write(JsonWriter,Obstacles)
++ Obstacles read(JsonReader)
 }
 
 class Class.Menu.Option {
 # String value
 # String name
 # Runnable action
++ <<Create>> Option(String,String,Runnable)
 + String getName()
 + String getValue()
 + void select()
++ Runnable getAction()
 }
 
 
-abstract class Class.Character.Character {
-- String name
-- ImageView persoView
-- int posX
-- int posY
-- int posZ
-- role type
-+ String getName()
-+ ImageView getPersoView()
-+ int getPosX()
-+ int getPosY()
-+ int getPosZ()
-+ role getType()
-+ void move(ImageView,StackPane)
+class Class.DevMode.Text.Place {
++ <<Create>> Place(String,String)
++ void displayText(StackPane)
++ void updateText(boolean)
 }
 
-
-class Class.Map.Room {
-- String name
+enum Class.Item.CanapTypeAction {
++  SLEEP
 }
 
 enum Class.Item.PcTypeAction {
@@ -135,95 +328,597 @@ enum Class.Item.PcTypeAction {
 +  SEARCH
 }
 
-class Class.Character.Player {
-- int money
-- int timeDays
-- int timeYears
-- int timeHours
-- double fun
-- double weakness
-- double hunger
-- List<Skill> skills
-~ double mapTranslateX
-~ double mapTranslateY
-- Timeline timelineUP
-- Timeline timelineDOWN
-- Timeline timelineLEFT
-- Timeline timelineRIGHT
-- Timeline animationTimeline
-- double movestep
-+ int getMoney()
-+ int getTimeDays()
-+ int getTimeYears()
-+ int getTimeHours()
-+ double getFun()
-+ double getWeakness()
-+ double getHunger()
-~ void interact()
-~ void profile()
-~ void menu()
-+ void updateStats(Map)
-+ void updateTime(Map)
-- Timeline checkKey(KeyCode)
-+ void move(ImageView,StackPane)
-- Timeline createMovementTimeline(double,double,ImageView)
-}
-
-
-class Class.Item.Pc {
-- Enum<PcTypeAction> typeAction
-+ Enum<PcTypeAction> getTypeAction()
-+ void displayMenu()
-+ void doAction(int)
-}
-
-
-class Class.bar.Tiredness {
-+ void sleep(float)
-+ void decreaseSleep(float)
-}
-
-enum Class.Item.ItemType {
-+  PC
-+  CANAP
-+  DISTRIBUTOR
-}
-
-class Class.Menu.Menu {
-# String name
-# String title
-# List<Option> options
-# int selectedOption
-# int id
+abstract class Class.Character.Character {
+- String name
+# ImageView characView
+- double posX
+- double posY
+- int posZ
+- Enum<Roles> type
+# javafx.geometry.Point2D characCoord
+- Rectangle characHitbox
+# <<Create>> Character(String,Enum<Roles>,ImageView,Map)
+# <<Create>> Character(String,Enum<Roles>)
 + String getName()
-+ String getTitle()
-+ List<Option> getOptions()
-+ int getSelectedOption()
-+ int getId()
++ ImageView getCharacView()
++ double getPosX()
++ double getPosY()
++ int getPosZ()
++ Enum<Roles> getType()
++ void setName(String)
++ void setPosX(double)
++ void setPosY(double)
++ void move(ImageView,StackPane,boolean,KeyEvent)
 }
 
+note left of Class.Character.Character::Character(String,Enum<Roles>,ImageView,Map)
+Constructor
+end note
+note right of Class.Character.Character::getName()
+Getter
+end note
+note left of Class.Character.Character::setName(String)
+setter
+end note
+note right of Class.Character.Character::move(ImageView,StackPane,boolean,KeyEvent)
+Method
+end note
 
 class Class.Engine.Engine {
 - Player player
 - Map map
+- Pane mapContainer
+- ImageView interactImg
+- Item itemToInteract
+- boolean canInteract
+- boolean isInteracting
+- boolean snaking
+- Snake snake
+- Tiredness weakness
+- Feed hunger
+- Time time
+- Money money
+- Music music
+- Profile profileMenu
+- End endMenu
+- MenuControler menuControler
+- boolean isDevMode
+- DevEngine devEngine
+- boolean isAltPressed
+- boolean isCtrlPressed
+- Text pnjName
+- boolean isEnd
++ <<Create>> Engine()
 - boolean isMoveKey(KeyCode)
-- void onClick(MouseEvent)
-- void changeMap(int)
+- void loadPnj(Map)
+- void displayPnjs(StackPane)
+- void loadItems(Map,int)
+- void displayItems(StackPane)
++ Point2D getClickPoint(MouseEvent)
+- Timeline getTimeline(StackPane)
 - void gameLoop(StackPane)
++ void start(Stage,boolean)
+}
+
+note left of Class.Engine.Engine::Engine()
+Constructor
+end note
+
+class Class.bar.Fun {
++ <<Create>> Fun(String)
+}
+
+enum Class.Character.Roles {
++  PLAYER
++  PEDAGO
++  AER
++  MONSTER
+}
+
+class Class.DevMode.KeyControler {
+- List<KeyCode> keys
++ <<Create>> KeyControler(String,List<KeyCode>)
++ KeyCode listenKey(KeyEvent)
+}
+
+
+class Class.DevMode.Text.Interact {
++ <<Create>> Interact(String,String)
++ void displayText(StackPane)
++ void updateText(boolean)
+}
+
+class Class.bar.barTest {
++ void testGetNameWithValidName()
++ void testGetNameWithDifferentName()
++ void testGetNameWithEmptyName()
++ void testGetNameWithNullName()
+}
+
+abstract class Class.DevMode.Controler {
+# String name
+# <<Create>> Controler(String)
++ String getName()
+}
+
+
+class Class.Character.Pedago {
+~ <<Create>> Pedago(String,Roles,int,double,double,int)
+}
+
+class Class.bar.Time {
+- Text years
+- Text months
+- Text days
+- Font font
++ <<Create>> Time(String)
++ void display(StackPane)
++ void update(Player)
+}
+
+
+class Class.bar.Tiredness {
++ <<Create>> Tiredness(String)
++ void update(Player,StackPane)
+}
+
+enum Class.Item.DistributorTypeAction {
++  BUY
++  HACK
+}
+
+class Class.DevMode.Edit.ImgMouseControler {
+- List<ImageView> imgMode
+- int mode
+- ImageView bar
+- List<EditItems> allImgItem
+- ImageView imgSelected
+- int selected
+- ImageView itemToDisplay
+- ReadItemFile readItemFile
+- List<Item> itemField
++ <<Create>> ImgMouseControler(String)
++ int getMode()
++ int getSelected()
++ List<ImageView> getAllImgItem()
++ void changeSelected(int)
++ void setMode(int,StackPane)
++ void displayItemSelected(double,double,StackPane)
++ void putItem(Map,Point2D)
+- void actionOnAdd(double,double,StackPane)
++ void displayImg(double,double,StackPane,Map,Replace)
++ void removeImg(StackPane)
++ void setItemField(List<Item>)
+}
+
+
+class Game.Game {
+- Start startMenu
+- int currentMenu
++ {static} void main(String[])
++ void startGame(Stage,StackPane)
 + void start(Stage)
 }
 
 
+class Class.Item.Pc {
+~ boolean snaking
+~ Snake snake
++ <<Create>> Pc(String,Enum<ItemType>,float,float,int,int,int)
++ void displayMenu()
+- boolean work(Player,int,String)
+- boolean play(Player,int,StackPane)
+- boolean search(Player,int)
++ boolean doAction(Player,Enum<?>,int,String,StackPane)
++ boolean isSnaking()
++ Snake getSnake()
++ List<PcTypeAction> getActions()
+}
 
 
-Class.bar.bar <|-- Class.bar.Feed
-Class.Item.Item <|-- Class.Item.Distributor
-Class.Character.Character <|-- Class.Character.Pnj
-Class.bar.bar <|-- Class.bar.Fun
-Class.Menu.Menu <|-- Class.Menu.Start
-Class.Item.Item <|-- Class.Item.Canap
+class Class.DevMode.DevEngine {
+- KeyControler keyControler
+- Player player
+- Map map
+- StackPane gameView
+- boolean isEditing
+- Collisions textCollisions
+- Interact textInteract
+- Place textPlace
+- Cords textCords
+- ImgMouseControler imgMouseControler
+- Replace replaceAction
+- boolean isAdding
+- List<KeyCode> keysPressed
+- Point2D mousePoint
+- ImageView textBlock
+- ReadItemFile readItemFile
++ <<Create>> DevEngine()
++ void displayDevMode(StackPane,Player,Map)
++ void listenKey(KeyEvent)
++ void listenMouse(MouseEvent)
++ void listenMouseClick(MouseEvent,Point2D)
++ void listenScroll(ScrollEvent,double,boolean)
++ void listenMouseDrag(MouseEvent)
+}
+
+
+class Class.DevMode.Edit.Replace {
+- List<Item> itemsToReplace
+- List<Item> itemsToReplaceStored
+- ReadItemFile readItemFile
+- List<Item> itemField
++ <<Create>> Replace(String)
++ void move(Map,Point2D)
++ void removeItem()
++ void selectItem(Map,Point2D)
++ void saveInJson()
++ void drag(Point2D)
++ void undo()
++ void deleteItem(Map,Point2D)
++ void setItemField(List<Item>)
+}
+
+
+class Class.Item.Item {
+# String name
+# ImageView itemView
+# Enum<ItemType> type
+# Rectangle hitbox
+# Rectangle interactionHitbox
+# int width
+# int height
+# float x
+# float y
+# int z
+# List<ImageView> menu
+# List<List<ImageView>> second_menu
+# ImageView selected_menu
+# int skin
+# int id
+# List<String> actions
++ <<Create>> Item(String,Enum<ItemType>,float,float,int,int,int)
++ int getId()
++ String getName()
++ Enum<ItemType> getType()
++ float getX()
++ float getY()
++ int getZ()
++ Node getItemView()
++ Rectangle getHitbox()
++ Rectangle getInteractionHitbox()
++ int getWidth()
++ int getHeight()
++ boolean doAction()
++ List<?> getActions()
++ List<ImageView> getMenu()
++ List<List<ImageView>> getSecondMenu()
++ ImageView getSelectedMenu()
++ int getSkin()
++ void setId(int)
++ void setX(float)
++ void setY(float)
++ List<String> getListActions()
+}
+
+
+enum Class.Map.MapFloor {
++  HOME
++  BASEMENT
++  FLOORAGE
+}
+
+class Class.bar.Feed {
++ <<Create>> Feed(String)
++ void update(Player,StackPane)
+}
+
+class Class.Item.DialoguesTypeApadter {
++ void write(JsonWriter,Dialogues)
++ Dialogues read(JsonReader)
+}
+
+class Class.Engine.MenuControler {
+- ImageView action
+- Text actionText
++ <<Create>> MenuControler(String)
++ void displayInteractiveMenu(Item,Pane)
++ void displayActionSelected(Item,Pane)
+- void moveSelectedRL(KeyEvent,Item)
+- void moveSelectedUpDown(KeyEvent,List<ImageView>)
++ void moveSelected(KeyEvent,Item)
++ void removeSecondMenu(Item,Pane)
++ void displaySecondMenu(Item,Pane)
++ void doActionOnEnter(Player,Item,StackPane,Pane)
++ void removeAlert(StackPane)
+}
+
+
+class Class.Item.Snake {
+- StackPane gameView
+- boolean snaking
+- {static} int WIDTH
+- {static} int HEIGHT
+- {static} int TILE_SIZE
+- Direction direction
+- List<Point> ssnake
+- boolean gameOver
+- Point food
+- int score
+- Random random
+~ GraphicsContext gc
+~ Label scoreLabel
++ <<Create>> Snake(StackPane)
++ void play(KeyCode)
+- void update()
+- void render(GraphicsContext,Label)
+- void renderGameOver(GraphicsContext)
+- void spawnFood()
++ void resetGame()
++ boolean isGameOver()
+}
+
+
+class Class.Item.Snake$Point {
+~ int x
+~ <<Create>> Point(int,int)
++ boolean equals(Object)
+}
+
+
+enum Class.Item.Direction {
++  UP
++  DOWN
++  LEFT
++  RIGHT
+}
+
+class Class.Item.PnjInteraction {
+~ Pnj pnj
+- Font font
+- int id
++ <<Create>> PnjInteraction(String,Enum<ItemType>,float,float,int,int,Pnj,int)
++ Pnj getPnj()
+- void displayDiaglogBox(StackPane)
+- void updateDialogBox(Dialogues,Label,Button,Button,List<Dialogues>,StackPane,Rectangle)
++ boolean speak(Player,Pnj,StackPane)
++ boolean doAction(Player,Enum<?>,Pnj,StackPane)
++ List<PnjTypeAction> getActions()
+}
+
+
+class com.example.demo1.HelloApplication {
++ void start(Stage)
++ {static} void main(String[])
+}
+
+class Class.Menu.Profile {
+- ImageView background
+- Rectangle backgroundRect
+- List<Skill> skills
+- List<Text> texts
+- Text firstName
+- Text lastName
+- Rectangle bar
+- boolean isLoaded
+- String font
++ <<Create>> Profile()
++ boolean isLoaded()
++ void loadSkills(Player)
++ void show(StackPane,Player)
++ void remove(StackPane)
+}
+
+
+class Class.Item.ItemTypeAdapter {
++ void write(JsonWriter,Item)
++ Item read(JsonReader)
+}
+
+class Class.Map.Fog {
+- Pane mapContainer
+- Player player
++ <<Create>> Fog(Pane,Player)
+- void initializeFogEffect()
+- void drawFog(GraphicsContext,double,double,double,double,double)
+}
+
+
+class Class.Character.PnjTypeAdapter {
++ void write(JsonWriter,Pnj)
++ Pnj read(JsonReader)
+}
+
+class Class.DevMode.Text.Collisions {
++ <<Create>> Collisions(String,String)
++ void displayText(StackPane)
++ void updateText(boolean)
+}
+
+class Class.DevMode.Text.Texts {
+# String name
+# Text content
+# Font font
+# {static} String styles
+# KeyCode keyListener
+# boolean display
+- {static} List<Texts> allTexts
++ <<Create>> Texts(String,String,KeyCode,boolean)
++ String getName()
++ Text getContent()
++ void setContent(Text)
++ KeyCode getKeyListener()
++ {static} List<KeyCode> getAllKeyListeners()
++ boolean getDisplay()
+}
+
+
+class Class.Map.Map {
+- String name
+- boolean isLoaded
+- List<Room> rooms
+- List<Item> items
+- List<Pnj> pnjs
+- ImageView mapView
+- Pane mapContainer
+- List<Rectangle> obstacles
+- double mapTranslateX
+- double mapTranslateY
+- double viewHeight
+- double viewWidth
+- double mapWidth
+- double mapHeight
++ <<Create>> Map(String,ImageView,boolean,List<Room>,List<Item>,List<Pnj>)
++ String getName()
++ boolean getIsLoaded()
++ List<Room> getRooms()
++ List<Item> getItems()
++ List<Pnj> getPnjs()
++ ImageView getMapView()
++ Pane getMapContainer()
++ List<Rectangle> getObstacles()
++ double getMapTranslateX()
++ double getMapTranslateY()
++ double getViewHeight()
++ double getViewWidth()
++ double getMapWidth()
++ double getMapHeight()
++ void setMapTranslateX(double)
++ void setMapTranslateY(double)
++ void setObstacles(List<Rectangle>)
++ void addMapContainer(Rectangle)
++ void addAllMapContainer(List<Rectangle>)
++ void setMapView(ImageView)
+- void createObstacles()
+}
+
+
+class Class.Map.Room {
+- String name
+}
+
+class Class.Menu.Start {
+- ImageView titleScene
+- ImageView background
+- ImageView cursor
+- Music music
+- Font font
+- List<ImageView> back
++ <<Create>> Start()
++ int selectOption()
++ void up()
++ void down()
++ void show(StackPane)
++ void displayCursor()
+}
+
+
+interface Class.DevMode.Text.TextInterface {
+~ void displayText(StackPane)
+~ void updateText(boolean)
+}
+
+class Class.Character.Pnj {
+- List<String> message
+- Rectangle pnjHitbox
+- int id
+- Image[] pnjAnim
+- int currentIndexAnim
+- Timeline staticAnimationTimeline
+- int skin
++ <<Create>> Pnj(String,Enum<Roles>,int,double,double,int)
++ List<String> getMessage()
++ Rectangle getPnjHitbox()
+- void animateStatic()
+- void startStaticAnimation()
++ int getId()
+}
+
+note left of Class.Character.Pnj::Pnj(String,Enum<Roles>,int,double,double,int)
+Constructor
+end note
+note right of Class.Character.Pnj::getMessage()
+Getter
+end note
+note left of Class.Character.Pnj::animateStatic()
+Method
+end note
+
+class Class.Skill.Skill {
+- String name
+- int level
++ <<Create>> Skill(String)
++ String getName()
++ int getLevel()
++ void setLevel(int)
+}
+
+note left of Class.Skill.Skill::Skill(String)
+Constructor
+end note
+note right of Class.Skill.Skill::getName()
+Getter
+end note
+
+class Class.bar.bar {
+# String name
+# ImageView texture
+# Rectangle bar
++ <<Create>> bar(String,ImageView)
++ String getName()
++ void display(StackPane)
+}
+
+
+class com.example.demo1.HelloController {
+- Label welcomeText
+# void onHelloButtonClick()
+}
+
+
+interface Class.Engine.Menu {
+~ void displayInteractiveMenu(Item,Pane)
+~ void displayActionSelected(Item,Pane)
+~ void moveSelected(KeyEvent,Item)
+~ void removeSecondMenu(Item,Pane)
+~ void displaySecondMenu(Item,Pane)
+~ void doActionOnEnter(Player,Item,StackPane,Pane)
+~ void removeAlert(StackPane)
+}
+
+
+
 Class.Character.Character <|-- Class.Character.Player
-Class.Item.Item <|-- Class.Item.Pc
+Class.bar.bar <|-- Class.bar.Money
+Class.DevMode.Text.Texts <|-- Class.DevMode.Text.Cords
+com.google.gson.TypeAdapter <|-- Class.Item.SkillTypeAdapter
+Class.Menu.Menu <|-- Class.Menu.End
+Class.Item.Item <|-- Class.Item.Canap
+Class.Item.Item <|-- Class.Item.Distributor
+com.google.gson.TypeAdapter <|-- Class.Map.obstaclesTypeAdaptater
+Class.DevMode.Text.TextInterface <|.. Class.DevMode.Text.Place
+Class.DevMode.Text.Texts <|-- Class.DevMode.Text.Place
+Class.bar.bar <|-- Class.bar.Fun
+Class.DevMode.Controler <|-- Class.DevMode.KeyControler
+Class.DevMode.Text.TextInterface <|.. Class.DevMode.Text.Interact
+Class.DevMode.Text.Texts <|-- Class.DevMode.Text.Interact
+Class.Character.Pnj <|-- Class.Character.Pedago
+Class.bar.bar <|-- Class.bar.Time
 Class.bar.bar <|-- Class.bar.Tiredness
-javafx.application.Application <|-- Class.Engine.Engine
+javafx.application.Application <|-- Game.Game
+Class.Item.Item <|-- Class.Item.Pc
+Class.bar.bar <|-- Class.bar.Feed
+com.google.gson.TypeAdapter <|-- Class.Item.DialoguesTypeApadter
+Class.Engine.Menu <|.. Class.Engine.MenuControler
+Class.Engine.Controler <|-- Class.Engine.MenuControler
+Class.Item.Snake +.. Class.Item.Snake$Point
+Class.Item.Item <|-- Class.Item.PnjInteraction
+javafx.application.Application <|-- com.example.demo1.HelloApplication
+Class.Menu.Menu <|-- Class.Menu.Profile
+com.google.gson.TypeAdapter <|-- Class.Item.ItemTypeAdapter
+com.google.gson.TypeAdapter <|-- Class.Character.PnjTypeAdapter
+Class.DevMode.Text.TextInterface <|.. Class.DevMode.Text.Collisions
+Class.DevMode.Text.Texts <|-- Class.DevMode.Text.Collisions
+Class.Menu.Menu <|-- Class.Menu.Start
+Class.Character.Character <|-- Class.Character.Pnj
 @enduml

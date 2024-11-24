@@ -260,7 +260,7 @@ public class Player extends Character {
     }
 
     public void eat() {
-        this.hunger += 7;
+        this.hunger += 5;
     }
 
     public void sleep(int hours) {
@@ -300,8 +300,8 @@ public class Player extends Character {
         }
     }
 
-    public void addTime(int hours) {
-        for (int i = 0; i < (hours * 60); i++) {
+    public void addTime(int days) {
+        for (int i = 0; i < (days * 60); i++) {
             updateTime();
         }
     }

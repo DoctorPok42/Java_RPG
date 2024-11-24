@@ -83,6 +83,7 @@ public class Pc extends Item {
 
     private boolean search(Player player, int time) {
         player.addTimeOfSearch(time);
+        player.addTime(2);
         return true;
     }
 

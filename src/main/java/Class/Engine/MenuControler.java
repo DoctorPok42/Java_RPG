@@ -155,8 +155,11 @@ public class MenuControler extends Controler implements Menu {
 
     @Override
     public void doActionOnEnter(Player player, Item itemToInteract, StackPane gameView, Pane mapContainer) {
-        String imgSelected = itemToInteract.getSecondMenu().get((currentAction / 10) - 1).get(currentAction % 10).getImage().getUrl();
-        String module = imgSelected.split("/")[2].split("\\.")[0].toUpperCase();
+        String module = "";
+        if (itemToInteract.getType() == ItemType.PC && currentAction >= 10) {
+            String imgSelected = itemToInteract.getSecondMenu().get((currentAction / 10) - 1).get(currentAction % 10).getImage().getUrl();
+            module = imgSelected.split("/")[2].split("\\.")[0].toUpperCase();
+        }
 
         int firstMenu;
         if (currentAction < 10) {
