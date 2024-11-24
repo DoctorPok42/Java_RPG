@@ -14,8 +14,8 @@
     {
         "id": 2,
         "name":"Nicolas",
-        "text": "...",
-        "choices": [3]
+        "text": "I’ll figure things\nout on my own for\nnow. Goodbye!",
+        "choices": []
     },
   {
     "id": 3,
@@ -32,8 +32,8 @@
   {
     "id": 5,
     "name":"Nicolas",
-    "text": "...",
-    "choices": [6]
+    "text": "I appreciate the chat,\nbut I need to focus on my\nnext task. Take care!",
+    "choices": []
   },
   {
     "id": 6,
@@ -50,19 +50,188 @@
     {
         "name":"Nicolas",
         "id": 8,
-        "text": "...",
-        "choices": [9]
+        "text": "This is getting boring...\nI’m out of here.",
+        "choices": []
     },
     {
         "name":"Nicolas",
         "id": 9,
         "text": "Here’s to a year of growth, learning, and\nbreakthroughs. Once again, welcome to Epitech!\nLet’s make it unforgettable.",
-        "choices": [10, 10]
+        "choices": [10, 11]
     },
   {
     "name":"Nicolas",
     "id": 10,
-    "text": "Let's go",
+    "text": "Alright, let’s do this!",
     "choices": []
-  }
+  },
+  {
+  "name":"Nicolas",
+  "id": 11,
+  "text": "Here we go!",
+  "choices": []
+},
+
+  {
+    "name":"Benjamin",
+    "id": 0,
+    "text" : "Hey there! I see you're getting the hang of\nthat keyboard. Tell me, would you like me to\nexplain a concept in computer science? It might\nhelp you down the road.",
+    "choices": [1, 2]
+  },
+  {
+    "name":"Benjamin",
+    "id": 1,
+    "text":"Yes, I’d like to learn\nmore. Go ahead.",
+    "choices": [3]
+  },
+    {
+        "name":"Benjamin",
+        "id": 2,
+        "text":"No, thanks. I’d rather\nfigure it out myself.",
+        "choices": []
+    },
+  {
+    "name": "Benjamin",
+    "id": 3,
+    "text": "Great! Let’s talk about algorithms. An\nalgorithm is a set of clear, step-by-step\ninstructions used to solve a problem or perform a\ntask. Think of it like a recipe: each step guides\nyou to the final dish. In computer science, the\n\"dish\" could be an app, a calculation, or even a\ngame.\nWant a concrete example, or should we move on?",
+    "choices": [4, 5]
+  },
+    {
+        "name":"Benjamin",
+        "id": 4,
+        "text":"I’d like an example,\nplease.",
+        "choices": [6]
+    },
+    {
+        "name":"Benjamin",
+        "id": 5,
+        "text":"I think I get it.\nLet’s move on.",
+        "choices": []
+    },
+  {
+    "name":"Benjamin",
+    "id": 6,
+    "text": "Of course! Let’s take something simple:\nsorting a list of numbers. One algorithm is called\nthe 'Bubble Sort.' Here’s how it works:",
+    "choices": [7, 8]
+  },
+  {
+    "name":"Benjamin",
+    "id": 7,
+    "text":"...",
+    "choices": [9]
+  },
+  {
+    "name":"Benjamin",
+    "id": 8,
+    "text":"This was helpful,\nbut I’m in a hurry.\nCatch you later!",
+    "choices": []
+  },
+  {
+    "name":"Benjamin",
+    "id": 9,
+    "text":"Compare two adjacent numbers in the list.\nIf the first is bigger, swap their positions.\nMove to the next pair and repeat.\nOnce you’ve gone through the whole list,\nstart again until no swaps are needed.",
+    "choices": [10, 11]
+  },
+  {
+    "name":"Benjamin",
+    "id": 10,
+    "text":"...",
+    "choices": [12]
+  },
+  {
+    "name":"Benjamin",
+    "id": 11,
+    "text":"Sorry, I need to\ngo now. Thanks\nfor the explanation!",
+    "choices": []
+  },
+  {
+    "name":"Benjamin",
+    "id": 12,
+    "text":"For example, if you had the list [5, 3, 8, 2],\nthe Bubble Sort would compare and swap until it’s\nsorted as [2, 3, 5, 8].",
+    "choices": [13,14]
+  },
+  {
+    "name":"Benjamin",
+    "id": 13,
+    "text":"Thank you, goodbye!",
+    "choices": []
+  },
+  {
+    "name":"Benjamin",
+    "id": 14,
+    "text":"Ok, I’ll try it myself.",
+    "choices": []
+  },
+  {
+    "name":"Denis",
+    "id": 0,
+    "text" : "Hey there! You look like someone eager to\nlevel up their skills. How about I explain a key\nconcept in development? Let’s talk about variables.",
+    "choices": [1, 2]
+  },
+  {
+    "name":"Denis",
+    "id": 1,
+    "text":"Yes, tell me more\nabout variables.",
+    "choices": [3]
+  },
+    {
+        "name":"Denis",
+        "id": 2,
+        "text":"No, thanks. I’ll\nfigure it out myself.",
+        "choices": []
+    },
+    {
+        "name":"Denis",
+        "id": 3,
+        "text":"Great! Variables are like containers that store\ndata. They have a name, a type, and a value. Think\nof them as labeled boxes: you can put different\nthings in each box, but you need to know what’s\ninside to use it properly.\nWant an example, or should we move on?",
+        "choices": [4, 5]
+    },
+    {
+        "name":"Denis",
+        "id": 4,
+        "text":"I’d like an example,\nplease.",
+        "choices": [6]
+    },
+    {
+        "name":"Denis",
+        "id": 5,
+        "text":"I think I understand.\nLet’s move on.",
+        "choices": []
+    },
+    {
+        "name":"Denis",
+        "id": 6,
+        "text":"Sure! Let’s say you have a variable called\n'age' that stores a number. You could assign it a\nvalue like 25. Now, whenever you refer to 'age'\nin your code, it will represent the number 25.\nDoes that make sense?",
+        "choices": [7, 8]
+    },
+    {
+        "name":"Denis",
+        "id": 7,
+        "text":"...",
+        "choices": [9]
+    },
+    {
+        "name":"Denis",
+        "id": 8,
+        "text":"I’m not interested\nanymore. I’ll see\nyou around.",
+        "choices": []
+    },
+    {
+        "name":"Denis",
+        "id": 9,
+        "text":"Variables are essential in programming because\nthey allow you to store and manipulate data.\nYou can change the value of a variable during\nthe program’s execution, making your code\ndynamic and adaptable.",
+        "choices": [10, 11]
+    },
+    {
+        "name":"Denis",
+        "id": 10,
+        "text":"Thanks, bye!",
+        "choices": []
+    },
+    {
+        "name":"Denis",
+        "id": 11,
+        "text":"Thanks for the\nexplanation!",
+        "choices": []
+    }
 ]

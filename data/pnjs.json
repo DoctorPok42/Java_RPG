@@ -2,8 +2,24 @@
   {
     "name": "Nicolas",
     "role": "Pedago",
-    "x": 1800.0,
-    "y": 962.0,
+    "x": 1873.0,
+    "y": 853.0,
+    "z": -1,
+    "skin": 3
+  },
+  {
+    "name": "Benjamin",
+    "role": "Pedago",
+    "x": 3025.0,
+    "y": 1620.0,
+    "z": -1,
+    "skin": 3
+  },
+  {
+    "name": "Denis",
+    "role": "Pedago",
+    "x": 2620.0,
+    "y": 1630.0,
     "z": -1,
     "skin": 3
   }

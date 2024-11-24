@@ -62,7 +62,7 @@ public class Engine {
 
     //Constructor
     public Engine() throws IOException {
-        this.map = new Map("Map", new ImageView(new Image("file:assets/map/mapavectextureencoreplus.png")), true, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+        this.map = new Map("Map", new ImageView(new Image("file:assets/map/mapfinale.png")), true, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
         this.player = new Player("John Doe", new Image("file:assets/perso/animtest1.png"), this.map);
         this.weakness = new Tiredness("Tiredness");
         this.hunger = new Feed("Hunger");
@@ -220,6 +220,14 @@ public class Engine {
                 }
             });
         }
+        gameView.setOnMousePressed((MouseEvent e) ->{
+            double clickX = e.getSceneX();
+            double clickY = e.getSceneY();
+            javafx.geometry.Point2D clickPoint = mapContainer.sceneToLocal(clickX, clickY);
+
+            System.out.println("X: " + clickPoint.getX());
+            System.out.println("Y: " + clickPoint.getY());
+        });
 
         gameView.setOnKeyPressed(e -> {
             if (isDevMode)

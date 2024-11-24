@@ -53,7 +53,7 @@ public class PnjInteraction extends Item{
              dialogues = gson.fromJson(reader, Dialogues[].class);
              pnjDialogues = new ArrayList<>();
              for (Dialogues d : dialogues) {
-                 if (d.getName().equals(this.pnj.getName())) {
+                 if (d.getName()!=null && d.getName().equals(this.pnj.getName())) {
                      pnjDialogues.add(d);
                  }
              }
