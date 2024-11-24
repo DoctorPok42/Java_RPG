@@ -220,14 +220,6 @@ public class Engine {
                 }
             });
         }
-        gameView.setOnMousePressed((MouseEvent e) ->{
-            double clickX = e.getSceneX();
-            double clickY = e.getSceneY();
-            javafx.geometry.Point2D clickPoint = mapContainer.sceneToLocal(clickX, clickY);
-
-            System.out.println("X: " + clickPoint.getX());
-            System.out.println("Y: " + clickPoint.getY());
-        });
 
         gameView.setOnKeyPressed(e -> {
             if (isDevMode)

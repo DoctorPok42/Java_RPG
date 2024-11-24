@@ -4,10 +4,7 @@ import Class.Character.Player;
 import Class.DevMode.Edit.ImgMouseControler;
 import Class.DevMode.Edit.Replace;
 import Class.DevMode.Edit.Utils.ReadItemFile;
-import Class.DevMode.Text.Collisions;
-import Class.DevMode.Text.Interact;
-import Class.DevMode.Text.Place;
-import Class.DevMode.Text.Texts;
+import Class.DevMode.Text.*;
 import Class.Item.Item;
 import Class.Item.ItemTypeAdapter;
 import Class.Map.Map;
@@ -32,6 +29,7 @@ public class DevEngine {
     private final Collisions textCollisions;
     private final Interact textInteract;
     private final Place textPlace;
+    private final Cords textCords;
     private final ImgMouseControler imgMouseControler;
     private final Replace replaceAction;
     private boolean isAdding = true;
@@ -44,6 +42,7 @@ public class DevEngine {
         textCollisions = new Collisions("Collisions", "Collisions: true (c)");
         textInteract = new Interact("Interact", "Interact hitBox: false (i)");
         textPlace = new Place("Place", "Edit mod: false (t)");
+        textCords = new Cords("Cords", "Cords: 0, 0");
         String filePath = "./data/items.json";
         readItemFile = new ReadItemFile(filePath);
         List<KeyCode> keys = Texts.getAllKeyListeners();
@@ -106,6 +105,11 @@ public class DevEngine {
 
             if (!isEditing) {
                 imgMouseControler.removeImg(gameView);
+                textCords.removeText(gameView);
+                textBlock.setFitHeight(90);
+            } else {
+                textCords.displayText(gameView);
+                textBlock.setFitHeight(120);
             }
         }
     }
@@ -115,6 +119,8 @@ public class DevEngine {
 
         if (isEditing) {
             imgMouseControler.displayImg(e.getX(), e.getY(), gameView, map, replaceAction);
+
+            textCords.updateText((int) mousePoint.getX() + ", " + (int) mousePoint.getY());
         } else {
             imgMouseControler.removeImg(gameView);
         }
