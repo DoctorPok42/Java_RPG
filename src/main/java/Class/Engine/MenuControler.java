@@ -13,7 +13,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 public class MenuControler extends Controler implements Menu {
@@ -153,42 +155,40 @@ public class MenuControler extends Controler implements Menu {
 
     @Override
     public void doActionOnEnter(Player player, Item itemToInteract, StackPane gameView, Pane mapContainer) {
-        List<Skill> skills = player.getSkills();
+        String imgSelected = itemToInteract.getSecondMenu().get((currentAction / 10) - 1).get(currentAction % 10).getImage().getUrl();
+        String module = imgSelected.split("/")[2].split("\\.")[0].toUpperCase();
 
+        int firstMenu;
+        if (currentAction < 10) {
+            firstMenu = currentAction;
+        } else {
+            firstMenu = (currentAction / 10) -1;
+        }
 
-        if (itemToInteract != null) {
-            int firstMenu;
-            if (currentAction < 10) {
-                firstMenu = currentAction;
+        if (itemToInteract.getType() == ItemType.PC) {
+            Pc pc = (Pc) itemToInteract;
+            pc.doAction(player, pc.getActions().get(firstMenu), 5, module, gameView);
+        } else if (itemToInteract.getType() == ItemType.DISTRIBUTOR) {
+            Distributor distributor = (Distributor) itemToInteract;
+            distributor.doAction(player, distributor.getActions().get(firstMenu), 1, "module");
+        } else if (itemToInteract.getType() == ItemType.CANAP) {
+            Canap canap = (Canap) itemToInteract;
+            canap.doAction(player, canap.getActions().get(firstMenu), 1, "module");
+        } else if (itemToInteract.getType() == ItemType.PNJ) {
+            PnjInteraction pnj = (PnjInteraction) itemToInteract;
+            pnj.doAction(player, pnj.getActions().get(firstMenu), pnj.getPnj(), gameView);
+        }
+
+        if (itemToInteract.getType() != ItemType.PNJ) {
+            String text = itemToInteract.getListActions().get(firstMenu);
+            if (!gameView.getChildren().contains(action)) {
+                actionText.setText(text);
+                action.setFitWidth(text.length() * 9.5);
+
+                gameView.getChildren().add(action);
+                gameView.getChildren().add(actionText);
             } else {
-                firstMenu = (currentAction / 10) -1;
-            }
-
-            if (itemToInteract.getType() == ItemType.PC) {
-                Pc pc = (Pc) itemToInteract;
-                pc.doAction(player, pc.getActions().get(firstMenu), 2, skills.get(currentAction % 10).getName(), gameView);
-            } else if (itemToInteract.getType() == ItemType.DISTRIBUTOR) {
-                Distributor distributor = (Distributor) itemToInteract;
-                distributor.doAction(player, distributor.getActions().get(firstMenu), 1, "module");
-            } else if (itemToInteract.getType() == ItemType.CANAP) {
-                Canap canap = (Canap) itemToInteract;
-                canap.doAction(player, canap.getActions().get(firstMenu), 1, "module");
-            } else if (itemToInteract.getType() == ItemType.PNJ) {
-                PnjInteraction pnj = (PnjInteraction) itemToInteract;
-                pnj.doAction(player, pnj.getActions().get(firstMenu), pnj.getPnj(), gameView);
-            }
-
-            if (itemToInteract.getType() != ItemType.PNJ) {
-                String text = itemToInteract.getListActions().get(firstMenu);
-                if (!gameView.getChildren().contains(action)) {
-                    actionText.setText(text);
-                    action.setFitWidth(text.length() * 9.5);
-
-                    gameView.getChildren().add(action);
-                    gameView.getChildren().add(actionText);
-                } else {
-                    actionText.setText(text);
-                }
+                actionText.setText(text);
             }
         }
     }

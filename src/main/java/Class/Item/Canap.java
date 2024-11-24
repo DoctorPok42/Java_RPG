@@ -18,7 +18,7 @@ public class Canap extends Item {
         this.second_menu.add(null);
 
         this.actions = List.of(
-            "You have just slept for 2 hours"
+            "You have just slept for 1 day"
         );
     }
 
