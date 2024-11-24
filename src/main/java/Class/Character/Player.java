@@ -252,12 +252,12 @@ public class Player extends Character {
     }
 
     public void sleep(int hours) {
-        this.weakness += hours;
+        this.weakness += (hours * 60);
     }
 
     public void updateStats() {
-        double weaknessPerSecond = 23.0 / 60.0;
-        double hungerPerSecond = 15.0 / 60.0;
+        double weaknessPerSecond = 8.0 / 60.0;
+        double hungerPerSecond = 5.0 / 60.0;
 
         this.weakness -= weaknessPerSecond;
         this.hunger -= hungerPerSecond;
@@ -267,7 +267,7 @@ public class Player extends Character {
     }
 
     private void timeLogic() {
-        if (timeDays >= 10) {
+        if (timeDays >= 20) {
             timeDays = 0;
             timeMonths++;
         }
@@ -289,7 +289,7 @@ public class Player extends Character {
     }
 
     public void addTime(int hours) {
-        for (int i = 0; i < hours; i++) {
+        for (int i = 0; i < (hours * 60); i++) {
             updateTime();
         }
     }
