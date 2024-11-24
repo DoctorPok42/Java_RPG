@@ -15,7 +15,7 @@ public class bar {
         this.name = name;
         this.texture = texture;
 
-        if (!Objects.equals(name, "Time")) {
+        if (!Objects.equals(name, "Time")&& !Objects.equals(name, "Money")) {
             this.texture.setFitWidth(187.6);
             this.texture.setFitHeight(60.4);
             StackPane.setAlignment(texture, Pos.BOTTOM_LEFT);

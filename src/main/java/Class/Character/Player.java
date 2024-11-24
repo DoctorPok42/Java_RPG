@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
 
 public class Player extends Character {
     private int money;
+    private boolean jobbing;
     private int timeDays;
     private int timeYears;
     private int timeMonths;
@@ -80,7 +81,8 @@ public class Player extends Character {
         this.setPosX(this.playerCoord.getX());
         this.setPosY(this.playerCoord.getY());
 
-        this.money = 0;
+        this.money = -5000;
+        this.jobbing = false;
         this.timeDays = 0;
         this.timeYears = 0;
         this.timeMonths = 0;
@@ -187,6 +189,9 @@ public class Player extends Character {
     public int getMoney(){
         return this.money;
     }
+    public void setMoney(int money){
+        this.money = money;
+    }
     public int getTimeDays(){
         return this.timeDays;
     }
@@ -205,6 +210,13 @@ public class Player extends Character {
 
     public double getWeakness() {
         return this.weakness;
+    }
+
+    public boolean isJobbing() {
+        return this.jobbing;
+    }
+    public void setJobbing(boolean jobbing) {
+        this.jobbing = jobbing;
     }
 
     public double getHunger() {

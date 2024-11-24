@@ -35,6 +35,7 @@ public class Distributor extends Item {
 
     private boolean buySnack(Player player) {
         money += 1;
+        player.setMoney(player.getMoney() - 10);
         player.eat();
         return true;
     }

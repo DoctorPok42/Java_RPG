@@ -11,6 +11,7 @@ import Class.Menu.End;
 import Class.Menu.Profile;
 import Class.Music.Music;
 import Class.bar.Feed;
+import Class.bar.Money;
 import Class.bar.Time;
 import Class.bar.Tiredness;
 import com.google.gson.Gson;
@@ -50,6 +51,7 @@ public class Engine {
     private final Tiredness weakness;
     private final Feed hunger;
     private final Time time;
+    private final Money money;
     private final Music music;
     private final Profile profileMenu;
     private final End endMenu;
@@ -67,6 +69,7 @@ public class Engine {
         this.weakness = new Tiredness("Tiredness");
         this.hunger = new Feed("Hunger");
         this.time = new Time("Time");
+        this.money = new Money("Money");
         this.profileMenu = new Profile();
         this.endMenu = new End();
         this.menuControler = new MenuControler("MenuControler");
@@ -181,6 +184,7 @@ public class Engine {
             if (!endMenu.isLoaded()) {
                 player.updateTime();
                 time.update(player);
+                money.update(player);
                 weakness.update(player, gameView);
                 hunger.update(player, gameView);
             }
@@ -359,6 +363,7 @@ public class Engine {
             weakness.display(gameView);
             hunger.display(gameView);
             time.display(gameView);
+            money.display(gameView);
         }
         this.gameLoop(gameView);
         gameView.requestFocus();
