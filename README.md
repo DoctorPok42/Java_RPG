@@ -4,7 +4,6 @@
 
 This project is an RPG game in Java. It is a school project for the 3rd year of engineering school at EPITECH.
 
-
 ## Installation
 
 To install the project, you need to clone the repository and go to the project directory.
@@ -58,3 +57,7 @@ The player has a profile with his name, his projects and his advancement. The pl
 - **Junit**: The project uses Junit for the tests.
 - **Jacoco**: The project uses Jacoco for the coverage.
 - **JavaDoc**: The project uses JavaDoc for the documentation.
+
+## UML
+
+![UML](./class_graphUML-0.png)
