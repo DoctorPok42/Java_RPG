@@ -78,6 +78,9 @@ public class PnjInteraction extends Item{
         dialog.setWrapText(true);
         dialog.setAlignment(Pos.CENTER);
 
+        int nbLines = dialog.getText().split("\n").length;
+        dialog.setLineSpacing(5);
+
         HBox pnjdialog = new HBox();
         Rectangle rect = new Rectangle(520, 101);
         rect.setFill(new ImagePattern(new Image(getClass().getResource("/assets/pnj/dialogbox5.png").toExternalForm())));
@@ -106,37 +109,39 @@ public class PnjInteraction extends Item{
 
         responses.getChildren().addAll(resp1background, resp2background);
 
-        updateDialogBox(pnjDialogues.get(idDialogue), dialog, resp1, resp2, pnjDialogues, gameView);
+        updateDialogBox(pnjDialogues.get(idDialogue), dialog, resp1, resp2, pnjDialogues, gameView, rect);
         dialogBox.getChildren().addAll(pnjdialog, responses);
         gameView.getChildren().add(dialogBox);
     }
 
-    private void updateDialogBox(Dialogues currentDialogue, Label pnjDialogue, Button resp1, Button resp2, List<Dialogues> pnjDialogues, StackPane gameView) {
+    private void updateDialogBox(Dialogues currentDialogue, Label pnjDialogue, Button resp1, Button resp2, List<Dialogues> pnjDialogues, StackPane gameView, Rectangle rect) {
+        int nbLines = pnjDialogue.getText().split("\n").length;
+        pnjDialogue.setLineSpacing(5 - (nbLines - 3));
 
         resp1.setOnAction(e -> {
             if (pnjDialogues.get(currentDialogue.getChoices().get(0)).getChoices().size() != 0){
                 pnjDialogue.setText(pnjDialogues.get(pnjDialogues.get(currentDialogue.getChoices().get(0)).getChoices().get(0)).getText());
                 resp1.setText(pnjDialogues.get(pnjDialogues.get(pnjDialogues.get(currentDialogue.getChoices().get(0)).getChoices().get(0)).getChoices().get(0)).getText());
                 resp2.setText(pnjDialogues.get(pnjDialogues.get(pnjDialogues.get(currentDialogue.getChoices().get(0)).getChoices().get(0)).getChoices().get(1)).getText());
-                updateDialogBox(pnjDialogues.get(pnjDialogues.get(currentDialogue.getChoices().get(0)).getChoices().get(0)), pnjDialogue, resp1, resp2, pnjDialogues, gameView);
+                updateDialogBox(pnjDialogues.get(pnjDialogues.get(currentDialogue.getChoices().get(0)).getChoices().get(0)), pnjDialogue, resp1, resp2, pnjDialogues, gameView, rect);
             }else{
                 gameView.getOnKeyPressed().handle(new KeyEvent(
                         KeyEvent.KEY_PRESSED, "", "", KeyCode.ESCAPE, false, false, false, false
                 ));
             }
         });
+
         resp2.setOnAction(e -> {
             if (pnjDialogues.get(currentDialogue.getChoices().get(1)).getChoices().size() != 0){
                 pnjDialogue.setText(pnjDialogues.get(pnjDialogues.get(currentDialogue.getChoices().get(1)).getChoices().get(0)).getText());
                 resp1.setText(pnjDialogues.get(pnjDialogues.get(pnjDialogues.get(currentDialogue.getChoices().get(1)).getChoices().get(0)).getChoices().get(0)).getText());
                 resp2.setText(pnjDialogues.get(pnjDialogues.get(pnjDialogues.get(currentDialogue.getChoices().get(1)).getChoices().get(0)).getChoices().get(1)).getText());
-                updateDialogBox(pnjDialogues.get(pnjDialogues.get(currentDialogue.getChoices().get(1)).getChoices().get(0)), pnjDialogue, resp1, resp2, pnjDialogues, gameView);
+                updateDialogBox(pnjDialogues.get(pnjDialogues.get(currentDialogue.getChoices().get(1)).getChoices().get(0)), pnjDialogue, resp1, resp2, pnjDialogues, gameView, rect);
             }else{
                 gameView.getOnKeyPressed().handle(new KeyEvent(
                         KeyEvent.KEY_PRESSED, "", "", KeyCode.ESCAPE, false, false, false, false
                 ));
             }
-
         });
 
     }

@@ -33,7 +33,9 @@ public class ImgMouseControler {
         new EditItems(new ImageView("file:assets/items/distributeur.png"), ItemType.DISTRIBUTOR, "DISTRIBUTOR", 0),
         new EditItems(new ImageView("file:assets/items/table3.png"), ItemType.TABLE, "Table", 3),
         new EditItems(new ImageView("file:assets/items/table5.png"), ItemType.TABLE, "Table", 5),
-        new EditItems(new ImageView("file:assets/Pnjs/Pnj_test.png"), ItemType.PNJ, "PNJ", 0)
+        new EditItems(new ImageView("file:assets/Pnjs/skin1/AnimSkin1-0.png"), ItemType.PNJ, "PNJ", 1),
+        new EditItems(new ImageView("file:assets/Pnjs/skin2/AnimSkin2-0.png"), ItemType.PNJ, "PNJ", 2),
+        new EditItems(new ImageView("file:assets/Pnjs/skin3/AnimSkin3-0.png"), ItemType.PNJ, "PNJ", 3)
     );
     private final ImageView imgSelected = new ImageView("file:assets/interact/mouse/selected.png");
     private int selected = 0;
@@ -49,17 +51,23 @@ public class ImgMouseControler {
 
         StackPane.setAlignment(bar, Pos.BOTTOM_LEFT);
 
+        int i = 0;
+
         for (ImageView img : EditItems.getAllItemsView()) {
             img.setFitWidth(40);
             img.setFitHeight(40);
 
             StackPane.setAlignment(img, Pos.BOTTOM_CENTER);
-            img.setTranslateX(-allImgItem.size() * 20 + (40 * allImgItem.indexOf(allImgItem.get(EditItems.getAllItemsView().indexOf(img))) * 2));
+            img.setTranslateX(
+                    // positionner les items au centre de l'écran en les décalant de 20px chacun
+                    (-allImgItem.size() * 20 + (40 * i * 2)) - ((double) 720 / allImgItem.size())
+            );
             img.setTranslateY(-20);
+            i++;
         }
 
         StackPane.setAlignment(imgSelected, Pos.BOTTOM_CENTER);
-        imgSelected.setTranslateX(-allImgItem.size() * 20);
+        imgSelected.setTranslateX((-allImgItem.size() * 20) - ((double) 720 / allImgItem.size()));
         imgSelected.setTranslateY(-9);
 
         readItemFile = new ReadItemFile(filePath);
@@ -81,7 +89,7 @@ public class ImgMouseControler {
     public void changeSelected(int selected) {
         this.selected = selected;
 
-        imgSelected.setTranslateX(-allImgItem.size() * 20 + (40 * selected * 2));
+        imgSelected.setTranslateX((-allImgItem.size() * 20 + (40 * selected * 2)) - ((double) 720 / allImgItem.size()));
     }
 
     public void setMode(int mode, StackPane gameView) {
@@ -113,7 +121,7 @@ public class ImgMouseControler {
         itemToDisplay.setTranslateX(fx);
         itemToDisplay.setTranslateY(fy);
 
-        itemToDisplay.setOpacity(0.5);
+        itemToDisplay.setOpacity(0.7);
 
         if (!gameView.getChildren().contains(itemToDisplay))
             gameView.getChildren().add(itemToDisplay);
@@ -159,7 +167,7 @@ public class ImgMouseControler {
             items.getItemView().setLayoutY(itemY);
 
             if (items.getType() == ItemType.PNJ) {
-                Pnj pnj = new Pnj("Pnj", Roles.PEDAGO, 3, items.getX(), items.getY(), lastId + 1);
+                Pnj pnj = new Pnj("Pnj", Roles.PEDAGO, item.getSkin(), items.getX(), items.getY(), lastId + 1);
                 map.getObstacles().add(pnj.getPnjHitbox());
                 pnj.getCharacView().setLayoutX(pnj.getPosX());
                 pnj.getCharacView().setLayoutY(pnj.getPosY());

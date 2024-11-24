@@ -5,6 +5,7 @@ import Class.Character.Pnj;
 import Class.Character.PnjTypeAdapter;
 import Class.DevMode.DevEngine;
 import Class.Item.*;
+import Class.Map.Fog;
 import Class.Map.Map;
 import Class.Menu.End;
 import Class.Menu.Profile;
@@ -26,6 +27,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.jetbrains.annotations.NotNull;
@@ -56,6 +58,7 @@ public class Engine {
     private final DevEngine devEngine;
     private boolean isAltPressed = false;
     private boolean isCtrlPressed = false;
+    private final Text pnjName = new Text();
 
     //Constructor
     public Engine() throws IOException {
@@ -76,6 +79,9 @@ public class Engine {
         this.canInteract = false;
         this.isInteracting = false;
         this.devEngine = new DevEngine();
+
+        this.pnjName.setStyle("-fx-font-size: 13;" + "-fx-font-family: 'Press Start 2P';");
+        this.pnjName.setFill(javafx.scene.paint.Color.WHITE);
     }
     private boolean isMoveKey(KeyCode key) {
         return key == KeyCode.UP || key == KeyCode.DOWN || key == KeyCode.LEFT || key == KeyCode.RIGHT || key == KeyCode.Z || key == KeyCode.Q || key == KeyCode.S || key == KeyCode.D;
@@ -267,8 +273,19 @@ public class Engine {
                     interactImg.setLayoutY((double) this.itemToInteract.getHeight() / 2 + this.itemToInteract.getY() - 16);
                     mapContainer.getChildren().add(interactImg);
                 }
+
+                if (this.itemToInteract.getType() == ItemType.PNJ) {
+                    PnjInteraction pnj = (PnjInteraction) this.itemToInteract;
+                    pnjName.setText(pnj.getName());
+                    pnjName.setLayoutX(pnj.getItemView().getLayoutX() - (pnj.getName().length() * 3.5));
+                    pnjName.setLayoutY(pnj.getItemView().getLayoutY() - 10);
+
+                    if (!mapContainer.getChildren().contains(pnjName))
+                        mapContainer.getChildren().add(pnjName);
+                }
             } else {
                 mapContainer.getChildren().remove(interactImg);
+                mapContainer.getChildren().remove(pnjName);
             }
 
             if (e.getCode() == KeyCode.E && this.canInteract && !this.isInteracting && !profileMenu.isLoaded() && !endMenu.isLoaded()) {
@@ -323,6 +340,8 @@ public class Engine {
         StackPane gameView = new StackPane(map.getMapContainer(), player.getPlayerView());
         gameView.setPrefSize(this.map.getViewWidth(), this.map.getViewHeight());
         music.play();
+
+//        new Fog(gameView, player);
 
         Scene scene = new Scene(gameView);
         primaryStage.setScene(scene);

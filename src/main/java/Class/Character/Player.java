@@ -163,7 +163,11 @@ public class Player extends Character {
         timelineLEFT = createMovementTimeline(movestep, 0, map);
         timelineRIGHT = createMovementTimeline(-movestep, 0, map);
 
-        pickName();
+        try {
+            pickName();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void pickName(){
