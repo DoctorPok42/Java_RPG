@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Pc.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Java_RPG</a> &gt; <a href="index.source.html" class="el_package">Class.Item</a> &gt; <span class="el_source">Pc.java</span></div><h1>Pc.java</h1><pre class="source lang-java linenums">package Class.Item;
+
+import Class.Character.Player;
+import Class.Skill.Skill;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.layout.StackPane;
+
+import java.util.List;
+
+public class Pc extends Item {
+<span class="nc" id="L12">    boolean snaking = false;</span>
+    Snake snake;
+
+    public Pc(String name, Enum&lt;ItemType&gt; type, float x, float y, int z, int skin, int id) {
+<span class="nc" id="L16">        super(name, type, x, y, z, skin, id);</span>
+
+<span class="nc" id="L18">        this.menu.add(new ImageView(&quot;file:assets/interact/pc/work.png&quot;));</span>
+<span class="nc" id="L19">        this.menu.add(new ImageView(&quot;file:assets/interact/pc/play.png&quot;));</span>
+<span class="nc" id="L20">        this.menu.add(new ImageView(&quot;file:assets/interact/pc/search.png&quot;));</span>
+
+<span class="nc" id="L22">        List&lt;ImageView&gt; sd_menu = List.of(</span>
+                new ImageView(&quot;file:assets/skills/web.png&quot;),
+                new ImageView(&quot;file:assets/skills/java.png&quot;),
+                new ImageView(&quot;file:assets/skills/devops.png&quot;),
+                new ImageView(&quot;file:assets/skills/cyber.png&quot;),
+                new ImageView(&quot;file:assets/skills/ai.png&quot;),
+                new ImageView(&quot;file:assets/skills/data.png&quot;)
+        );
+
+<span class="nc" id="L31">        int random = (int) (Math.random() * sd_menu.size());</span>
+<span class="nc" id="L32">        this.second_menu.add(List.of(sd_menu.get(random)));</span>
+
+<span class="nc" id="L34">        this.second_menu.add(null);</span>
+<span class="nc" id="L35">        this.second_menu.add(null);</span>
+
+<span class="nc bnc" id="L37" title="All 2 branches missed.">        for (ImageView img : this.menu) {</span>
+<span class="nc" id="L38">            img.setFitWidth(83.6);</span>
+<span class="nc" id="L39">            img.setFitHeight(32);</span>
+<span class="nc" id="L40">        }</span>
+
+<span class="nc bnc" id="L42" title="All 2 branches missed.">        for (List&lt;ImageView&gt; secondMenu : this.second_menu) {</span>
+<span class="nc bnc" id="L43" title="All 2 branches missed.">            if (secondMenu != null) {</span>
+<span class="nc bnc" id="L44" title="All 2 branches missed.">                for (ImageView img : secondMenu) {</span>
+<span class="nc" id="L45">                    img.setFitWidth(83.6);</span>
+<span class="nc" id="L46">                    img.setFitHeight(32);</span>
+<span class="nc" id="L47">                }</span>
+            }
+<span class="nc" id="L49">        }</span>
+
+<span class="nc" id="L51">        this.actions = List.of(</span>
+                &quot;You have just worked for 5 days&quot;,
+                &quot;You are playing snake&quot;,
+                &quot;You have just searched for 2 days&quot;
+        );
+<span class="nc" id="L56">    }</span>
+
+    public void displayMenu() {
+<span class="nc" id="L59">        System.out.println(&quot;Displaying menu...&quot;);</span>
+<span class="nc" id="L60">    }</span>
+
+    private boolean work(Player player, int time, String module) {
+<span class="nc bnc" id="L63" title="All 2 branches missed.">        if (module == null)</span>
+<span class="nc" id="L64">            return false;</span>
+
+<span class="nc bnc" id="L66" title="All 2 branches missed.">        if (player.getSkill(module) != null) {</span>
+<span class="nc" id="L67">            player.getSkill(module).setLevel(player.getSkill(module).getLevel() + 1);</span>
+        } else {
+<span class="nc" id="L69">            player.getSkills().add(new Skill(module));</span>
+<span class="nc" id="L70">            player.getSkill(module).setLevel(player.getSkill(module).getLevel() + 1);</span>
+        }
+
+<span class="nc" id="L73">        player.addTime(time);</span>
+<span class="nc" id="L74">        return true;</span>
+    }
+
+    private boolean play(Player player, int time, StackPane gameView) {
+<span class="nc" id="L78">        snaking = true;</span>
+<span class="nc" id="L79">        snake = new Snake(gameView);</span>
+<span class="nc" id="L80">        player.addFun(time);</span>
+<span class="nc" id="L81">        return true;</span>
+    }
+
+    private boolean search(Player player, int time) {
+<span class="nc" id="L85">        player.addTimeOfSearch(time);</span>
+<span class="nc" id="L86">        player.addTime(2);</span>
+<span class="nc" id="L87">        return true;</span>
+    }
+
+    public boolean doAction(Player player, Enum&lt;?&gt; action, int time, String module, StackPane gameView) {
+<span class="nc bnc" id="L91" title="All 2 branches missed.">        if (!(action instanceof PcTypeAction))</span>
+<span class="nc" id="L92">            return false;</span>
+<span class="nc bnc" id="L93" title="All 4 branches missed.">        return switch ((PcTypeAction) action) {</span>
+<span class="nc" id="L94">            case WORK -&gt; work(player, time, module);</span>
+<span class="nc" id="L95">            case PLAY -&gt; play(player, time, gameView);</span>
+<span class="nc" id="L96">            case SEARCH -&gt; search(player, time);</span>
+        };
+    }
+    public boolean isSnaking() {
+<span class="nc" id="L100">        return snaking;</span>
+    }
+    public Snake getSnake() {
+<span class="nc" id="L103">        return snake;</span>
+    }
+
+    @Override
+    public List&lt;PcTypeAction&gt; getActions() {
+<span class="nc" id="L108">        return List.of(PcTypeAction.class.getEnumConstants());</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

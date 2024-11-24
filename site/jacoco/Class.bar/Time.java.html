@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Time.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Java_RPG</a> &gt; <a href="index.source.html" class="el_package">Class.bar</a> &gt; <span class="el_source">Time.java</span></div><h1>Time.java</h1><pre class="source lang-java linenums">package Class.bar;
+
+import Class.Character.Player;
+import javafx.geometry.Pos;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.StackPane;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+
+public class Time extends bar {
+<span class="nc" id="L11">    private final Text years = new Text();</span>
+<span class="nc" id="L12">    private final Text months = new Text();</span>
+<span class="nc" id="L13">    private final Text days = new Text();</span>
+<span class="nc" id="L14">    private final Font font = Font.loadFont(&quot;file:assets/font/PressStart2P-Regular.ttf&quot;, 13);</span>
+
+    public Time(String name) {
+<span class="nc" id="L17">        super(name, new ImageView(&quot;file:assets/bar/time.png&quot;));</span>
+<span class="nc" id="L18">    }</span>
+
+    @Override
+    public void display(StackPane gameView) {
+<span class="nc" id="L22">        String styles = &quot;-fx-font-size: 13;&quot; + &quot;-fx-font-family: 'Press Start 2P';&quot;;</span>
+
+<span class="nc bnc" id="L24" title="All 2 branches missed.">        if (!gameView.getChildren().contains(texture)) {</span>
+<span class="nc" id="L25">            StackPane.setAlignment(texture, Pos.TOP_CENTER);</span>
+<span class="nc" id="L26">            gameView.getChildren().add(texture);</span>
+        }
+
+<span class="nc bnc" id="L29" title="All 2 branches missed.">        if (!gameView.getChildren().contains(years)) {</span>
+<span class="nc" id="L30">            years.setFill(javafx.scene.paint.Color.WHITE);</span>
+<span class="nc" id="L31">            years.setStyle(styles);</span>
+<span class="nc" id="L32">            StackPane.setAlignment(years, Pos.TOP_CENTER);</span>
+<span class="nc" id="L33">            years.setTranslateX(-110);</span>
+<span class="nc" id="L34">            years.setTranslateY(15);</span>
+<span class="nc" id="L35">            gameView.getChildren().add(years);</span>
+        }
+
+<span class="nc bnc" id="L38" title="All 2 branches missed.">        if (!gameView.getChildren().contains(months)) {</span>
+<span class="nc" id="L39">            months.setFill(javafx.scene.paint.Color.WHITE);</span>
+<span class="nc" id="L40">            months.setStyle(styles);</span>
+<span class="nc" id="L41">            StackPane.setAlignment(months, Pos.TOP_CENTER);</span>
+<span class="nc" id="L42">            months.setTranslateX(2.5);</span>
+<span class="nc" id="L43">            months.setTranslateY(15);</span>
+<span class="nc" id="L44">            gameView.getChildren().add(months);</span>
+        }
+
+<span class="nc bnc" id="L47" title="All 2 branches missed.">        if (!gameView.getChildren().contains(days)) {</span>
+<span class="nc" id="L48">            days.setFill(javafx.scene.paint.Color.WHITE);</span>
+<span class="nc" id="L49">            days.setStyle(styles);</span>
+<span class="nc" id="L50">            StackPane.setAlignment(days, Pos.TOP_CENTER);</span>
+<span class="nc" id="L51">            days.setTranslateX(115);</span>
+<span class="nc" id="L52">            days.setTranslateY(15);</span>
+<span class="nc" id="L53">            gameView.getChildren().add(days);</span>
+        }
+<span class="nc" id="L55">    }</span>
+
+    public void update(Player player) {
+<span class="nc bnc" id="L58" title="All 2 branches missed.">        years.setText(player.getTimeYears() &gt; 1 ? &quot;Years: &quot;+player.getTimeYears() : &quot;Year: &quot;+player.getTimeYears());</span>
+<span class="nc bnc" id="L59" title="All 2 branches missed.">        months.setText(player.getTimeMonths() &gt; 1 ? &quot;Months: &quot;+player.getTimeMonths() : &quot;Month: &quot;+player.getTimeMonths());</span>
+<span class="nc bnc" id="L60" title="All 2 branches missed.">        days.setText(player.getTimeDays() &gt; 1 ? &quot;Days: &quot;+player.getTimeDays() : &quot;Day: &quot;+player.getTimeDays());</span>
+<span class="nc" id="L61">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

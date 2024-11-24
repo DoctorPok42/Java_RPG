@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Snake.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Java_RPG</a> &gt; <a href="index.source.html" class="el_package">Class.Item</a> &gt; <span class="el_source">Snake.java</span></div><h1>Snake.java</h1><pre class="source lang-java linenums">package Class.Item;
+
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.geometry.Pos;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Label;
+import javafx.scene.input.KeyCode;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.util.Duration;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
+public class Snake {
+
+    private StackPane gameView;
+    private boolean snaking;
+
+    private static final int WIDTH = 600;
+    private static final int HEIGHT = 600;
+    private static final int TILE_SIZE = 20;
+
+
+<span class="nc" id="L30">    private Direction direction = Direction.RIGHT;</span>
+
+
+<span class="nc" id="L33">    private final List&lt;Point&gt; ssnake = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L34">    private boolean gameOver = false;</span>
+
+
+    private Point food;
+
+<span class="nc" id="L39">    private int score = 0;</span>
+
+
+<span class="nc" id="L42">    private final Random random = new Random();</span>
+
+    GraphicsContext gc;
+    Label scoreLabel;
+
+<span class="nc" id="L47">    public Snake(StackPane gameView) {</span>
+<span class="nc" id="L48">        snaking = true;</span>
+<span class="nc" id="L49">        this.gameView = gameView;</span>
+<span class="nc" id="L50">        Canvas canvas = new Canvas(WIDTH, HEIGHT);</span>
+<span class="nc" id="L51">        this.gc = canvas.getGraphicsContext2D();</span>
+
+<span class="nc" id="L53">        this.scoreLabel = new Label(&quot;Score: 0&quot;);</span>
+<span class="nc" id="L54">        scoreLabel.setStyle(&quot;-fx-font-family:'Press Start 2P';-fx-font-size: 20; -fx-text-fill: white;&quot;);</span>
+<span class="nc" id="L55">        HBox scoreBox = new HBox(scoreLabel);</span>
+<span class="nc" id="L56">        scoreBox.setPrefWidth(WIDTH);</span>
+<span class="nc" id="L57">        scoreBox.setMaxWidth(WIDTH);</span>
+<span class="nc" id="L58">        scoreBox.setStyle(&quot;-fx-background-color: black; -fx-padding: 10px;&quot;);</span>
+<span class="nc" id="L59">        scoreLabel.setAlignment(Pos.CENTER);</span>
+
+<span class="nc" id="L61">        VBox snakeWindow = new VBox();</span>
+<span class="nc" id="L62">        snakeWindow.getChildren().addAll(scoreBox,canvas);</span>
+<span class="nc" id="L63">        snakeWindow.setId(&quot;snakeWindow&quot;);</span>
+
+
+<span class="nc" id="L66">        ssnake.add(new Point(5, 5));</span>
+<span class="nc" id="L67">        ssnake.add(new Point(4, 5));</span>
+<span class="nc" id="L68">        ssnake.add(new Point(3, 5));</span>
+<span class="nc" id="L69">        spawnFood();</span>
+
+<span class="nc" id="L71">        Timeline timeline = new Timeline(new KeyFrame(Duration.millis(150), e -&gt; {</span>
+<span class="nc bnc" id="L72" title="All 2 branches missed.">            if (!gameOver) {</span>
+<span class="nc" id="L73">                update();</span>
+<span class="nc" id="L74">                render(gc, scoreLabel);</span>
+            } else {
+<span class="nc" id="L76">                renderGameOver(gc);</span>
+            }
+<span class="nc" id="L78">        }));</span>
+<span class="nc" id="L79">        timeline.setCycleCount(Timeline.INDEFINITE);</span>
+<span class="nc" id="L80">        timeline.play();</span>
+<span class="nc" id="L81">        snakeWindow.setPrefSize(WIDTH, HEIGHT);</span>
+<span class="nc" id="L82">        snakeWindow.setMaxSize(WIDTH, HEIGHT);</span>
+<span class="nc" id="L83">        StackPane.setAlignment(snakeWindow, Pos.CENTER);</span>
+<span class="nc" id="L84">        gameView.getChildren().add(snakeWindow);</span>
+<span class="nc" id="L85">    }</span>
+
+    public void play(KeyCode code){
+<span class="nc bnc" id="L88" title="All 6 branches missed.">        if (code == KeyCode.UP || code == KeyCode.Z &amp;&amp; direction != Direction.DOWN) {</span>
+<span class="nc" id="L89">            direction = Direction.UP;</span>
+<span class="nc bnc" id="L90" title="All 6 branches missed.">        } else if (code == KeyCode.DOWN || code == KeyCode.S &amp;&amp; direction != Direction.UP) {</span>
+<span class="nc" id="L91">            direction = Direction.DOWN;</span>
+<span class="nc bnc" id="L92" title="All 6 branches missed.">        } else if (code == KeyCode.LEFT || code == KeyCode.Q &amp;&amp; direction != Direction.RIGHT) {</span>
+<span class="nc" id="L93">            direction = Direction.LEFT;</span>
+<span class="nc bnc" id="L94" title="All 6 branches missed.">        } else if (code == KeyCode.RIGHT || code == KeyCode.D &amp;&amp; direction != Direction.LEFT) {</span>
+<span class="nc" id="L95">            direction = Direction.RIGHT;</span>
+        }
+<span class="nc" id="L97">    }</span>
+
+    private void update() {
+<span class="nc" id="L100">        Point head = ssnake.getFirst();</span>
+<span class="nc bnc" id="L101" title="All 5 branches missed.">        Point newHead = switch (direction) {</span>
+<span class="nc" id="L102">            case UP -&gt; new Point(head.x, head.y - 1);</span>
+<span class="nc" id="L103">            case DOWN -&gt; new Point(head.x, head.y + 1);</span>
+<span class="nc" id="L104">            case LEFT -&gt; new Point(head.x - 1, head.y);</span>
+<span class="nc" id="L105">            case RIGHT -&gt; new Point(head.x + 1, head.y);</span>
+        };
+
+<span class="nc bnc" id="L108" title="All 8 branches missed.">        if (newHead.x &lt; 0 || newHead.y &lt; 0 || newHead.x &gt;= WIDTH / TILE_SIZE || newHead.y &gt;= HEIGHT / TILE_SIZE</span>
+<span class="nc bnc" id="L109" title="All 2 branches missed.">                || ssnake.contains(newHead)) {</span>
+<span class="nc" id="L110">            gameOver = true;</span>
+<span class="nc" id="L111">            return;</span>
+        }
+
+<span class="nc" id="L114">        ssnake.addFirst(newHead);</span>
+
+<span class="nc bnc" id="L116" title="All 2 branches missed.">        if (newHead.equals(food)) {</span>
+<span class="nc" id="L117">            spawnFood();</span>
+<span class="nc" id="L118">            score++;</span>
+        } else {
+<span class="nc" id="L120">            ssnake.removeLast();</span>
+        }
+<span class="nc" id="L122">    }</span>
+    private void render(GraphicsContext gc, Label scoreLabel) {
+<span class="nc" id="L124">        scoreLabel.setText(&quot;Score: &quot; + score);</span>
+
+<span class="nc" id="L126">        gc.setFill(Color.BLACK);</span>
+<span class="nc" id="L127">        gc.fillRect(0, 0, WIDTH, HEIGHT);</span>
+
+<span class="nc" id="L129">        gc.setFill(Color.RED);</span>
+<span class="nc" id="L130">        gc.fillOval(food.x * TILE_SIZE, food.y * TILE_SIZE, TILE_SIZE, TILE_SIZE);</span>
+
+<span class="nc" id="L132">        gc.setFill(Color.GREEN);</span>
+<span class="nc bnc" id="L133" title="All 2 branches missed.">        for (Point p : ssnake) {</span>
+<span class="nc" id="L134">            gc.fillRect(p.x * TILE_SIZE, p.y * TILE_SIZE, TILE_SIZE, TILE_SIZE);</span>
+<span class="nc" id="L135">        }</span>
+<span class="nc" id="L136">    }</span>
+    private void renderGameOver(GraphicsContext gc) {
+<span class="nc" id="L138">        gc.setFill(Color.BLACK);</span>
+<span class="nc" id="L139">        gc.fillRect(0, 0, WIDTH, HEIGHT);</span>
+
+<span class="nc" id="L141">        gc.setFill(Color.RED);</span>
+<span class="nc" id="L142">        gc.fillText(&quot;GAME OVER,&quot; + &quot;\nScore: &quot;+score+ &quot;\nPress Enter to play again.&quot;, (double) WIDTH / 2 - 50, (double) HEIGHT / 2);</span>
+
+<span class="nc" id="L144">    }</span>
+    private void spawnFood() {
+        int x;
+        int y;
+        do {
+<span class="nc" id="L149">            x = random.nextInt(WIDTH / TILE_SIZE);</span>
+<span class="nc" id="L150">            y = random.nextInt(HEIGHT / TILE_SIZE);</span>
+<span class="nc bnc" id="L151" title="All 2 branches missed.">        } while (ssnake.contains(new Point(x, y)));</span>
+
+<span class="nc" id="L153">        food = new Point(x, y);</span>
+<span class="nc" id="L154">    }</span>
+
+    public void resetGame() {
+<span class="nc" id="L157">        ssnake.clear();</span>
+<span class="nc" id="L158">        ssnake.add(new Point(5, 5));</span>
+<span class="nc" id="L159">        ssnake.add(new Point(4, 5));</span>
+<span class="nc" id="L160">        ssnake.add(new Point(3, 5));</span>
+<span class="nc" id="L161">        direction = Direction.RIGHT;</span>
+<span class="nc" id="L162">        spawnFood();</span>
+<span class="nc" id="L163">        score = 0;</span>
+<span class="nc" id="L164">        gameOver = false;</span>
+
+<span class="nc" id="L166">        render(this.gc, this.scoreLabel);</span>
+<span class="nc" id="L167">    }</span>
+    public boolean isGameOver() {
+<span class="nc" id="L169">        return gameOver;</span>
+    }
+
+
+    private static class Point {
+        int x, y;
+
+<span class="nc" id="L176">        Point(int x, int y) {</span>
+<span class="nc" id="L177">            this.x = x;</span>
+<span class="nc" id="L178">            this.y = y;</span>
+<span class="nc" id="L179">        }</span>
+    @Override
+    public boolean equals(Object obj) {
+<span class="nc bnc" id="L182" title="All 2 branches missed.">        if (obj instanceof Point other) {</span>
+<span class="nc bnc" id="L183" title="All 4 branches missed.">            return this.x == other.x &amp;&amp; this.y == other.y;</span>
+        }
+<span class="nc" id="L185">        return false;</span>
+        }
+    }
+
+
+<span class="nc" id="L190">    private enum Direction {</span>
+<span class="nc" id="L191">        UP, DOWN, LEFT, RIGHT</span>
+    }
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

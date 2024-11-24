@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>obstaclesTypeAdaptater.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Java_RPG</a> &gt; <a href="index.source.html" class="el_package">Class.Map</a> &gt; <span class="el_source">obstaclesTypeAdaptater.java</span></div><h1>obstaclesTypeAdaptater.java</h1><pre class="source lang-java linenums">package Class.Map;
+
+import com.google.gson.TypeAdapter;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
+
+import java.io.IOException;
+
+<span class="nc" id="L9">public class obstaclesTypeAdaptater extends TypeAdapter&lt;Obstacles&gt; {</span>
+    @Override
+    public void write(JsonWriter out, Obstacles obstacles) throws IOException {
+<span class="nc" id="L12">        out.beginObject();</span>
+
+<span class="nc" id="L14">        out.name(&quot;x&quot;).value(obstacles.getX());</span>
+<span class="nc" id="L15">        out.name(&quot;y&quot;).value(obstacles.getY());</span>
+<span class="nc" id="L16">        out.name(&quot;width&quot;).value(obstacles.getWidth());</span>
+<span class="nc" id="L17">        out.name(&quot;height&quot;).value(obstacles.getHeight());</span>
+<span class="nc" id="L18">        out.name(&quot;id&quot;).value(obstacles.getId());</span>
+
+<span class="nc" id="L20">        out.endObject();</span>
+<span class="nc" id="L21">    }</span>
+
+    @Override
+    public Obstacles read(JsonReader in) throws IOException {
+<span class="nc" id="L25">        in.beginObject();</span>
+
+<span class="nc" id="L27">        double x = 0;</span>
+<span class="nc" id="L28">        double y = 0;</span>
+<span class="nc" id="L29">        double width = 0;</span>
+<span class="nc" id="L30">        double height = 0;</span>
+<span class="nc" id="L31">        int id = 0;</span>
+
+<span class="nc bnc" id="L33" title="All 2 branches missed.">        while (in.hasNext()) {</span>
+<span class="nc bnc" id="L34" title="All 6 branches missed.">            switch (in.nextName()) {</span>
+                case &quot;x&quot;:
+<span class="nc" id="L36">                    x = in.nextDouble();</span>
+<span class="nc" id="L37">                    break;</span>
+                case &quot;y&quot;:
+<span class="nc" id="L39">                    y = in.nextDouble();</span>
+<span class="nc" id="L40">                    break;</span>
+                case &quot;width&quot;:
+<span class="nc" id="L42">                    width = in.nextDouble();</span>
+<span class="nc" id="L43">                    break;</span>
+                case &quot;height&quot;:
+<span class="nc" id="L45">                    height = in.nextDouble();</span>
+<span class="nc" id="L46">                    break;</span>
+                case &quot;id&quot;:
+<span class="nc" id="L48">                    id = in.nextInt();</span>
+<span class="nc" id="L49">                    break;</span>
+                default:
+<span class="nc" id="L51">                    in.skipValue();</span>
+                    break;
+<span class="nc" id="L53">            }</span>
+        }
+
+<span class="nc" id="L56">        in.endObject();</span>
+
+<span class="nc" id="L58">        return new Obstacles(x, y, width, height, id);</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

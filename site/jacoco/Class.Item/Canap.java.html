@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Canap.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Java_RPG</a> &gt; <a href="index.source.html" class="el_package">Class.Item</a> &gt; <span class="el_source">Canap.java</span></div><h1>Canap.java</h1><pre class="source lang-java linenums">package Class.Item;
+
+import Class.Character.Player;
+
+import java.util.List;
+import javafx.scene.image.ImageView;
+
+public class Canap extends Item {
+    public Canap(String name, Enum&lt;ItemType&gt; type, float x, float y, int z, int skin, int id) {
+<span class="nc" id="L10">        super(name, type, x, y, z, skin, id);</span>
+
+<span class="nc" id="L12">        this.menu.add(new ImageView(&quot;file:assets/interact/canap/sleep.png&quot;));</span>
+
+<span class="nc bnc" id="L14" title="All 2 branches missed.">        for (ImageView img : this.menu) {</span>
+<span class="nc" id="L15">            img.setFitWidth(83.6);</span>
+<span class="nc" id="L16">            img.setFitHeight(32);</span>
+<span class="nc" id="L17">        }</span>
+<span class="nc" id="L18">        this.second_menu.add(null);</span>
+
+<span class="nc" id="L20">        this.actions = List.of(</span>
+            &quot;You have just slept for 1 day&quot;
+        );
+<span class="nc" id="L23">    }</span>
+
+    private boolean sleep(Player player, int time) {
+<span class="nc" id="L26">        player.addTime(time);</span>
+<span class="nc" id="L27">        player.sleep(time);</span>
+<span class="nc" id="L28">        return true;</span>
+    }
+
+    public boolean doAction(Player player, Enum&lt;?&gt; action, int time, String module) {
+<span class="nc bnc" id="L32" title="All 2 branches missed.">        if (!(action instanceof CanapTypeAction))</span>
+<span class="nc" id="L33">            return false;</span>
+<span class="nc bnc" id="L34" title="All 2 branches missed.">        return switch ((CanapTypeAction) action) {</span>
+<span class="nc" id="L35">            case SLEEP -&gt; sleep(player, time);</span>
+        };
+    }
+
+    public List&lt;CanapTypeAction&gt; getActions() {
+<span class="nc" id="L40">        return List.of(CanapTypeAction.class.getEnumConstants());</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

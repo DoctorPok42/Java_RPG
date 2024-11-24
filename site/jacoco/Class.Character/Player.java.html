@@ -1,0 +1,545 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Player.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Java_RPG</a> &gt; <a href="index.source.html" class="el_package">Class.Character</a> &gt; <span class="el_source">Player.java</span></div><h1>Player.java</h1><pre class="source lang-java linenums">package Class.Character;
+
+import Class.Item.Item;
+import Class.Map.Map;
+import Class.Music.Music;
+import Class.Skill.Skill;
+import com.google.gson.Gson;
+import com.google.gson.JsonIOException;
+import com.google.gson.JsonSyntaxException;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import javafx.util.Duration;
+
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
+public class Player extends Character {
+    private int money;
+    private boolean jobbing;
+    private int timeDays;
+    private int timeYears;
+    private int timeMonths;
+<span class="nc" id="L34">    private int secondsCounter = 0;</span>
+    private int nbHoursOfSearch;
+    private Item storeItem;
+
+
+    private double fun;
+    private double weakness;
+    private double hunger;
+
+    private List&lt;Skill&gt; skills;
+
+    private final Timeline timelineUP;
+    private final Timeline timelineDOWN;
+    private final Timeline timelineLEFT;
+    private final Timeline timelineRIGHT;
+    private final Timeline staticAnimationTimeline;
+    private final Timeline walkDownAnimationTimeline;
+    private final Timeline walkUpAnimationTimeline;
+    private final Timeline walkLeftAnimationTimeline;
+    private final Timeline walkRightAnimationTimeline;
+<span class="nc" id="L54">    private final Music walkSound = new Music(&quot;assets/music/walk.wav&quot;,0.2);</span>
+
+    protected final ImageView playerView;
+    protected final Image[] StaticAnim;
+<span class="nc" id="L58">    private int currentStaticIndex = 0;</span>
+    protected final Image[] walkDownAnim;
+<span class="nc" id="L60">    private int currentWalkDownIndex = 0;</span>
+    private final Image[] walkUpAnim;
+<span class="nc" id="L62">    private int currentWalkUpIndex = 0;</span>
+    private final Image[] walkLeftAnim;
+<span class="nc" id="L64">    private int currentWalkLeftIndex = 0;</span>
+    private final Image[] walkRightAnim;
+<span class="nc" id="L66">    private int currentWalkRightIndex = 0;</span>
+
+    private javafx.geometry.Point2D playerCoord;
+    private final Rectangle playerHitbox;
+
+    // Dev engine
+<span class="nc" id="L72">    private boolean hasToCheckCollision = true;</span>
+
+    //Constructor
+    public Player(String name, Image texture, Map map) {
+<span class="nc" id="L76">        super(name, Roles.PLAYER, new ImageView(texture), map);</span>
+<span class="nc" id="L77">        this.playerView = super.characView;</span>
+<span class="nc" id="L78">        this.playerView.setLayoutX(map.getViewWidth() / 2 - this.playerView.getFitWidth() / 2);</span>
+<span class="nc" id="L79">        this.playerView.setLayoutY(map.getViewHeight() / 2 - this.playerView.getFitHeight() / 2);</span>
+<span class="nc" id="L80">        this.playerCoord = map.getMapContainer().sceneToLocal(this.playerView.getLayoutX(), this.playerView.getLayoutY());</span>
+<span class="nc" id="L81">        this.setPosX(this.playerCoord.getX());</span>
+<span class="nc" id="L82">        this.setPosY(this.playerCoord.getY());</span>
+
+<span class="nc" id="L84">        this.money = -5000;</span>
+<span class="nc" id="L85">        this.jobbing = false;</span>
+<span class="nc" id="L86">        this.timeDays = 0;</span>
+<span class="nc" id="L87">        this.timeYears = 0;</span>
+<span class="nc" id="L88">        this.timeMonths = 0;</span>
+<span class="nc" id="L89">        this.nbHoursOfSearch = 0;</span>
+<span class="nc" id="L90">        this.fun = 0;</span>
+<span class="nc" id="L91">        this.weakness = 115;</span>
+<span class="nc" id="L92">        this.hunger = 115;</span>
+
+<span class="nc" id="L94">        this.StaticAnim = new Image[]{</span>
+                new Image(&quot;file:assets/perso/anim/AnimStatic0.png&quot;),
+                new Image(&quot;file:assets/perso/anim/AnimStatic1.png&quot;),
+                new Image(&quot;file:assets/perso/anim/AnimStatic2.png&quot;),
+                new Image(&quot;file:assets/perso/anim/AnimStatic3.png&quot;),
+                new Image(&quot;file:assets/perso/anim/AnimStatic4.png&quot;),
+                new Image(&quot;file:assets/perso/anim/AnimStatic5.png&quot;),
+        };
+<span class="nc" id="L102">        staticAnimationTimeline = new Timeline(new KeyFrame(Duration.millis(200),e-&gt;animateStatic()));</span>
+<span class="nc" id="L103">        staticAnimationTimeline.setCycleCount(Animation.INDEFINITE);</span>
+<span class="nc" id="L104">        startStaticAnimation();</span>
+
+<span class="nc" id="L106">        this.walkDownAnim = new Image[]{</span>
+                new Image(&quot;file:assets/perso/anim/AnimWalkDown0.png&quot;),
+                new Image(&quot;file:assets/perso/anim/AnimWalkDown1.png&quot;),
+                new Image(&quot;file:assets/perso/anim/AnimWalkDown2.png&quot;),
+                new Image(&quot;file:assets/perso/anim/AnimWalkDown3.png&quot;),
+                new Image(&quot;file:assets/perso/anim/AnimWalkDown4.png&quot;),
+                new Image(&quot;file:assets/perso/anim/AnimWalkDown5.png&quot;),
+        };
+<span class="nc" id="L114">        walkDownAnimationTimeline = new Timeline(new KeyFrame(Duration.millis(100),e-&gt;animateWalkDown()));</span>
+<span class="nc" id="L115">        walkDownAnimationTimeline.setCycleCount(Animation.INDEFINITE);</span>
+
+<span class="nc" id="L117">        this.walkUpAnim = new Image[]{</span>
+                new Image(&quot;file:assets/perso/anim/AnimWalkUp0.png&quot;),
+                new Image(&quot;file:assets/perso/anim/AnimWalkUp1.png&quot;),
+                new Image(&quot;file:assets/perso/anim/AnimWalkUp2.png&quot;),
+                new Image(&quot;file:assets/perso/anim/AnimWalkUp3.png&quot;),
+                new Image(&quot;file:assets/perso/anim/AnimWalkUp4.png&quot;),
+                new Image(&quot;file:assets/perso/anim/AnimWalkUp5.png&quot;),
+        };
+<span class="nc" id="L125">        walkUpAnimationTimeline = new Timeline(new KeyFrame(Duration.millis(100),e-&gt;animateWalkUp()));</span>
+<span class="nc" id="L126">        walkUpAnimationTimeline.setCycleCount(Animation.INDEFINITE);</span>
+
+<span class="nc" id="L128">        this.walkLeftAnim = new Image[]{</span>
+                new Image(&quot;file:assets/perso/anim/AnimWalkLeft0.png&quot;),
+                new Image(&quot;file:assets/perso/anim/AnimWalkLeft1.png&quot;),
+                new Image(&quot;file:assets/perso/anim/AnimWalkLeft2.png&quot;),
+                new Image(&quot;file:assets/perso/anim/AnimWalkLeft3.png&quot;),
+                new Image(&quot;file:assets/perso/anim/AnimWalkLeft4.png&quot;),
+                new Image(&quot;file:assets/perso/anim/AnimWalkLeft5.png&quot;),
+        };
+<span class="nc" id="L136">        walkLeftAnimationTimeline = new Timeline(new KeyFrame(Duration.millis(100),e-&gt;animateWalkLeft()));</span>
+<span class="nc" id="L137">        walkLeftAnimationTimeline.setCycleCount(Animation.INDEFINITE);</span>
+
+<span class="nc" id="L139">        this.walkRightAnim = new Image[]{</span>
+                new Image(&quot;file:assets/perso/anim/AnimWalkRight0.png&quot;),
+                new Image(&quot;file:assets/perso/anim/AnimWalkRight1.png&quot;),
+                new Image(&quot;file:assets/perso/anim/AnimWalkRight2.png&quot;),
+                new Image(&quot;file:assets/perso/anim/AnimWalkRight3.png&quot;),
+                new Image(&quot;file:assets/perso/anim/AnimWalkRight4.png&quot;),
+                new Image(&quot;file:assets/perso/anim/AnimWalkRight5.png&quot;),
+        };
+<span class="nc" id="L147">        walkRightAnimationTimeline = new Timeline(new KeyFrame(Duration.millis(100),e-&gt;animateWalkRight()));</span>
+<span class="nc" id="L148">        walkRightAnimationTimeline.setCycleCount(Animation.INDEFINITE);</span>
+
+
+
+<span class="nc" id="L152">        map.getMapContainer().setTranslateX(map.getViewWidth() / 2 - map.getMapWidth() / 2);</span>
+<span class="nc" id="L153">        map.getMapContainer().setTranslateY(map.getViewHeight() / 2 - map.getMapHeight() / 2);</span>
+<span class="nc" id="L154">        map.setMapTranslateX(map.getViewWidth() / 2 - map.getMapWidth() / 2);</span>
+<span class="nc" id="L155">        map.setMapTranslateY(map.getViewHeight() / 2 - map.getMapHeight() / 2);</span>
+<span class="nc" id="L156">        this.playerHitbox = new Rectangle(playerCoord.getX(),playerCoord.getY(), this.playerView.getFitWidth(), this.playerView.getFitHeight());</span>
+<span class="nc" id="L157">        this.playerHitbox.setFill(Color.TRANSPARENT);</span>
+<span class="nc" id="L158">        this.playerHitbox.setStroke(Color.TRANSPARENT);</span>
+<span class="nc" id="L159">        this.playerHitbox.setStrokeWidth(2);</span>
+<span class="nc" id="L160">        map.addMapContainer(this.playerHitbox);</span>
+
+<span class="nc" id="L162">        double movestep = 6;</span>
+<span class="nc" id="L163">        timelineUP = createMovementTimeline(0, movestep, map);</span>
+<span class="nc" id="L164">        timelineDOWN = createMovementTimeline(0, -movestep, map);</span>
+<span class="nc" id="L165">        timelineLEFT = createMovementTimeline(movestep, 0, map);</span>
+<span class="nc" id="L166">        timelineRIGHT = createMovementTimeline(-movestep, 0, map);</span>
+
+        try {
+<span class="nc" id="L169">            pickName();</span>
+<span class="nc" id="L170">        } catch (Exception e) {</span>
+<span class="nc" id="L171">            e.printStackTrace();</span>
+<span class="nc" id="L172">        }</span>
+<span class="nc" id="L173">    }</span>
+
+    private void pickName(){
+<span class="nc" id="L176">        try (FileReader reader = new FileReader(&quot;./data/playerName.json&quot;)) {</span>
+            // Read JSON file
+<span class="nc" id="L178">            Gson gson = new Gson();</span>
+            // Parse JSON file
+<span class="nc" id="L180">            String[] names = gson.fromJson(reader, String[].class);</span>
+<span class="nc" id="L181">            this.setName(names[new java.util.Random().nextInt(names.length)]);</span>
+<span class="nc" id="L182">        } catch (NullPointerException | IOException | JsonIOException | JsonSyntaxException e) {</span>
+<span class="nc" id="L183">            e.printStackTrace();</span>
+<span class="nc" id="L184">            this.setName(&quot;John Doe&quot;);</span>
+<span class="nc" id="L185">        }</span>
+<span class="nc" id="L186">    }</span>
+
+    //Getter
+    public int getMoney(){
+<span class="nc" id="L190">        return this.money;</span>
+    }
+    public void setMoney(int money){
+<span class="nc" id="L193">        this.money = money;</span>
+<span class="nc" id="L194">    }</span>
+    public int getTimeDays(){
+<span class="nc" id="L196">        return this.timeDays;</span>
+    }
+    public int getTimeYears(){
+<span class="nc" id="L199">        return this.timeYears;</span>
+    }
+    public int getTimeMonths() {
+<span class="nc" id="L202">        return this.timeMonths;</span>
+    }
+    public int getNbHoursOfSearch(){
+<span class="nc" id="L205">        return this.nbHoursOfSearch;</span>
+    }
+    public double getFun(){
+<span class="nc" id="L208">        return this.fun;</span>
+    }
+
+    public double getWeakness() {
+<span class="nc" id="L212">        return this.weakness;</span>
+    }
+
+    public boolean isJobbing() {
+<span class="nc" id="L216">        return this.jobbing;</span>
+    }
+    public void setJobbing(boolean jobbing) {
+<span class="nc" id="L219">        this.jobbing = jobbing;</span>
+<span class="nc" id="L220">    }</span>
+
+    public double getHunger() {
+<span class="nc" id="L223">        return this.hunger;</span>
+    }
+
+    public List&lt;Skill&gt; getSkills(){
+<span class="nc" id="L227">        return this.skills;</span>
+    }
+    public Item getStoreItem() {
+<span class="nc" id="L230">        return this.storeItem;</span>
+    }
+
+    public void setStoreItem(Item item) {
+<span class="nc" id="L234">        this.storeItem = item;</span>
+<span class="nc" id="L235">    }</span>
+
+    public Skill getSkill(String name) {
+<span class="nc bnc" id="L238" title="All 2 branches missed.">        for (Skill skill : this.skills) {</span>
+<span class="nc bnc" id="L239" title="All 2 branches missed.">            if (skill.getName().equals(name)) {</span>
+<span class="nc" id="L240">                return skill;</span>
+            }
+<span class="nc" id="L242">        }</span>
+<span class="nc" id="L243">        return null;</span>
+    }
+    public ImageView getPlayerView(){
+<span class="nc" id="L246">        return this.playerView;</span>
+    }
+
+    //Method
+    public void addTimeOfSearch(int hours){
+<span class="nc" id="L251">        this.nbHoursOfSearch += hours;</span>
+<span class="nc" id="L252">    }</span>
+
+    public void addMoney(int money) {
+<span class="nc" id="L255">        this.money += money;</span>
+<span class="nc" id="L256">    }</span>
+
+    public void addFun(double fun) {
+<span class="nc" id="L259">        this.fun += fun;</span>
+<span class="nc" id="L260">    }</span>
+
+    public void eat() {
+<span class="nc" id="L263">        this.hunger += 5;</span>
+<span class="nc" id="L264">    }</span>
+
+    public void sleep(int hours) {
+<span class="nc" id="L267">        this.weakness += (hours * 60);</span>
+<span class="nc" id="L268">    }</span>
+
+    public void updateStats() {
+<span class="nc" id="L271">        double weaknessPerSecond = 8.0 / 60.0;</span>
+<span class="nc" id="L272">        double hungerPerSecond = 5.0 / 60.0;</span>
+
+<span class="nc" id="L274">        this.weakness -= weaknessPerSecond;</span>
+<span class="nc" id="L275">        this.hunger -= hungerPerSecond;</span>
+
+<span class="nc" id="L277">        this.weakness = Math.clamp(this.weakness, 0, 115);</span>
+<span class="nc" id="L278">        this.hunger = Math.clamp(this.hunger, 0, 115);</span>
+<span class="nc" id="L279">    }</span>
+
+    private void timeLogic() {
+<span class="nc bnc" id="L282" title="All 2 branches missed.">        if (timeDays &gt;= 20) {</span>
+<span class="nc" id="L283">            timeDays = 0;</span>
+<span class="nc" id="L284">            timeMonths++;</span>
+        }
+<span class="nc bnc" id="L286" title="All 2 branches missed.">        if (timeMonths &gt;= 12) {</span>
+<span class="nc" id="L287">            timeMonths = 0;</span>
+<span class="nc" id="L288">            timeYears++;</span>
+        }
+<span class="nc" id="L290">    }</span>
+
+    public void updateTime() {
+<span class="nc" id="L293">        this.secondsCounter++;</span>
+<span class="nc" id="L294">        this.updateStats();</span>
+
+<span class="nc bnc" id="L296" title="All 2 branches missed.">        if (this.secondsCounter &gt;= 60) {</span>
+<span class="nc" id="L297">            this.timeDays++;</span>
+<span class="nc" id="L298">            this.secondsCounter = 0;</span>
+<span class="nc" id="L299">            timeLogic();</span>
+        }
+<span class="nc" id="L301">    }</span>
+
+    public void addTime(int days) {
+<span class="nc bnc" id="L304" title="All 2 branches missed.">        for (int i = 0; i &lt; (days * 60); i++) {</span>
+<span class="nc" id="L305">            updateTime();</span>
+        }
+<span class="nc" id="L307">    }</span>
+
+    public void addSkill(Skill skill) {
+<span class="nc" id="L310">        this.skills.add(skill);</span>
+<span class="nc" id="L311">    }</span>
+
+    public void setSkills(Skill argSkills) {
+<span class="nc bnc" id="L314" title="All 2 branches missed.">        for (Skill skill : this.skills) {</span>
+<span class="nc bnc" id="L315" title="All 2 branches missed.">            if (skill.getName().equals(argSkills.getName())) {</span>
+<span class="nc" id="L316">                skill.setLevel(argSkills.getLevel());</span>
+<span class="nc" id="L317">                return;</span>
+            }
+<span class="nc" id="L319">        }</span>
+<span class="nc" id="L320">    }</span>
+
+    // Dev engine
+    public void setIsCollision(boolean isCollision) {
+<span class="nc" id="L324">        this.hasToCheckCollision = isCollision;</span>
+<span class="nc" id="L325">    }</span>
+
+    private Timeline checkKey(KeyCode code) {
+<span class="nc bnc" id="L328" title="All 4 branches missed.">        if (code == KeyCode.UP || code == KeyCode.Z) {</span>
+<span class="nc" id="L329">            startWalkUpAnimation();</span>
+<span class="nc" id="L330">            walkSound.play();</span>
+<span class="nc" id="L331">            return timelineUP;</span>
+<span class="nc bnc" id="L332" title="All 4 branches missed.">        } else if (code == KeyCode.DOWN || code == KeyCode.S) {</span>
+<span class="nc" id="L333">            startWalkDownAnimation();</span>
+<span class="nc" id="L334">            walkSound.play();</span>
+<span class="nc" id="L335">            return timelineDOWN;</span>
+<span class="nc bnc" id="L336" title="All 4 branches missed.">        } else if (code == KeyCode.LEFT || code == KeyCode.Q) {</span>
+<span class="nc" id="L337">            startWalkLeftAnimation();</span>
+<span class="nc" id="L338">            walkSound.play();</span>
+<span class="nc" id="L339">            return timelineLEFT;</span>
+<span class="nc bnc" id="L340" title="All 4 branches missed.">        } else if (code == KeyCode.RIGHT || code == KeyCode.D) {</span>
+<span class="nc" id="L341">            startWalkRightAnimation();</span>
+<span class="nc" id="L342">            walkSound.play();</span>
+<span class="nc" id="L343">            return timelineRIGHT;</span>
+        }
+<span class="nc" id="L345">        return null;</span>
+    }
+
+    //Move method
+    @Override
+    public void move(ImageView mapView, StackPane gameView, boolean keyUp, KeyEvent e) {
+<span class="nc bnc" id="L351" title="All 2 branches missed.">        if (keyUp) {</span>
+<span class="nc bnc" id="L352" title="All 4 branches missed.">            if (e.getCode() == KeyCode.UP || e.getCode() == KeyCode.Z) {</span>
+<span class="nc" id="L353">                timelineDOWN.stop();</span>
+<span class="nc" id="L354">                stopWalkDownAnimation();</span>
+<span class="nc" id="L355">                timelineLEFT.stop();</span>
+<span class="nc" id="L356">                stopWalkLeftAnimation();</span>
+<span class="nc" id="L357">                timelineRIGHT.stop();</span>
+<span class="nc" id="L358">                stopWalkRightAnimation();</span>
+<span class="nc bnc" id="L359" title="All 4 branches missed.">            } else if (e.getCode() == KeyCode.DOWN || e.getCode() == KeyCode.S) {</span>
+<span class="nc" id="L360">                timelineUP.stop();</span>
+<span class="nc" id="L361">                stopWalkUpAnimation();</span>
+<span class="nc" id="L362">                timelineLEFT.stop();</span>
+<span class="nc" id="L363">                stopWalkLeftAnimation();</span>
+<span class="nc" id="L364">                timelineRIGHT.stop();</span>
+<span class="nc" id="L365">                stopWalkRightAnimation();</span>
+<span class="nc bnc" id="L366" title="All 4 branches missed.">            } else if (e.getCode() == KeyCode.LEFT || e.getCode() == KeyCode.Q) {</span>
+<span class="nc" id="L367">                timelineDOWN.stop();</span>
+<span class="nc" id="L368">                stopWalkDownAnimation();</span>
+<span class="nc" id="L369">                timelineUP.stop();</span>
+<span class="nc" id="L370">                stopWalkUpAnimation();</span>
+<span class="nc" id="L371">                timelineRIGHT.stop();</span>
+<span class="nc" id="L372">                stopWalkRightAnimation();</span>
+<span class="nc bnc" id="L373" title="All 4 branches missed.">            } else if (e.getCode() == KeyCode.RIGHT || e.getCode() == KeyCode.D) {</span>
+<span class="nc" id="L374">                timelineDOWN.stop();</span>
+<span class="nc" id="L375">                stopWalkDownAnimation();</span>
+<span class="nc" id="L376">                timelineLEFT.stop();</span>
+<span class="nc" id="L377">                stopWalkLeftAnimation();</span>
+<span class="nc" id="L378">                timelineUP.stop();</span>
+<span class="nc" id="L379">                stopWalkUpAnimation();</span>
+
+            }
+<span class="nc" id="L382">            stopStaticAnimation();</span>
+<span class="nc" id="L383">            Timeline timeline = checkKey(e.getCode());</span>
+<span class="nc" id="L384">            timeline.play();</span>
+<span class="nc" id="L385">        } else {</span>
+<span class="nc" id="L386">            Timeline timeline = checkKey(e.getCode());</span>
+<span class="nc" id="L387">            timeline.stop();</span>
+<span class="nc" id="L388">            walkSound.stop();</span>
+<span class="nc" id="L389">            stopWalkDownAnimation();</span>
+<span class="nc" id="L390">            stopWalkLeftAnimation();</span>
+<span class="nc" id="L391">            stopWalkRightAnimation();</span>
+<span class="nc" id="L392">            stopWalkUpAnimation();</span>
+<span class="nc" id="L393">            startStaticAnimation();</span>
+        }
+<span class="nc" id="L395">    }</span>
+
+    public void stopWalkSound() {
+<span class="nc" id="L398">        walkSound.stop();</span>
+<span class="nc" id="L399">    }</span>
+
+    //Create movement timeline
+    private Timeline createMovementTimeline(double x, double y, Map map) {
+<span class="nc" id="L403">        Timeline timeline = new Timeline(</span>
+<span class="nc" id="L404">                new KeyFrame(Duration.millis(16), event -&gt; {</span>
+<span class="nc" id="L405">                    javafx.geometry.Point2D targetCoord = map.getMapContainer().sceneToLocal(map.getViewWidth() / 2-this.playerView.getFitWidth() / 2, map.getViewHeight() / 2-this.playerView.getFitHeight() / 2);</span>
+<span class="nc" id="L406">                    Rectangle targetHitbox = new Rectangle(targetCoord.getX()-x, targetCoord.getY()-y, this.playerView.getFitWidth(), this.playerView.getFitHeight());</span>
+<span class="nc" id="L407">                    map.addMapContainer(targetHitbox);</span>
+<span class="nc" id="L408">                    targetHitbox.setFill(Color.TRANSPARENT);</span>
+//                    targetHitbox.setStroke(Color.RED);
+//                    targetHitbox.setStrokeWidth(2);
+
+<span class="nc" id="L412">                    this.storeItem = detectInteraction(targetHitbox, map);</span>
+
+<span class="nc bnc" id="L414" title="All 2 branches missed.">                    if (!isCollision(targetHitbox, map)) {</span>
+<span class="nc" id="L415">                        map.setMapTranslateX(map.getMapTranslateX() + x);</span>
+<span class="nc" id="L416">                        map.setMapTranslateY(map.getMapTranslateY() + y);</span>
+<span class="nc" id="L417">                        map.getMapContainer().setTranslateX(map.getMapTranslateX());</span>
+<span class="nc" id="L418">                        map.getMapContainer().setTranslateY(map.getMapTranslateY());</span>
+<span class="nc" id="L419">                        this.playerCoord = map.getMapContainer().sceneToLocal(map.getViewWidth() / 2-this.playerView.getFitWidth() / 2, map.getViewHeight() / 2-playerView.getFitHeight() / 2);</span>
+<span class="nc" id="L420">                        playerHitbox.setX(this.playerCoord.getX());</span>
+<span class="nc" id="L421">                        playerHitbox.setY(this.playerCoord.getY());</span>
+                    }
+<span class="nc" id="L423">                })</span>
+        );
+<span class="nc" id="L425">        timeline.setCycleCount(Timeline.INDEFINITE);</span>
+<span class="nc" id="L426">        return timeline;</span>
+    }
+
+    //Animate character
+    private void animateStatic() {
+<span class="nc" id="L431">        currentStaticIndex = (currentStaticIndex + 1) % StaticAnim.length;</span>
+<span class="nc" id="L432">        playerView.setImage(StaticAnim[currentStaticIndex]);</span>
+<span class="nc" id="L433">    }</span>
+    private void startStaticAnimation() {
+<span class="nc bnc" id="L435" title="All 2 branches missed.">        if(staticAnimationTimeline.getStatus() == Animation.Status.STOPPED)</span>
+<span class="nc" id="L436">            staticAnimationTimeline.play();</span>
+<span class="nc" id="L437">    }</span>
+    private void stopStaticAnimation() {
+<span class="nc bnc" id="L439" title="All 2 branches missed.">        if(staticAnimationTimeline.getStatus() == Animation.Status.RUNNING)</span>
+<span class="nc" id="L440">            staticAnimationTimeline.stop();</span>
+<span class="nc" id="L441">    }</span>
+
+    private void animateWalkDown() {
+<span class="nc" id="L444">        currentWalkDownIndex = (currentWalkDownIndex + 1) % walkDownAnim.length;</span>
+<span class="nc" id="L445">        playerView.setImage(walkDownAnim[currentWalkDownIndex]);</span>
+<span class="nc" id="L446">    }</span>
+    private void startWalkDownAnimation() {
+<span class="nc bnc" id="L448" title="All 2 branches missed.">        if(walkDownAnimationTimeline.getStatus() == Animation.Status.STOPPED)</span>
+<span class="nc" id="L449">            walkDownAnimationTimeline.play();</span>
+<span class="nc" id="L450">    }</span>
+    private void stopWalkDownAnimation() {
+<span class="nc bnc" id="L452" title="All 2 branches missed.">        if(walkDownAnimationTimeline.getStatus() == Animation.Status.RUNNING)</span>
+<span class="nc" id="L453">            walkDownAnimationTimeline.stop();</span>
+<span class="nc" id="L454">    }</span>
+
+    private void animateWalkUp() {
+<span class="nc" id="L457">        currentWalkUpIndex = (currentWalkUpIndex + 1) % walkUpAnim.length;</span>
+<span class="nc" id="L458">        playerView.setImage(walkUpAnim[currentWalkUpIndex]);</span>
+<span class="nc" id="L459">    }</span>
+    private void startWalkUpAnimation() {
+<span class="nc bnc" id="L461" title="All 2 branches missed.">        if(walkUpAnimationTimeline.getStatus() == Animation.Status.STOPPED)</span>
+<span class="nc" id="L462">            walkUpAnimationTimeline.play();</span>
+<span class="nc" id="L463">    }</span>
+    private void stopWalkUpAnimation() {
+<span class="nc bnc" id="L465" title="All 2 branches missed.">        if(walkUpAnimationTimeline.getStatus() == Animation.Status.RUNNING)</span>
+<span class="nc" id="L466">            walkUpAnimationTimeline.stop();</span>
+<span class="nc" id="L467">    }</span>
+
+    private void animateWalkLeft() {
+<span class="nc" id="L470">        currentWalkLeftIndex = (currentWalkLeftIndex + 1) % walkLeftAnim.length;</span>
+<span class="nc" id="L471">        playerView.setImage(walkLeftAnim[currentWalkLeftIndex]);</span>
+<span class="nc" id="L472">    }</span>
+    private void startWalkLeftAnimation() {
+<span class="nc bnc" id="L474" title="All 2 branches missed.">        if(walkLeftAnimationTimeline.getStatus() == Animation.Status.STOPPED)</span>
+<span class="nc" id="L475">            walkLeftAnimationTimeline.play();</span>
+<span class="nc" id="L476">    }</span>
+    private void stopWalkLeftAnimation() {
+<span class="nc bnc" id="L478" title="All 2 branches missed.">        if(walkLeftAnimationTimeline.getStatus() == Animation.Status.RUNNING)</span>
+<span class="nc" id="L479">            walkLeftAnimationTimeline.stop();</span>
+<span class="nc" id="L480">    }</span>
+
+    private void animateWalkRight() {
+<span class="nc" id="L483">        currentWalkRightIndex = (currentWalkRightIndex + 1) % walkRightAnim.length;</span>
+<span class="nc" id="L484">        playerView.setImage(walkRightAnim[currentWalkRightIndex]);</span>
+<span class="nc" id="L485">    }</span>
+    private void startWalkRightAnimation() {
+<span class="nc bnc" id="L487" title="All 2 branches missed.">        if(walkRightAnimationTimeline.getStatus() == Animation.Status.STOPPED)</span>
+<span class="nc" id="L488">            walkRightAnimationTimeline.play();</span>
+<span class="nc" id="L489">    }</span>
+    private void stopWalkRightAnimation() {
+<span class="nc bnc" id="L491" title="All 2 branches missed.">        if(walkRightAnimationTimeline.getStatus() == Animation.Status.RUNNING)</span>
+<span class="nc" id="L492">            walkRightAnimationTimeline.stop();</span>
+<span class="nc" id="L493">    }</span>
+
+
+    private boolean isCollision(Rectangle targetHitbox, Map map) {
+<span class="nc bnc" id="L497" title="All 2 branches missed.">        if (!hasToCheckCollision) return false;</span>
+
+<span class="nc bnc" id="L499" title="All 2 branches missed.">        for (Rectangle obstacle : map.getObstacles()) {</span>
+<span class="nc bnc" id="L500" title="All 2 branches missed.">            if (targetHitbox.getBoundsInParent().intersects(obstacle.getBoundsInParent())) {</span>
+<span class="nc" id="L501">                return true;</span>
+            }
+<span class="nc" id="L503">        }</span>
+
+<span class="nc bnc" id="L505" title="All 2 branches missed.">        for (int i = 0; i &lt; map.getItems().size(); i++) {</span>
+<span class="nc" id="L506">            Item item = map.getItems().get(i);</span>
+<span class="nc bnc" id="L507" title="All 2 branches missed.">            if (targetHitbox.getBoundsInParent().intersects(item.getHitbox().getBoundsInParent())) {</span>
+<span class="nc" id="L508">                return true;</span>
+            }
+        }
+<span class="nc" id="L511">        return false;</span>
+    }
+
+    private Item detectInteraction(Rectangle targetHitbox, Map map) {
+<span class="nc bnc" id="L515" title="All 2 branches missed.">        for (int i = 0; i &lt; map.getItems().size(); i++) {</span>
+<span class="nc" id="L516">            Item item = map.getItems().get(i);</span>
+<span class="nc bnc" id="L517" title="All 2 branches missed.">            if (targetHitbox.getBoundsInParent().intersects(item.getInteractionHitbox().getBoundsInParent())) {</span>
+<span class="nc" id="L518">                this.storeItem = item;</span>
+<span class="nc" id="L519">                return item;</span>
+            }
+        }
+<span class="nc" id="L522">        return null;</span>
+    }
+
+    public void loadSkills(String filename) {
+<span class="nc" id="L526">        try (FileReader reader = new FileReader(filename)) {</span>
+            // Read JSON file
+<span class="nc" id="L528">            Gson gson = new Gson();</span>
+
+            // Parse JSON file
+<span class="nc" id="L531">            String[] skillNames = gson.fromJson(reader, String[].class);</span>
+<span class="nc" id="L532">            this.skills = Arrays.stream(skillNames)</span>
+<span class="nc" id="L533">                    .map(Skill::new)</span>
+<span class="nc" id="L534">                    .collect(Collectors.toList());</span>
+<span class="nc" id="L535">        } catch (NullPointerException | IOException | JsonIOException | JsonSyntaxException e) {</span>
+<span class="nc" id="L536">            e.printStackTrace();</span>
+<span class="nc" id="L537">        }</span>
+<span class="nc" id="L538">    }</span>
+
+    // getPlayerHitbox
+    public Rectangle getPlayerHitbox() {
+<span class="nc" id="L542">        return playerHitbox;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

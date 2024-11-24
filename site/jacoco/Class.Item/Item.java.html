@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Item.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Java_RPG</a> &gt; <a href="index.source.html" class="el_package">Class.Item</a> &gt; <span class="el_source">Item.java</span></div><h1>Item.java</h1><pre class="source lang-java linenums">package Class.Item;
+
+import javafx.scene.Node;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+
+import java.util.ArrayList;
+import java.util.List;
+
+<span class="nc" id="L13">public class Item {</span>
+    protected String name;
+    protected ImageView itemView;
+    protected Enum&lt;ItemType&gt; type;
+    protected Rectangle hitbox;
+    protected Rectangle interactionHitbox;
+    protected int width;
+    protected int height;
+    protected float x;
+    protected float y;
+    protected int z;
+<span class="nc" id="L24">    protected List&lt;ImageView&gt; menu = new ArrayList&lt;ImageView&gt;();</span>
+<span class="nc" id="L25">    protected List&lt;List&lt;ImageView&gt;&gt; second_menu = new ArrayList&lt;List&lt;ImageView&gt;&gt;();</span>
+<span class="nc" id="L26">    protected ImageView selected_menu = null;</span>
+    protected int skin;
+    protected int id;
+<span class="nc" id="L29">    protected List&lt;String&gt; actions = new ArrayList&lt;String&gt;();</span>
+
+<span class="nc" id="L31">    public Item(String name, Enum&lt;ItemType&gt; type, float x, float y, int z, int skin, int id) {</span>
+<span class="nc" id="L32">        this.name = name;</span>
+<span class="nc" id="L33">        this.type = type;</span>
+<span class="nc" id="L34">        this.x = x;</span>
+<span class="nc" id="L35">        this.y = y;</span>
+<span class="nc" id="L36">        this.z = z;</span>
+<span class="nc" id="L37">        this.skin = skin;</span>
+<span class="nc" id="L38">        this.id = id;</span>
+
+<span class="nc bnc" id="L40" title="All 6 branches missed.">        switch (type) {</span>
+            case ItemType.PC:
+<span class="nc" id="L42">                this.itemView = new ImageView(new Image(&quot;file:assets/items/pc.png&quot;));</span>
+<span class="nc" id="L43">                break;</span>
+            case ItemType.CANAP:
+<span class="nc bnc" id="L45" title="All 3 branches missed.">                switch (skin) {</span>
+                    case 1:
+<span class="nc" id="L47">                        this.itemView = new ImageView(new Image(&quot;file:assets/items/canapplusgros.png&quot;));</span>
+<span class="nc" id="L48">                        break;</span>
+                    case 2:
+<span class="nc" id="L50">                        this.itemView = new ImageView(new Image(&quot;file:assets/items/canapplusgros2.png&quot;));</span>
+<span class="nc" id="L51">                        break;</span>
+                    default:
+<span class="nc" id="L53">                        break;</span>
+                }
+                break;
+            case ItemType.DISTRIBUTOR:
+<span class="nc" id="L57">                this.itemView = new ImageView(new Image(&quot;file:assets/items/distributeur.png&quot;));</span>
+<span class="nc" id="L58">                break;</span>
+            case ItemType.TABLE:
+<span class="nc bnc" id="L60" title="All 6 branches missed.">                switch (skin) {</span>
+                    case 1:
+<span class="nc" id="L62">                        this.itemView = new ImageView(new Image(&quot;file:assets/items/table1.png&quot;));</span>
+<span class="nc" id="L63">                        break;</span>
+                    case 2:
+<span class="nc" id="L65">                        this.itemView = new ImageView(new Image(&quot;file:assets/items/table2.png&quot;));</span>
+<span class="nc" id="L66">                        break;</span>
+                    case 3:
+<span class="nc" id="L68">                        this.itemView = new ImageView(new Image(&quot;file:assets/items/table3.png&quot;));</span>
+<span class="nc" id="L69">                        break;</span>
+                    case 4:
+<span class="nc" id="L71">                        this.itemView = new ImageView(new Image(&quot;file:assets/items/table4.png&quot;));</span>
+<span class="nc" id="L72">                        break;</span>
+                    case 5:
+<span class="nc" id="L74">                        this.itemView = new ImageView(new Image(&quot;file:assets/items/table5.png&quot;));</span>
+<span class="nc" id="L75">                        break;</span>
+                    default:
+<span class="nc" id="L77">                        break;</span>
+                }
+                break;
+            case ItemType.PNJ:
+<span class="nc" id="L81">                this.itemView = new ImageView(new Image(&quot;file:assets/item/pnjinteract.png&quot;));</span>
+<span class="nc" id="L82">                break;</span>
+            default:
+                break;
+        }
+
+<span class="nc bnc" id="L87" title="All 2 branches missed.">        assert itemView != null;</span>
+<span class="nc" id="L88">        this.width = (int) itemView.getImage().getWidth();</span>
+<span class="nc" id="L89">        this.height = (int) itemView.getImage().getHeight();</span>
+<span class="nc bnc" id="L90" title="All 2 branches missed.">        if (type == ItemType.PNJ) {</span>
+<span class="nc" id="L91">            this.width = 32;</span>
+<span class="nc" id="L92">            this.height = 46;</span>
+        }
+<span class="nc" id="L94">        this.hitbox = new Rectangle((int) x, (int) y, width, height);</span>
+<span class="nc" id="L95">        this.hitbox.setFill(Color.TRANSPARENT);</span>
+
+<span class="nc" id="L97">        this.interactionHitbox = new Rectangle((int) x - 40, (int) y - 40, width + 80, height + 80);</span>
+<span class="nc" id="L98">        this.interactionHitbox.setFill(Color.TRANSPARENT);</span>
+<span class="nc" id="L99">        this.interactionHitbox.setStroke(Color.TRANSPARENT);</span>
+<span class="nc" id="L100">        this.interactionHitbox.setStrokeWidth(2);</span>
+
+<span class="nc" id="L102">        this.selected_menu = new ImageView(new Image(&quot;file:assets/interact/test4.png&quot;));</span>
+<span class="nc" id="L103">        this.selected_menu.setFitWidth(91.96);</span>
+<span class="nc" id="L104">        this.selected_menu.setFitHeight(37.5);</span>
+
+<span class="nc bnc" id="L106" title="All 2 branches missed.">        if (type == ItemType.TABLE) {</span>
+<span class="nc" id="L107">            this.interactionHitbox.setWidth(0);</span>
+<span class="nc" id="L108">            this.interactionHitbox.setHeight(0);</span>
+<span class="nc" id="L109">            this.interactionHitbox.setX(-1280);</span>
+<span class="nc" id="L110">            this.interactionHitbox.setY(-720);</span>
+        }
+<span class="nc" id="L112">    }</span>
+
+    public int getId() {
+<span class="nc" id="L115">        return id;</span>
+    }
+
+    public String getName() {
+<span class="nc" id="L119">        return name;</span>
+    }
+
+    public Enum&lt;ItemType&gt; getType() {
+<span class="nc" id="L123">        return type;</span>
+    }
+
+    public float getX() {
+<span class="nc" id="L127">        return x;</span>
+    }
+
+    public float getY() {
+<span class="nc" id="L131">        return y;</span>
+    }
+
+    public int getZ() {
+<span class="nc" id="L135">        return z;</span>
+    }
+
+    public Node getItemView() {
+<span class="nc" id="L139">        return itemView;</span>
+    }
+
+    public Rectangle getHitbox() {
+<span class="nc" id="L143">        return hitbox;</span>
+    }
+
+    public Rectangle getInteractionHitbox() {
+<span class="nc" id="L147">        return interactionHitbox;</span>
+    }
+
+    public int getWidth() {
+<span class="nc" id="L151">        return width;</span>
+    }
+
+    public int getHeight() {
+<span class="nc" id="L155">        return height;</span>
+    }
+
+    public boolean doAction() {
+<span class="nc" id="L159">        return false;</span>
+    }
+
+    public List&lt;?&gt; getActions() {
+<span class="nc" id="L163">        return null;</span>
+    }
+
+    public List&lt;ImageView&gt; getMenu() {
+<span class="nc" id="L167">        return menu;</span>
+    }
+
+    public List&lt;List&lt;ImageView&gt;&gt; getSecondMenu() {
+<span class="nc" id="L171">        return second_menu;</span>
+    }
+
+    public ImageView getSelectedMenu() {
+<span class="nc" id="L175">        return selected_menu;</span>
+    }
+
+    public int getSkin() {
+<span class="nc" id="L179">        return skin;</span>
+    }
+
+    public void setId(int id) {
+<span class="nc" id="L183">        this.id = id;</span>
+<span class="nc" id="L184">    }</span>
+
+    public void setX(float x) {
+<span class="nc" id="L187">        this.x = x;</span>
+<span class="nc" id="L188">    }</span>
+
+    public void setY(float y) {
+<span class="nc" id="L191">        this.y = y;</span>
+<span class="nc" id="L192">    }</span>
+
+    public List&lt;String&gt; getListActions() {
+<span class="nc" id="L195">        return actions;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

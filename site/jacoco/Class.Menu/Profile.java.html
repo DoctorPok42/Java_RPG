@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Profile.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Java_RPG</a> &gt; <a href="index.source.html" class="el_package">Class.Menu</a> &gt; <span class="el_source">Profile.java</span></div><h1>Profile.java</h1><pre class="source lang-java linenums">package Class.Menu;
+
+import Class.Character.Player;
+import Class.Skill.Skill;
+import javafx.geometry.Pos;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+import javafx.scene.shape.Rectangle;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class Profile extends Menu {
+<span class="nc" id="L17">    private final ImageView background = new ImageView(&quot;file:assets/menu/profile/carte.png&quot;);</span>
+<span class="nc" id="L18">    private final Rectangle backgroundRect = new Rectangle(1280, 720, Color.rgb(0, 0, 0, 0.5));</span>
+    private List&lt;Skill&gt; skills;
+<span class="nc" id="L20">    private final List&lt;Text&gt; texts = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L21">    private final Text firstName = new Text(&quot;&quot;);</span>
+<span class="nc" id="L22">    private final Text lastName = new Text(&quot;&quot;);</span>
+<span class="nc" id="L23">    private final Rectangle bar = new Rectangle(0, -30, 525, 24);</span>
+<span class="nc" id="L24">    private boolean isLoaded = false;</span>
+<span class="nc" id="L25">    private String font = &quot;Press Start 2P&quot;;</span>
+
+    public Profile() {
+<span class="nc" id="L28">        super(&quot;Profile&quot;, &quot;Profile Menu&quot;, 1);</span>
+<span class="nc" id="L29">        this.selectedOption = 0;</span>
+
+<span class="nc" id="L31">        StackPane.setAlignment(this.background, Pos.CENTER);</span>
+
+<span class="nc" id="L33">        StackPane.setAlignment(this.bar, Pos.BOTTOM_LEFT);</span>
+<span class="nc" id="L34">        this.bar.setTranslateX(377</span>
+        );
+<span class="nc" id="L36">        this.bar.setTranslateY(-97.5);</span>
+<span class="nc" id="L37">        this.bar.setFill(Color.rgb(10, 62, 101));</span>
+<span class="nc" id="L38">        this.bar.setWidth(0);</span>
+<span class="nc" id="L39">    }</span>
+
+    public boolean isLoaded() {
+<span class="nc" id="L42">        return isLoaded;</span>
+    }
+
+    public void loadSkills(Player player) {
+<span class="nc" id="L46">        this.skills = player.getSkills();</span>
+
+<span class="nc bnc" id="L48" title="All 2 branches missed.">        for (int i = 0; i &lt; this.skills.size(); i++) {</span>
+<span class="nc" id="L49">            Text text = new Text(this.skills.get(i).getName() + &quot;: &quot; + this.skills.get(i).getLevel());</span>
+<span class="nc" id="L50">            text.setFont(new Font(font, 20));</span>
+<span class="nc" id="L51">            text.setFill(Color.GREY);</span>
+<span class="nc" id="L52">            StackPane.setAlignment(text, Pos.BOTTOM_LEFT);</span>
+<span class="nc" id="L53">            text.setTranslateX(</span>
+                150 + (i % 4) * 250
+            );
+<span class="nc" id="L56">            text.setTranslateY(</span>
+<span class="nc bnc" id="L57" title="All 2 branches missed.">                i &lt;= 3 ? -230 : -190</span>
+            );
+<span class="nc" id="L59">            this.texts.add(text);</span>
+        }
+
+        try {
+<span class="nc" id="L63">            this.firstName.setText(player.getName().split(&quot; &quot;)[0]);</span>
+<span class="nc" id="L64">            this.lastName.setText(player.getName().split(&quot; &quot;)[1]);</span>
+
+<span class="nc" id="L66">            this.lastName.setFont(new Font(font, 20));</span>
+<span class="nc" id="L67">            this.lastName.setFill(Color.GREY);</span>
+<span class="nc" id="L68">            StackPane.setAlignment(this.lastName, Pos.TOP_LEFT);</span>
+<span class="nc" id="L69">            this.lastName.setTranslateX(320);</span>
+<span class="nc" id="L70">            this.lastName.setTranslateY(309);</span>
+
+<span class="nc" id="L72">            this.firstName.setFont(new Font(font, 20));</span>
+<span class="nc" id="L73">            this.firstName.setFill(Color.GREY);</span>
+<span class="nc" id="L74">            StackPane.setAlignment(this.firstName, Pos.TOP_LEFT);</span>
+<span class="nc" id="L75">            this.firstName.setTranslateX(320);</span>
+<span class="nc" id="L76">            this.firstName.setTranslateY(340);</span>
+<span class="nc" id="L77">        } catch (Exception e) {</span>
+<span class="nc" id="L78">            System.exit(0);</span>
+<span class="nc" id="L79">        }</span>
+<span class="nc" id="L80">    }</span>
+
+    public void show(StackPane gameView, Player player) {
+<span class="nc" id="L83">        this.isLoaded = true;</span>
+<span class="nc" id="L84">        gameView.getChildren().add(backgroundRect);</span>
+<span class="nc" id="L85">        gameView.getChildren().add(background);</span>
+
+<span class="nc" id="L87">        skills = player.getSkills();</span>
+<span class="nc" id="L88">        int total = 0;</span>
+
+        // Display name of the player
+<span class="nc" id="L91">        gameView.getChildren().add(firstName);</span>
+<span class="nc" id="L92">        gameView.getChildren().add(lastName);</span>
+
+<span class="nc bnc" id="L94" title="All 2 branches missed.">        for (Text text : texts) {</span>
+            // update text with player's skills
+<span class="nc" id="L96">            text.setText(skills.get(texts.indexOf(text)).getName() + &quot;: &quot; + skills.get(texts.indexOf(text)).getLevel());</span>
+<span class="nc" id="L97">            total += skills.get(texts.indexOf(text)).getLevel();</span>
+
+<span class="nc" id="L99">            gameView.getChildren().add(text);</span>
+<span class="nc" id="L100">        }</span>
+
+        // to have a full bar, we need each skill to be at level 8
+<span class="nc" id="L103">        bar.setWidth(Math.clamp((total * 65.625) / skills.size(), 0, 525));</span>
+<span class="nc" id="L104">        gameView.getChildren().add(bar);</span>
+<span class="nc" id="L105">    }</span>
+
+    public void remove(StackPane gameView) {
+<span class="nc" id="L108">        this.isLoaded = false;</span>
+<span class="nc" id="L109">        gameView.getChildren().remove(backgroundRect);</span>
+<span class="nc" id="L110">        gameView.getChildren().remove(background);</span>
+<span class="nc" id="L111">        gameView.getChildren().remove(firstName);</span>
+<span class="nc" id="L112">        gameView.getChildren().remove(lastName);</span>
+
+<span class="nc bnc" id="L114" title="All 2 branches missed.">        for (int i = 0; i &lt; skills.size(); i++) {</span>
+<span class="nc" id="L115">            gameView.getChildren().remove(texts.get(i));</span>
+        }
+
+<span class="nc" id="L118">        gameView.getChildren().remove(bar);</span>
+<span class="nc" id="L119">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>bar.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Java_RPG</a> &gt; <a href="index.source.html" class="el_package">Class.bar</a> &gt; <span class="el_source">bar.java</span></div><h1>bar.java</h1><pre class="source lang-java linenums">package Class.bar;
+
+import javafx.geometry.Pos;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.StackPane;
+import javafx.scene.shape.Rectangle;
+import java.util.Objects;
+
+public class bar {
+    protected String name;
+    protected ImageView texture;
+    protected Rectangle bar;
+
+<span class="fc" id="L14">    public bar(String name, ImageView texture) {</span>
+<span class="fc" id="L15">        this.name = name;</span>
+<span class="fc" id="L16">        this.texture = texture;</span>
+
+<span class="pc bpc" id="L18" title="2 of 4 branches missed.">        if (!Objects.equals(name, &quot;Time&quot;)&amp;&amp; !Objects.equals(name, &quot;Money&quot;)) {</span>
+<span class="fc" id="L19">            this.texture.setFitWidth(187.6);</span>
+<span class="fc" id="L20">            this.texture.setFitHeight(60.4);</span>
+<span class="fc" id="L21">            StackPane.setAlignment(texture, Pos.BOTTOM_LEFT);</span>
+<span class="fc" id="L22">            this.texture.setTranslateX(5);</span>
+<span class="fc" id="L23">            this.bar = new Rectangle(0, -30, 115, 14.5);</span>
+
+<span class="fc" id="L25">            StackPane.setAlignment(bar, Pos.BOTTOM_LEFT);</span>
+<span class="fc" id="L26">            this.bar.setTranslateX(60);</span>
+        }
+<span class="fc" id="L28">    }</span>
+
+    public String getName() {
+<span class="fc" id="L31">        return name;</span>
+    }
+
+    public void display(StackPane gameView) {
+<span class="nc" id="L35">        gameView.getChildren().add(texture);</span>
+<span class="nc" id="L36">        gameView.getChildren().add(bar);</span>
+<span class="nc" id="L37">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>
