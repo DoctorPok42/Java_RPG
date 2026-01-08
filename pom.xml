@@ -125,11 +125,17 @@
         <groupId>org.openjfx</groupId>
         <artifactId>javafx-maven-plugin</artifactId>
         <version>0.0.8</version>
+        <configuration>
+          <options>
+            <option>--add-modules</option>
+            <option>ALL-MODULE-PATH</option>
+          </options>
+        </configuration>
         <executions>
           <execution>
             <id>default-cli</id>
             <configuration>
-              <mainClass>com.example.demo1/com.example.demo1.HelloApplication</mainClass>
+              <mainClass>com.example.demo/Game.Game</mainClass>
               <launcher>app</launcher>
               <jlinkZipName>app</jlinkZipName>
               <jlinkImageName>app</jlinkImageName>
